@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Digital Saarthi | Smart Login Wizard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* CSS variables for light/dark theme - clean */
+    :root {
+      --bg-page: #f1f5f9;
+      --mobile-bezel: #1a1e2c;
+      --mobile-screen: #ffffff;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --border-light: #e2e8f0;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --input-bg: #ffffff;
+      --input-border: #cbd5e1;
+      --btn-primary: #2563eb;
+      --btn-primary-text: white;
+      --progress-bg: #e2e8f0;
+      --toast-bg: #0f172a;
+      --toast-text: #f8fafc;
+      --modal-bg: #ffffff;
+      --modal-text: #0f172a;
+      --modal-overlay: rgba(0,0,0,0.7);
+      --popup-bg: #ffffff;
+      --popup-shadow: 0 20px 35px -12px rgba(0,0,0,0.25);
+      --step-dot-bg: #cbd5e1;
+      --step-dot-active: #2563eb;
+      --step-dot-complete: #2563eb;
+      --welcome-bg: rgba(15, 23, 42, 0.94);
+    }
+
+    body.dark {
+      --bg-page: #0f172a;
+      --mobile-bezel: #0a0f1c;
+      --mobile-screen: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e6;
+      --border-light: #334155;
+      --accent: #3b82f6;
+      --accent-hover: #60a5fa;
+      --input-bg: #0f172a;
+      --input-border: #475569;
+      --btn-primary: #3b82f6;
+      --progress-bg: #334155;
+      --toast-bg: #1e293b;
+      --toast-text: #e2e8f0;
+      --modal-bg: #1e293b;
+      --modal-text: #f1f5f9;
+      --modal-overlay: rgba(0,0,0,0.85);
+      --popup-bg: #1e293b;
+      --popup-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+      --step-dot-bg: #475569;
+      --step-dot-active: #3b82f6;
+      --step-dot-complete: #3b82f6;
+      --welcome-bg: rgba(0, 0, 0, 0.92);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: var(--bg-page);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+      transition: background 0.2s ease;
+      overflow: hidden;
+    }
+
+    /* Welcome Overlay - Simple splash screen, no loader */
+    .welcome-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--overlay-bg);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      transition: opacity 1s ease, visibility 1s ease;
+      opacity: 1;
+      visibility: visible;
+    }
+    .welcome-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .welcome-card {
+      text-align: center;
+      animation: welcomePulse 1.5s ease-in-out;
+    }
+    .welcome-card h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), #00a1ff, var(--accent));
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+      letter-spacing: 2px;
+    }
+    .welcome-card p {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    @keyframes welcomePulse {
+      0% { transform: scale(0.96); opacity: 0; }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    /* Theme toggle button */
+    .theme-toggle {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 100;
+      background: var(--mobile-screen);
+      border: 1.5px solid var(--border-light);
+      border-radius: 48px;
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: all 0.2s;
+    }
+    .theme-toggle:active {
+      transform: scale(0.96);
+    }
+
+    /* Main mobile container - no scrollbar */
+    .mobile-wrapper {
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    /* Phone replica */
+    .phone-replica {
+      background: var(--mobile-bezel);
+      border-radius: 2.5rem;
+      padding: 0.7rem;
+      box-shadow: 0 25px 45px -12px rgba(0,0,0,0.4);
+    }
+
+    .phone-screen {
+      background: var(--mobile-screen);
+      border-radius: 2rem;
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+      max-height: 85vh;
+      min-height: 560px;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.2s;
+      scrollbar-width: none; /* Firefox hide scrollbar */
+      -ms-overflow-style: none; /* IE/Edge */
+    }
+    .phone-screen::-webkit-scrollbar {
+      display: none; /* Chrome/Safari/Opera hide scrollbar */
+    }
+
+    /* Dynamic island */
+    .dynamic-island {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 0 6px;
+    }
+    .dynamic-island span {
+      width: 8px;
+      height: 8px;
+      background: var(--step-dot-bg);
+      border-radius: 50%;
+    }
+
+    /* Header */
+    .phone-header {
+      text-align: center;
+      padding: 0.4rem 0 0.8rem;
+      border-bottom: 1.5px solid var(--border-light);
+      margin-bottom: 0.2rem;
+    }
+    .phone-header h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.3px;
+    }
+
+    /* Step indicator */
+    .step-indicator {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 0.7rem 1rem 0.3rem;
+    }
+    .step-dot {
+      width: 36px;
+      height: 5px;
+      background: var(--step-dot-bg);
+      border-radius: 6px;
+      transition: all 0.2s;
+    }
+    .step-dot.active {
+      background: var(--step-dot-active);
+      width: 48px;
+    }
+    .step-dot.completed {
+      background: var(--step-dot-complete);
+    }
+
+    /* Form container */
+    .form-container {
+      padding: 0.5rem 1.2rem 0.8rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.3rem;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+    }
+
+    .form-group label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      color: var(--text-secondary);
+    }
+
+    /* Inputs */
+    input {
+      background: var(--input-bg);
+      border: 2px solid var(--input-border);
+      border-radius: 1rem;
+      padding: 0.85rem 1rem;
+      font-size: 1rem;
+      outline: none;
+      color: var(--text-primary);
+      transition: border-color 0.2s;
+      font-family: inherit;
+      font-weight: 500;
+    }
+    input:focus {
+      border-color: var(--accent);
+    }
+
+    /* Radio group */
+    .radio-group {
+      display: flex;
+      gap: 1.8rem;
+      flex-wrap: wrap;
+      align-items: center;
+      padding: 0.2rem 0;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 600;
+      text-transform: none;
+      font-size: 0.95rem;
+      cursor: pointer;
+      color: var(--text-primary);
+    }
+    input[type="radio"] {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--accent);
+      margin: 0;
+    }
+
+    /* Phone row */
+    .phone-row {
+      display: flex;
+      gap: 0.7rem;
+      align-items: center;
+    }
+    .phone-row input {
+      flex: 1;
+    }
+    .send-otp-btn {
+      background: var(--accent);
+      border: none;
+      padding: 0.85rem 1rem;
+      border-radius: 1rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      font-size: 0.85rem;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.05s;
+      min-width: 95px;
+    }
+    .send-otp-btn:active {
+      transform: scale(0.97);
+    }
+
+    /* Login Button */
+    .login-btn-container {
+      padding: 0.4rem 1.2rem 1.2rem;
+    }
+    .login-btn {
+      width: 100%;
+      background: var(--btn-primary);
+      border: none;
+      border-radius: 2rem;
+      padding: 1rem;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: var(--btn-primary-text);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    .login-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* BIG ACCESSIBLE POPUP - no emojis */
+    .inline-popup {
+      position: absolute;
+      top: calc(100% + 10px);
+      left: 0;
+      right: 0;
+      background: var(--popup-bg);
+      border-radius: 1.2rem;
+      padding: 1rem 1rem 0.9rem 1rem;
+      box-shadow: var(--popup-shadow);
+      border-left: 5px solid var(--accent);
+      z-index: 150;
+      animation: popupSlide 0.25s ease;
+    }
+    .inline-popup p {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: var(--text-primary);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      padding-right: 28px;
+    }
+    .inline-popup small {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      display: block;
+      margin-top: 6px;
+      font-weight: 500;
+    }
+    .popup-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      cursor: pointer;
+      color: var(--text-secondary);
+      padding: 4px 6px;
+      font-weight: bold;
+      border-radius: 30px;
+    }
+
+    /* OTP Toast */
+    .otp-toast {
+      background: var(--toast-bg);
+      color: var(--toast-text);
+      border-radius: 1rem;
+      padding: 0.8rem 1rem;
+      margin: 0 1rem 0.8rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-left: 4px solid var(--accent);
+      animation: slideDown 0.25s ease;
+    }
+    .otp-toast span:first-child {
+      font-weight: 700;
+    }
+    .otp-toast span:last-child {
+      font-family: monospace;
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      background: rgba(59,130,246,0.2);
+      padding: 0.2rem 0.7rem;
+      border-radius: 0.7rem;
+    }
+
+    /* Centered modal */
+    .phone-modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--modal-overlay);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 300;
+      border-radius: 2rem;
+      animation: fadeIn 0.2s;
+    }
+    .phone-modal-card {
+      background: var(--modal-bg);
+      border-radius: 1.8rem;
+      width: 85%;
+      max-width: 280px;
+      padding: 1.6rem 1.3rem;
+      text-align: center;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.35);
+      border: 1px solid var(--border-light);
+    }
+    .phone-modal-card h3 {
+      font-size: 1.5rem;
+      margin-bottom: 0.6rem;
+      color: var(--accent);
+      font-weight: 800;
+    }
+    .phone-modal-card p {
+      font-size: 0.95rem;
+      margin: 0.8rem 0;
+      color: var(--text-primary);
+      line-height: 1.4;
+      font-weight: 500;
+    }
+    .phone-modal-close {
+      background: var(--accent);
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 2.5rem;
+      color: white;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-top: 0.8rem;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    /* Password rules */
+    .password-hint {
+      background: var(--popup-bg);
+      border-radius: 1rem;
+      padding: 0.9rem;
+      margin-top: 0.4rem;
+      font-size: 0.75rem;
+      border: 1.5px solid var(--border-light);
+    }
+    .password-hint p {
+      font-weight: 800;
+      margin-bottom: 6px;
+      font-size: 0.8rem;
+      color: var(--accent);
+    }
+    .rule-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.75rem;
+      margin: 5px 0;
+      font-weight: 500;
+    }
+    .strength-meter {
+      height: 5px;
+      background: var(--progress-bg);
+      border-radius: 5px;
+      margin: 8px 0 4px;
+      overflow: hidden;
+    }
+    .strength-fill {
+      height: 100%;
+      width: 0%;
+      transition: width 0.2s;
+    }
+
+    @keyframes popupSlide {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Responsive: ensure no external scrolling */
+    @media (max-width: 450px) {
+      body {
+        padding: 0.5rem;
+        overflow: hidden;
+      }
+      .phone-screen {
+        max-height: 90vh;
+      }
+      .form-container {
+        gap: 1.1rem;
+        padding: 0.4rem 1rem 0.6rem;
+      }
+      .login-btn-container {
+        padding: 0.2rem 1rem 1rem;
+      }
+      .step-indicator {
+        padding: 0.5rem 1rem 0.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Simple Welcome Splash Screen - only text, no loader -->
+  <div id="welcomeOverlay" class="welcome-overlay">
+    <div class="welcome-card">
+      <h1>learn how to login</h1>
+      <p>Follow the guided instructions to complete your signup</p>
+    </div>
+  </div>
+
+  <button class="theme-toggle" id="themeToggleBtn">Light / Dark</button>
+  
+  <div class="mobile-wrapper" id="mainApp" style="opacity: 0; transition: opacity 0.5s ease;">
+    <div class="phone-replica">
+      <div class="phone-screen" id="phoneScreen">
+        <div class="dynamic-island"><span></span><span></span><span></span></div>
+        <div class="phone-header"><h2>Digital Saarthi</h2></div>
+        
+        <!-- Step indicator -->
+        <div class="step-indicator" id="stepDots">
+          <div class="step-dot" data-step="1"></div>
+          <div class="step-dot" data-step="2"></div>
+          <div class="step-dot" data-step="3"></div>
+          <div class="step-dot" data-step="4"></div>
+          <div class="step-dot" data-step="5"></div>
+        </div>
+
+        <div class="form-container">
+          <div class="form-group" id="nameGroup">
+            <label>FULL NAME</label>
+            <input type="text" id="nameInput" placeholder="e.g. Rajesh Kumar" autocomplete="off">
+          </div>
+          <div class="form-group" id="genderGroup">
+            <label>GENDER</label>
+            <div class="radio-group" id="genderRadioGroup">
+              <label><input type="radio" name="gender" value="Male"> Male</label>
+              <label><input type="radio" name="gender" value="Female"> Female</label>
+              <label><input type="radio" name="gender" value="Other"> Other</label>
+            </div>
+          </div>
+          <div class="form-group" id="phoneGroup">
+            <label>MOBILE NUMBER</label>
+            <div class="phone-row">
+              <input type="tel" id="phoneInput" placeholder="10-digit number" maxlength="10" inputmode="numeric">
+              <button class="send-otp-btn" id="sendOtpBtn">Send OTP</button>
+            </div>
+          </div>
+          <div class="form-group" id="otpGroup">
+            <label>VERIFICATION CODE</label>
+            <input type="text" id="otpInput" placeholder="Enter OTP" maxlength="6" inputmode="numeric">
+          </div>
+          <div class="form-group" id="passwordGroup">
+            <label>CREATE PASSWORD</label>
+            <input type="password" id="passwordInput" placeholder="Strong password">
+            <div id="passwordRulesContainer" class="password-hint" style="display: none;"></div>
+          </div>
+        </div>
+
+        <div class="login-btn-container">
+          <button class="login-btn" id="loginBtn">Create Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Simple splash screen fades after 2 seconds - only text, no loader
+    const welcomeOverlay = document.getElementById('welcomeOverlay');
+    const mainApp = document.getElementById('mainApp');
+    setTimeout(() => {
+      welcomeOverlay.classList.add('fade-out');
+      mainApp.style.opacity = '1';
+      setTimeout(() => {
+        welcomeOverlay.style.display = 'none';
+      }, 800);
+    }, 2000);
+
+    // DOM Elements
+    const nameInput = document.getElementById('nameInput');
+    const genderRadios = document.querySelectorAll('input[name="gender"]');
+    const phoneInput = document.getElementById('phoneInput');
+    const otpInput = document.getElementById('otpInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const sendOtpBtn = document.getElementById('sendOtpBtn');
+    const loginBtn = document.getElementById('loginBtn');
+    const phoneScreen = document.getElementById('phoneScreen');
+    const passwordRulesContainer = document.getElementById('passwordRulesContainer');
+    const stepDots = document.querySelectorAll('.step-dot');
+
+    let currentStep = 1;
+    let otpSent = false;
+    let generatedOtp = "";
+    let activePopup = null;
+
+    function removeActivePopup() {
+      if (activePopup && activePopup.parentNode) {
+        activePopup.remove();
+        activePopup = null;
+      }
+    }
+
+    function showInstructionPopup(groupId, message, subMessage = "") {
+      removeActivePopup();
+      const group = document.getElementById(groupId);
+      if (!group) return;
+      const popup = document.createElement('div');
+      popup.className = 'inline-popup';
+      popup.innerHTML = `
+        <button class="popup-close" aria-label="Close">✕</button>
+        <p>📘 ${message}</p>
+        ${subMessage ? `<small>💡 ${subMessage}</small>` : ''}
+      `;
+      group.style.position = 'relative';
+      group.appendChild(popup);
+      activePopup = popup;
+      const closeBtn = popup.querySelector('.popup-close');
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        removeActivePopup();
+      });
+      setTimeout(() => {
+        if (activePopup === popup) removeActivePopup();
+      }, 7000);
+    }
+
+    function updateStepUI() {
+      stepDots.forEach((dot, idx) => {
+        const stepNum = idx + 1;
+        dot.classList.remove('active', 'completed');
+        if (stepNum < currentStep) dot.classList.add('completed');
+        else if (stepNum === currentStep) dot.classList.add('active');
+      });
+
+      if (currentStep === 1) {
+        if (!validateName()) showInstructionPopup('nameGroup', 'Enter your full name');
+        else removeActivePopup();
+      } 
+      else if (currentStep === 2) {
+        if (!validateGender()) showInstructionPopup('genderGroup', 'Select your gender', 'Choose one option to continue');
+        else removeActivePopup();
+      }
+      else if (currentStep === 3) {
+        if (!validatePhone()) showInstructionPopup('phoneGroup', 'Enter 10-digit mobile number');
+        else removeActivePopup();
+      }
+      else if (currentStep === 4) {
+        if (!otpSent) showInstructionPopup('otpGroup', 'Request OTP first', 'Tap "Send OTP" button');
+        else if (!validateOTP()) showInstructionPopup('otpGroup', 'Enter the 6-digit OTP', 'Check the code in notification');
+        else removeActivePopup();
+      }
+      else if (currentStep === 5) {
+        if (!validatePasswordStrong() && passwordInput.value.length > 0) {
+          showInstructionPopup('passwordGroup', 'Make password stronger', 'Follow all rules below');
+        } else if (passwordInput.value.length === 0) {
+          showInstructionPopup('passwordGroup', 'Create a strong password', '8+ chars, uppercase, number, symbol');
+        } else {
+          removeActivePopup();
+        }
+        updatePasswordUI();
+      }
+    }
+
+    function validateName() { return nameInput.value.trim().length >= 10; }
+    function validateGender() { return [...genderRadios].some(r => r.checked); }
+    function validatePhone() { return phoneInput.value.replace(/\D/g, '').length === 10; }
+    function validateOTP() { 
+      if (!otpSent) return false;
+      const entered = otpInput.value.replace(/\D/g, '');
+      return entered.length >= 4 && entered === generatedOtp;
+    }
+    function checkPasswordStrength(pwd) {
+      const nameVal = nameInput.value.trim().toLowerCase();
+      const rules = {
+        length: pwd.length >= 8,
+        upperLower: /[a-z]/.test(pwd) && /[A-Z]/.test(pwd),
+        number: /[0-9]/.test(pwd),
+        special: /[!@#$%^&*(),.?":{}|<>]/.test(pwd),
+        noPersonal: true
+      };
+      if (nameVal && pwd.toLowerCase().includes(nameVal)) rules.noPersonal = false;
+      if (/\b(19[0-9]{2}|20[0-2][0-9]|202[0-5])\b/.test(pwd)) rules.noPersonal = false;
+      const score = Object.values(rules).filter(v => v === true).length;
+      return { rules, score, isStrong: score >= 5 };
+    }
+    function validatePasswordStrong() {
+      const pwd = passwordInput.value;
+      if (pwd.length === 0) return false;
+      return checkPasswordStrength(pwd).isStrong;
+    }
+
+    function updatePasswordUI() {
+      const pwd = passwordInput.value;
+      if (currentStep === 5) {
+        const { rules, score } = checkPasswordStrength(pwd);
+        const ruleList = [
+          { key: 'length', text: 'At least 8 characters' },
+          { key: 'upperLower', text: 'Uppercase & lowercase letters' },
+          { key: 'number', text: 'Contains numbers (0-9)' },
+          { key: 'special', text: 'Special character (! @ # $ %)' },
+          { key: 'noPersonal', text: 'No name or birth year' }
+        ];
+        let html = `<p>Password strength checklist</p>`;
+        ruleList.forEach(item => {
+          const ok = rules[item.key];
+          html += `<div class="rule-item"><span>${ok ? '✔️' : '❌'}</span> ${item.text}</div>`;
+        });
+        let strengthColor = "#e11d48";
+        let strengthWidth = (score/5)*100;
+        if (score >= 5) strengthColor = "#10b981";
+        else if (score >= 3) strengthColor = "#f59e0b";
+        html += `<div class="strength-meter"><div class="strength-fill" style="width: ${strengthWidth}%; background: ${strengthColor};"></div></div>`;
+        html += `<div style="font-size:0.75rem; margin-top:5px; font-weight:600;">${score >= 5 ? 'Strong password - Good' : (pwd ? 'Needs improvement' : 'Create strong password')}</div>`;
+        passwordRulesContainer.innerHTML = html;
+        passwordRulesContainer.style.display = 'block';
+      } else {
+        passwordRulesContainer.style.display = 'none';
+      }
+    }
+
+    function sendOtpLogic() {
+      if (!validatePhone()) return false;
+      generatedOtp = Math.floor(100000 + Math.random() * 900000).toString().slice(0,6);
+      otpSent = true;
+      const existingToast = document.querySelector('.otp-toast');
+      if (existingToast) existingToast.remove();
+      const toast = document.createElement('div');
+      toast.className = 'otp-toast';
+      toast.innerHTML = `<span>Your OTP code:</span> <span>${generatedOtp}</span>`;
+      const formContainer = document.querySelector('.form-container');
+      formContainer.insertBefore(toast, formContainer.firstChild);
+      setTimeout(() => { if(toast && toast.parentNode) toast.remove(); }, 7000);
+      return true;
+    }
+
+    function tryAdvanceStep() {
+      if (currentStep === 1 && validateName()) { currentStep = 2; updateStepUI(); }
+      else if (currentStep === 2 && validateGender()) { currentStep = 3; updateStepUI(); }
+      else if (currentStep === 4 && validateOTP()) { currentStep = 5; updateStepUI(); updatePasswordUI(); removeActivePopup(); }
+    }
+
+    nameInput.addEventListener('input', () => { tryAdvanceStep(); updateStepUI(); });
+    genderRadios.forEach(r => r.addEventListener('change', () => { tryAdvanceStep(); updateStepUI(); }));
+    phoneInput.addEventListener('input', (e) => {
+      let val = phoneInput.value.replace(/\D/g, '').slice(0,10);
+      phoneInput.value = val;
+      tryAdvanceStep();
+      updateStepUI();
+    });
+    otpInput.addEventListener('input', (e) => {
+      let val = otpInput.value.replace(/\D/g, '').slice(0,6);
+      otpInput.value = val;
+      if (currentStep === 4 && validateOTP()) {
+        currentStep = 5;
+        updateStepUI();
+        updatePasswordUI();
+        removeActivePopup();
+      } else {
+        updateStepUI();
+      }
+    });
+    passwordInput.addEventListener('input', () => {
+      if (currentStep === 5) { updatePasswordUI(); updateStepUI(); }
+    });
+
+    sendOtpBtn.addEventListener('click', () => {
+      if (!validatePhone()) {
+        showInstructionPopup('phoneGroup', 'Invalid mobile number', 'Enter exactly 10 digits');
+        return;
+      }
+      if (sendOtpLogic()) {
+        if (currentStep === 3) {
+          currentStep = 4;
+          updateStepUI();
+          removeActivePopup();
+          showInstructionPopup('otpGroup', 'OTP sent successfully', `Code: ${generatedOtp}`);
+        } else if (currentStep === 4) {
+          removeActivePopup();
+          showInstructionPopup('otpGroup', 'New OTP sent', `Code: ${generatedOtp}`);
+        }
+      }
+    });
+
+    function showCenteredModal(title, message, isSuccess = true) {
+      const existing = document.querySelector('.phone-modal-overlay');
+      if (existing) existing.remove();
+      const overlay = document.createElement('div');
+      overlay.className = 'phone-modal-overlay';
+      overlay.innerHTML = `
+        <div class="phone-modal-card">
+          <h3>${isSuccess ? '✓' : '!'} ${title}</h3>
+          <p>${message}</p>
+          <button class="phone-modal-close">OK</button>
+        </div>
+      `;
+      phoneScreen.appendChild(overlay);
+      overlay.querySelector('.phone-modal-close').addEventListener('click', () => overlay.remove());
+    }
+
+    loginBtn.addEventListener('click', () => {
+      if (!validateName()) { showCenteredModal('Name Required', 'Please enter your full name ', false); return; }
+      if (!validateGender()) { showCenteredModal('Gender Required', 'Please select your gender', false); return; }
+      if (!validatePhone()) { showCenteredModal('Invalid Phone', 'Enter a valid 10-digit mobile number', false); return; }
+      if (!otpSent) { showCenteredModal('OTP Missing', 'Please request OTP and verify your number', false); return; }
+      if (!validateOTP()) { showCenteredModal('Wrong OTP', 'Enter the correct verification code', false); return; }
+      if (!validatePasswordStrong()) {
+        const pwd = passwordInput.value;
+        if (!pwd) showCenteredModal('Password Required', 'Please create a password', false);
+        else showCenteredModal('Weak Password', 'Follow rules: 8+ chars, uppercase, lowercase, numbers, special symbols, no name/DOB', false);
+        return;
+      }
+      const firstName = nameInput.value.trim().split(' ')[0];
+      showCenteredModal('Account Created', `Welcome ${firstName || 'User'}! Your Digital Saarthi account is ready.`, true);
+    });
+
+    const themeBtn = document.getElementById('themeToggleBtn');
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    themeBtn.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+      if (currentStep === 5) updatePasswordUI();
+      updateStepUI();
+    });
+
+    function resetForm() {
+      currentStep = 1;
+      otpSent = false;
+      generatedOtp = "";
+      nameInput.value = "";
+      phoneInput.value = "";
+      otpInput.value = "";
+      passwordInput.value = "";
+      genderRadios.forEach(r => r.checked = false);
+      removeActivePopup();
+      const toast = document.querySelector('.otp-toast');
+      if(toast) toast.remove();
+      updateStepUI();
+      passwordRulesContainer.style.display = 'none';
+    }
+    resetForm();
+    setTimeout(() => { 
+      if(currentStep===1 && !validateName()) 
+        showInstructionPopup('nameGroup', 'Enter your full name'); 
+    }, 400);
+  </script>
+</body>
+</html>

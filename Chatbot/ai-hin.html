@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>डिजिटल सारथी - एआई स्कैम सिम्युलेटर | बहुविकल्पीय शिक्षा</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', 'Inter', sans-serif;
+            background: #0a0f1c;
+            color: #eef2ff;
+            transition: background 0.3s, color 0.2s;
+            font-size: 18px;
+        }
+
+        body.light-mode {
+            background: #f0f4fa;
+            color: #1e293b;
+        }
+
+        body.light-mode .chat-container {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+        }
+
+        body.light-mode .message-bot {
+            background: #eef2ff;
+            color: #0f172a;
+        }
+
+        body.light-mode .message-user {
+            background: #3b82f6;
+            color: white;
+        }
+
+        body.light-mode .message-correct {
+            background: #10b981;
+            color: white;
+        }
+
+        body.light-mode .message-wrong {
+            background: #ef4444;
+            color: white;
+        }
+
+        body.light-mode .option-btn {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+            color: #0f172a;
+        }
+
+        body.light-mode .option-btn:hover {
+            background: #e2e8f0;
+        }
+
+        body.light-mode .warning-card {
+            background: #fff7ed;
+            border-left-color: #f97316;
+        }
+
+        .app-wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 1.8rem 2rem;
+        }
+
+        .header-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+            padding-bottom: 1rem;
+        }
+
+        .logo-area h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #c084fc, #3b82f6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .logo-area p {
+            font-size: 1rem;
+            color: #94a3b8;
+            margin-top: 0.2rem;
+        }
+
+        .theme-toggle {
+            background: #1e293b;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 60px;
+            color: #f1f5f9;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.2s;
+        }
+
+        body.light-mode .theme-toggle {
+            background: #e2e8f0;
+            color: #0f172a;
+        }
+
+        .warning-card {
+            background: #111827;
+            border-left: 6px solid #f97316;
+            padding: 1.2rem 1.8rem;
+            border-radius: 1rem;
+            margin-bottom: 1.8rem;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        .warning-card i {
+            font-size: 2rem;
+            color: #f97316;
+        }
+
+        .warning-text strong {
+            color: #facc15;
+            font-size: 1.1rem;
+        }
+
+        .warning-text {
+            font-size: 1rem;
+        }
+
+        .chat-container {
+            background: #0f172a;
+            border-radius: 2rem;
+            padding: 1.8rem;
+            min-height: 550px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            border: 1px solid #1e293b;
+        }
+
+        .messages-area {
+            max-height: 460px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            padding-right: 0.5rem;
+        }
+
+        .messages-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .messages-area::-webkit-scrollbar-track {
+            background: #1e293b;
+            border-radius: 10px;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb {
+            background: #3b82f6;
+            border-radius: 10px;
+        }
+
+        .message {
+            max-width: 90%;
+            padding: 1rem 1.5rem;
+            border-radius: 1.5rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            animation: fadeSlideUp 0.2s ease;
+        }
+
+        .message-bot {
+            background: #1e293b;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+        }
+
+        .message-user {
+            background: #2563eb;
+            align-self: flex-end;
+            border-bottom-right-radius: 0.25rem;
+            color: white;
+        }
+
+        .message-correct {
+            background: #10b981;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+            color: white;
+            font-weight: 500;
+        }
+
+        .message-wrong {
+            background: #ef4444;
+            align-self: flex-start;
+            border-bottom-left-radius: 0.25rem;
+            color: white;
+        }
+
+        .options-panel {
+            margin-top: 0.8rem;
+            background: rgba(15, 23, 42, 0.6);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            border-top: 1px solid #334155;
+        }
+
+        .options-title {
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .options-title i {
+            font-size: 1.2rem;
+        }
+
+        .buttons-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.8rem;
+        }
+
+        .option-btn {
+            background: #0f172a;
+            border: 2px solid #334155;
+            padding: 0.9rem 1.2rem;
+            border-radius: 60px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #f1f5f9;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 260px;
+            justify-content: center;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #3b82f6;
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .option-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .reset-btn {
+            background: #dc2626;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 60px;
+            color: white;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 0.8rem;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .reset-btn:hover {
+            background: #b91c1c;
+            transform: scale(1.02);
+        }
+
+        .status-badge {
+            font-size: 0.9rem;
+            background: #334155;
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            margin-top: 0.8rem;
+        }
+
+        .scenario-counter {
+            background: #3b82f6;
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-left: 1rem;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.85rem;
+            padding-top: 1rem;
+            border-top: 1px solid #1e293b;
+            color: #64748b;
+        }
+
+        @keyframes fadeSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-wrapper { padding: 1rem; }
+            .message { max-width: 95%; font-size: 0.9rem; }
+            .option-btn { 
+                padding: 0.7rem 1rem; 
+                font-size: 0.8rem; 
+                min-width: 200px;
+            }
+            .logo-area h1 { font-size: 1.6rem; }
+        }
+
+        @media (max-width: 480px) {
+            .option-btn { 
+                width: 100%; 
+                justify-content: center;
+            }
+            .buttons-grid { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+<div class="app-wrapper">
+    <div class="header-row">
+        <div class="logo-area">
+            <h1><i class="fas fa-robot" style="color: #3b82f6;"></i> डिजिटल सारथी</h1>
+            <p>एआई स्कैम सिम्युलेटर — ठगी पहचानना और बचना सीखें</p>
+        </div>
+        <button class="theme-toggle" id="darkModeToggle">
+            <i class="fas fa-moon"></i> लाइट मोड
+        </button>
+    </div>
+
+    <div class="warning-card">
+        <i class="fas fa-shield-alt"></i>
+        <div class="warning-text">
+            <strong>⚠️ शैक्षिक स्कैम सिमुलेशन - केवल सीखने के लिए</strong><br>
+            आप 6 अलग-अलग ठगी की स्थितियों का अनुभव करेंगे। प्रत्येक स्थिति के लिए सबसे अच्छा जवाब चुनें!
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="messages-area" id="chatMessages">
+            <div class="message message-bot">
+                🤖 नमस्ते! मैं आपको 6 अलग-अलग प्रकार की ठगियों से बचना सिखाऊंगा। प्रत्येक स्थिति के लिए नीचे दिए गए विकल्पों में से सबसे अच्छा जवाब चुनें...
+            </div>
+        </div>
+        <div class="options-panel">
+            <div class="options-title">
+                <i class="fas fa-hand-pointer"></i> अपना जवाब चुनें:
+                <span class="scenario-counter" id="scenarioCounter">स्थिति 1/6</span>
+            </div>
+            <div class="buttons-grid" id="optionsContainer">
+                <button class="option-btn" disabled>लोड हो रहा है...</button>
+            </div>
+            <div style="display: flex; justify-content: center; margin-top: 0.8rem;">
+                <button class="reset-btn" id="resetBtn"><i class="fas fa-undo-alt"></i> फिर से शुरू करें</button>
+            </div>
+        </div>
+    </div>
+    <div class="status-badge" id="statusBadge">📚 6 स्थितियाँ तैयार हैं · सीखने के लिए सबसे अच्छा जवाब चुनें</div>
+    <footer>
+        <i class="fas fa-graduation-cap"></i> प्रत्येक विकल्प आपको कुछ नया सिखाता है · अंत में पूरा सारांश
+    </footer>
+</div>
+
+<script>
+    // 6 अलग-अलग स्कैम स्थितियाँ - प्रत्येक में 5-6 विकल्प
+    const scenarios = [
+        {
+            id: 1,
+            title: "📞 बैंक फ्रॉड कॉल",
+            scammerMessage: "नमस्ते, मैं SBI बैंक से बोल रहा हूँ। आपके खाते से ₹50,000 निकलने का प्रयास हो रहा है! तुरंत अपना OTP और पासवर्ड बताएं वरना आपके पैसे निकल जाएंगे!",
+            options: [
+                { text: "❌ मैं कुछ भी साझा नहीं करूंगा। मैं फोन काटकर बैंक के आधिकारिक नंबर पर कॉल कर रहा हूँ।", isCorrect: true, feedback: "बहुत बढ़िया! बैंक कभी भी फोन पर OTP या पासवर्ड नहीं मांगते। हमेशा आधिकारिक चैनलों से पुष्टि करें।" },
+                { text: "😨 अरे नहीं! मेरा OTP है 123456, कृपया ट्रांजैक्शन रोक दीजिए!", isCorrect: false, feedback: "⚠️ कभी भी OTP या पासवर्ड साझा न करें! बैंक कभी यह नहीं मांगते। इस सिमुलेशन में आप ठगी के शिकार हो गए।" },
+                { text: "🤔 पहले मैं अपने बेटे को फोन करके पूछ लेता हूँ कि क्या करना चाहिए।", isCorrect: true, feedback: "अच्छा विचार! ऐसे कॉल पर कार्रवाई करने से पहले हमेशा परिवार के किसी भरोसेमंद सदस्य से सलाह लें।" },
+                { text: "🔐 मैं आपको अपना पासवर्ड देता हूँ: mypassword@123. कृपया मेरी मदद करें!", isCorrect: false, feedback: "⚠️ कभी भी पासवर्ड साझा न करें! असली बैंक अधिकारी कभी पासवर्ड नहीं मांगते। यह ठगी है!" },
+                { text: "📱 मैं खुद अपने बैंक ऐप में चेक कर लूंगा कि कोई ट्रांजैक्शन हो रहा है या नहीं।", isCorrect: true, feedback: "एकदम सही! हमेशा अपने आधिकारिक बैंकिंग ऐप या शाखा में जाकर पुष्टि करें।" },
+                { text: "😠 मुझे पता है यह ठगी है! मैं इस नंबर को साइबर क्राइम में रिपोर्ट कर रहा हूँ।", isCorrect: true, feedback: "शानदार जागरूकता! ठगी कॉल रिपोर्ट करने से दूसरों को बचाने में मदद मिलती है।" }
+            ]
+        },
+        {
+            id: 2,
+            title: "💻 टेक सपोर्ट स्कैम",
+            scammerMessage: "मैं माइक्रोसॉफ्ट टेक सपोर्ट से बोल रहा हूँ। आपके कंप्यूटर में वायरस आ गया है! तुरंत अपना लॉगिन पासवर्ड बताएं वरना आपका सारा डाटा डिलीट हो जाएगा!",
+            options: [
+                { text: "❌ माइक्रोसॉफ्ट कभी रैंडमली फोन नहीं करता। मैं फोन काट रहा हूँ।", isCorrect: true, feedback: "सही! माइक्रोसॉफ्ट और अन्य कंपनियाँ कभी भी बिना मांगे पासवर्ड के लिए कॉल नहीं करतीं।" },
+                { text: "😰 मेरा पासवर्ड admin123 है। कृपया मेरा कंप्यूटर बचा लीजिए!", isCorrect: false, feedback: "⚠️ कभी भी अजनबियों को पासवर्ड न बताएं! वे आपका डाटा चुरा लेंगे, कुछ ठीक नहीं करेंगे।" },
+                { text: "🔒 मैं खुद अपना एंटीवायरस स्कैन चलाऊंगा और माइक्रोसॉफ्ट सपोर्ट से खुद संपर्क करूंगा।", isCorrect: true, feedback: "उत्कृष्ट! हमेशा अपने भरोसेमंड एंटीवायरस का उपयोग करें और आधिकारिक चैनलों से संपर्क करें।" },
+                { text: "🤔 पहले अपना नाम और एम्प्लॉय आईडी बताइए ताकि मैं वेरिफाई कर सकूँ।", isCorrect: true, feedback: "स्मार्ट! हमेशा वेरिफिकेशन डिटेल्स मांगें, लेकिन फिर भी फोन पर पासवर्ड कभी साझा न करें।" },
+                { text: "😡 मुझे पता है यह ठगी है! अब मैं आपका समय बर्बाद करूंगा।", isCorrect: true, feedback: "ठगों का समय बर्बाद करना एक अच्छी रणनीति है - लेकिन सबसे अच्छा है सीधे फोन काट देना!" },
+                { text: "📞 क्या आप 10 मिनट में मुझे वापस कॉल कर सकते हैं? मुझे कुछ काम निपटाना है।", isCorrect: false, feedback: "⚠️ ठगों से बात मत करो। वे कोशिश करते रहेंगे। बस तुरंत फोन काट दो।" }
+            ]
+        },
+        {
+            id: 3,
+            title: "🎁 फर्जी लॉटरी / इनाम",
+            scammerMessage: "बधाई हो! आपने 10 लाख रुपये की लॉटरी जीती है! इनाम पाने के लिए, कृपया अपना बैंक पासवर्ड और OTP बताएं। यह ऑफर सिर्फ आज के लिए है!",
+            options: [
+                { text: "❌ मैंने कोई लॉटरी नहीं खरीदी। यह स्पष्ट रूप से ठगी है।", isCorrect: true, feedback: "एकदम सही! आप कभी नहीं जीत सकते कोई लॉटरी जो आपने खरीदी ही नहीं। इस जाल में कभी मत फंसो।" },
+                { text: "🎉 वाह! 10 लाख! मेरा बैंक पासवर्ड है lottery@2024", isCorrect: false, feedback: "⚠️ 'इनाम' के लिए कभी भी बैंकिंग विवरण साझा न करें! वैध इनाम कभी पासवर्ड या OTP नहीं मांगते।" },
+                { text: "📞 मैं पहले आधिकारिक लॉटरी विभाग को फोन करके पुष्टि करूंगा।", isCorrect: true, feedback: "अच्छा तरीका! किसी भी इनाम के दावे पर विश्वास करने से पहले हमेशा आधिकारिक चैनलों से पुष्टि करें।" },
+                { text: "🤔 क्या आप पहले मुझे डाक से लिखित विवरण भेज सकते हैं?", isCorrect: true, feedback: "स्मार्ट! वैध संगठन लिखित संचार भेज सकते हैं। ठग बहाने बनाएंगे।" },
+                { text: "😡 मैं इस कॉल को पुलिस साइबर सेल में रिपोर्ट कर रहा हूँ।", isCorrect: true, feedback: "उत्कृष्ट! ठगी कॉल रिपोर्ट करने से अधिकारियों को धोखेबाजों को ट्रैक करने में मदद मिलती है।" },
+                { text: "💰 इनाम के पैसे अपने पास रखो। मुझे जरूरत नहीं है।", isCorrect: false, feedback: "बस फोन काट देना बेहतर है। ठगों से बात मत करो।" }
+            ]
+        },
+        {
+            id: 4,
+            title: "👨‍👩‍👧 परिवार का आपातकाल",
+            scammerMessage: "मैं आपके बेटे का दोस्त बोल रहा हूँ। उनका गंभीर एक्सीडेंट हो गया है! हॉस्पिटल का बिल भरने के लिए मुझे आपका बैंक पासवर्ड चाहिए। कृपया जल्दी बताएं, हर सेकंड मायने रखता है!",
+            options: [
+                { text: "📞 मैं अपने बेटे को सीधे उसके मोबाइल नंबर पर फोन करके पुष्टि करूंगा।", isCorrect: true, feedback: "एकदम सही! हमेशा अपने परिवार के सदस्य को सीधे कॉल करें। अजनबियों के आपातकालीन दावों पर भरोसा न करें।" },
+                { text: "😭 हे भगवान! मेरा पासवर्ड family123 है, कृपया उसे बचाइए!", isCorrect: false, feedback: "⚠️ घबराहट में कभी पासवर्ड साझा न करें! यह एक आम भावनात्मक ठगी है। पहले हमेशा पुष्टि करें!" },
+                { text: "🏥 कौन सा हॉस्पिटल? मैं अभी वहाँ खुद आता हूँ।", isCorrect: true, feedback: "अच्छा जवाब! असली आपातकाल में आपको आने दिया जाएगा। ठग बहाने बनाएंगे।" },
+                { text: "🤔 पहले मैं अपने बेटे की पत्नी को फोन करके पुष्टि कर लेता हूँ।", isCorrect: true, feedback: "उत्कृष्ट! कोई भी कार्रवाई करने से पहले हमेशा कई परिवार के सदस्यों से पुष्टि करें।" },
+                { text: "📱 पहले मेरे बेटे की फोटो भेजो ताकि मुझे पता चले कि यह सच है।", isCorrect: true, feedback: "स्मार्ट! ठग असली फोटो नहीं दे सकते। लेकिन सबसे अच्छा है फोन काटकर सीधे कॉल करना।" },
+                { text: "💰 मैं आधिकारिक बैंकिंग चैनलों के माध्यम से पैसे भेजूंगा, पासवर्ड साझा करके नहीं।", isCorrect: true, feedback: "सही! कभी पासवर्ड साझा न करें। पुष्टि के बाद पैसे भेजने के लिए आधिकारिक बैंकिंग विधियों का उपयोग करें।" }
+            ]
+        },
+        {
+            id: 5,
+            title: "📱 केवाईसी अपडेट स्कैम",
+            scammerMessage: "आपका केवाईसी अपडेट नहीं है! आपका बैंक अकाउंट 2 घंटे में ब्लॉक हो जाएगा। मैं जो लिंक भेज रहा हूँ उस पर क्लिक करें और तुरंत अपना पासवर्ड डालकर केवाईसी अपडेट करें।",
+            options: [
+                { text: "❌ अनजान लिंक पर कभी क्लिक न करें। मैं सीधे बैंक शाखा जाऊंगा।", isCorrect: true, feedback: "एकदम सही! कभी भी मैसेज में आए लिंक पर क्लिक न करें। हमेशा सीधे बैंक जाएं या आधिकारिक ऐप का उपयोग करें।" },
+                { text: "😰 अभी क्लिक कर रहा हूँ! मेरा पासवर्ड kyc@2024 है। कृपया मेरा अकाउंट ब्लॉक मत करें!", isCorrect: false, feedback: "⚠️ कभी भी अनजान लिंक पर क्लिक न करें या पासवर्ड साझा न करें! वह लिंक आपके बैंकिंग विवरण चुरा लेगा।" },
+                { text: "📱 मैं अपने बैंक के आधिकारिक मोबाइल ऐप से केवाईसी अपडेट करूंगा।", isCorrect: true, feedback: "उत्कृष्ट! हमेशा आधिकारिक बैंकिंग ऐप या वेबसाइट का सीधे उपयोग करें, आपको भेजे गए लिंक के माध्यम से कभी नहीं।" },
+                { text: "🏦 मैं कल अपनी बैंक शाखा जाकर व्यक्तिगत रूप से केवाईसी अपडेट करूंगा।", isCorrect: true, feedback: "अच्छा विकल्प! बैंक जाकर व्यक्तिगत रूप से केवाईसी अपडेट करना सबसे सुरक्षित तरीका है।" },
+                { text: "🤔 क्या आप पहले बैंक के डोमेन से आधिकारिक ईमेल भेज सकते हैं?", isCorrect: true, feedback: "स्मार्ट! लेकिन ठग ईमेल भी नकली बना सकते हैं। सबसे अच्छा है खुद बैंक से संपर्क करना।" },
+                { text: "📞 मैं बैंक के आधिकारिक कस्टमर केयर नंबर पर कॉल करके चेक करूंगा।", isCorrect: true, feedback: "बहुत अच्छा! हमेशा अपने बैंक के कार्ड या वेबसाइट पर दिए गए आधिकारिक नंबरों से सत्यापन करें।" }
+            ]
+        },
+        {
+            id: 6,
+            title: "💳 क्रेडिट कार्ड अपग्रेड",
+            scammerMessage: "आपका क्रेडिट कार्ड प्रीमियम में अपग्रेड हो गया है! सालाना ₹5000 मुफ्त बचाएं। वेरिफिकेशन के लिए बस अपना कार्ड नंबर, CVV और PIN बताएं।",
+            options: [
+                { text: "❌ कभी भी फोन पर कार्ड की जानकारी साझा न करें। मैं सीधे बैंक को कॉल करूंगा।", isCorrect: true, feedback: "एकदम सही! बैंक कभी भी फोन पर CVV या PIN नहीं मांगते। हमेशा खुद आधिकारिक नंबर पर कॉल करें।" },
+                { text: "💳 ये रहा मेरा कार्ड नंबर: 1234-5678-9012-3456, CVV: 123, PIN: 0000", isCorrect: false, feedback: "⚠️ कभी भी कार्ड की जानकारी साझा न करें! आपने अपना अकाउंट खाली करने के लिए सब कुछ दे दिया!" },
+                { text: "📱 मैं अपने आधिकारिक बैंकिंग ऐप पर अपने क्रेडिट कार्ड के लाभ चेक करूंगा।", isCorrect: true, feedback: "उत्कृष्ट! हमेशा फोन पर नहीं, बल्कि आधिकारिक बैंकिंग ऐप या वेबसाइट के माध्यम से ऑफर सत्यापित करें।" },
+                { text: "🏦 मैं इस अपग्रेड ऑफर की पुष्टि के लिए बैंक शाखा जाऊंगा।", isCorrect: true, feedback: "स्मार्ट! किसी भी ऑफर को सत्यापित करने का सबसे सुरक्षित तरीका व्यक्तिगत रूप से बैंक जाना है।" },
+                { text: "🤔 क्या आप मुझे पहले मेरी मौजूदा क्रेडिट लिमिट बता सकते हैं ताकि पता चले कि आप बैंक से हैं?", isCorrect: true, feedback: "अच्छा सत्यापन प्रश्न! लेकिन फिर भी, अजनबियों के साथ कार्ड की जानकारी कभी साझा न करें।" },
+                { text: "📞 मैं अपने क्रेडिट कार्ड के पीछे दिए गए नंबर पर कॉल करके इस ऑफर की पुष्टि करूंगा।", isCorrect: true, feedback: "एकदम सही! आपके कार्ड पर दिया गया नंबर ही बैंक कॉल के लिए एकमात्र भरोसेमंद नंबर है।" }
+            ]
+        }
+    ];
+    
+    let currentScenarioIndex = 0;
+    let userAnswers = [];
+    let gameActive = true;
+    let isLoading = false;
+    let sessionEnded = false;
+    let waitingForNext = false;
+    
+    const chatMessagesDiv = document.getElementById('chatMessages');
+    const optionsContainer = document.getElementById('optionsContainer');
+    const statusBadge = document.getElementById('statusBadge');
+    const scenarioCounter = document.getElementById('scenarioCounter');
+    const resetBtn = document.getElementById('resetBtn');
+    
+    function updateScenarioCounter() {
+        scenarioCounter.innerHTML = `स्थिति ${currentScenarioIndex + 1}/${scenarios.length}`;
+    }
+    
+    function addMessage(text, type = 'bot') {
+        const msgDiv = document.createElement('div');
+        if (type === 'correct') {
+            msgDiv.className = 'message message-correct';
+        } else if (type === 'wrong') {
+            msgDiv.className = 'message message-wrong';
+        } else if (type === 'user') {
+            msgDiv.className = 'message message-user';
+        } else {
+            msgDiv.className = 'message message-bot';
+        }
+        
+        let icon = '';
+        if (type === 'bot') icon = '<i class="fas fa-user-ninja"></i> ';
+        else if (type === 'user') icon = '<i class="fas fa-user"></i> ';
+        else if (type === 'correct') icon = '<i class="fas fa-check-circle"></i> ';
+        else if (type === 'wrong') icon = '<i class="fas fa-exclamation-triangle"></i> ';
+        
+        msgDiv.innerHTML = `${icon} ${text}`;
+        chatMessagesDiv.appendChild(msgDiv);
+        chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+    }
+    
+    function updateOptions() {
+        optionsContainer.innerHTML = '';
+        if (sessionEnded || !gameActive || waitingForNext) {
+            const msg = document.createElement('div');
+            msg.style.padding = '0.8rem';
+            msg.style.textAlign = 'center';
+            msg.style.color = '#94a3b8';
+            msg.style.fontSize = '1rem';
+            msg.innerHTML = sessionEnded ? '✅ सभी स्थितियाँ पूरी हो गईं। फिर से अभ्यास करने के लिए "फिर से शुरू करें" क्लिक करें।' : '⏳ अगली स्थिति लोड हो रही है...';
+            optionsContainer.appendChild(msg);
+            return;
+        }
+        
+        const currentScenario = scenarios[currentScenarioIndex];
+        
+        // विकल्पों को क्रमबद्ध करें
+        const shuffledOptions = [...currentScenario.options];
+        for (let i = shuffledOptions.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffledOptions[i], shuffledOptions[j]] = [shuffledOptions[j], shuffledOptions[i]];
+        }
+        
+        shuffledOptions.forEach(option => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerHTML = `<i class="fas fa-comment"></i> ${option.text}`;
+            btn.addEventListener('click', () => handleAnswer(option));
+            optionsContainer.appendChild(btn);
+        });
+    }
+    
+    function disableOptions(disabled) {
+        const btns = document.querySelectorAll('.option-btn');
+        btns.forEach(btn => btn.disabled = disabled);
+    }
+    
+    async function handleAnswer(selectedOption) {
+        if (!gameActive || sessionEnded || waitingForNext || isLoading) return;
+        
+        isLoading = true;
+        waitingForNext = true;
+        disableOptions(true);
+        
+        // उपयोगकर्ता का चुनाव दिखाएं
+        addMessage(selectedOption.text, 'user');
+        
+        // उत्तर स्टोर करें
+        userAnswers.push({
+            scenario: scenarios[currentScenarioIndex].title,
+            correct: selectedOption.isCorrect,
+            selectedText: selectedOption.text.substring(0, 50)
+        });
+        
+        // फीडबैक दिखाएं
+        if (selectedOption.isCorrect) {
+            addMessage(`✅ ${selectedOption.feedback}`, 'correct');
+        } else {
+            addMessage(`❌ ${selectedOption.feedback}`, 'wrong');
+        }
+        
+        // अगली स्थिति पर जाएं
+        currentScenarioIndex++;
+        updateScenarioCounter();
+        
+        // अगली स्थिति दिखाने से पहले रुकें
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        
+        if (currentScenarioIndex < scenarios.length) {
+            // अगली स्थिति दिखाएं
+            const nextScenario = scenarios[currentScenarioIndex];
+            addMessage(`📋 अगली स्थिति (${currentScenarioIndex + 1}/${scenarios.length}): ${nextScenario.title}`, 'bot');
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            addMessage(nextScenario.scammerMessage, 'bot');
+            waitingForNext = false;
+            updateOptions();
+            disableOptions(false);
+        } else {
+            // सभी स्थितियाँ पूरी - अंतिम सारांश दिखाएं
+            sessionEnded = true;
+            gameActive = false;
+            await showFinalSummary();
+        }
+        
+        isLoading = false;
+    }
+    
+    async function showFinalSummary() {
+        const correctCount = userAnswers.filter(a => a.correct).length;
+        const totalCount = userAnswers.length;
+        
+        addMessage("🏆 सीखने का सत्र पूर्ण! 🏆", 'correct');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        addMessage(`📊 आपका स्कोर: ${correctCount} में से ${totalCount} सही उत्तर।`, 'bot');
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        if (correctCount === totalCount) {
+            addMessage("🎉 शानदार! आपने सभी ठगी रोकथाम तकनीकों में महारत हासिल कर ली है! आप ऑनलाइन धोखाधड़ी से अच्छी तरह सुरक्षित हैं।", 'correct');
+        } else if (correctCount >= totalCount - 2) {
+            addMessage("👍 बहुत अच्छा! बस कुछ स्थितियों में थोड़ा और अभ्यास करें। आप लगभग वहाँ पहुँच गए हैं!", 'bot');
+        } else if (correctCount >= totalCount - 4) {
+            addMessage("📚 अच्छा प्रयास! स्पष्टीकरण की समीक्षा करें और अधिक आत्मविश्वासी बनने के लिए पुनः प्रयास करें।", 'bot');
+        } else {
+            addMessage("📖 अभ्यास करते रहें! प्रत्येक स्थिति मूल्यवान सबक सिखाती है। फिर से शुरू करें और फीडबैक ध्यान से पढ़ें।", 'wrong');
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        addMessage("🔐 याद रखने योग्य महत्वपूर्ण बातें:\n\n• बैंक कभी फोन पर पासवर्ड/OTP नहीं मांगते\n• SMS या कॉल के माध्यम से आए अनजान लिंक पर कभी क्लिक न करें\n• आपातकाल की स्थिति में परिवार के सदस्यों को सीधे कॉल करें\n• जो लॉटरी आपने खरीदी ही नहीं, उसे आप नहीं जीत सकते\n• टेक कंपनियाँ बिना मांगे सपोर्ट कॉल नहीं करतीं\n• बैंकिंग के लिए हमेशा आधिकारिक ऐप/वेबसाइट का उपयोग करें\n• ठगी कॉल को साइबर क्राइम अधिकारियों को रिपोर्ट करें", 'bot');
+        
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
+        addMessage("🙏 डिजिटल सारथी के साथ सीखने के लिए धन्यवाद! अधिक आत्मविश्वासी बनने के लिए 'फिर से शुरू करें' दबाएं और फिर से अभ्यास करें।", 'correct');
+        
+        statusBadge.innerHTML = "✅ सभी 6 स्थितियाँ पूरी! फिर से अभ्यास करने के लिए 'फिर से शुरू करें' क्लिक करें।";
+        statusBadge.style.background = "#10b981";
+        
+        updateOptions();
+    }
+    
+    async function resetConversation() {
+        gameActive = true;
+        isLoading = false;
+        sessionEnded = false;
+        waitingForNext = false;
+        currentScenarioIndex = 0;
+        userAnswers = [];
+        
+        chatMessagesDiv.innerHTML = '';
+        
+        statusBadge.innerHTML = "📚 6 स्थितियाँ तैयार हैं · सीखने के लिए सबसे अच्छा जवाब चुनें";
+        statusBadge.style.background = "#334155";
+        updateScenarioCounter();
+        
+        // स्वागत संदेश
+        addMessage("🤖 वापस स्वागत है! आइए ठगियों की पहचान करने का अभ्यास करें। प्रत्येक स्थिति को ध्यान से पढ़ें और विकल्पों में से सबसे अच्छा जवाब चुनें। आपको तुरंत फीडबैक मिलेगा जो आपको सीखने में मदद करेगा!", 'bot');
+        
+        await new Promise(resolve => setTimeout(resolve, 800));
+        
+        // पहली स्थिति दिखाएं
+        const firstScenario = scenarios[0];
+        addMessage(`📌 स्थिति 1/6: ${firstScenario.title}`, 'bot');
+        await new Promise(resolve => setTimeout(resolve, 500));
+        addMessage(firstScenario.scammerMessage, 'bot');
+        
+        updateOptions();
+        disableOptions(false);
+    }
+    
+    function initTheme() {
+        const toggleBtn = document.getElementById('darkModeToggle');
+        toggleBtn.addEventListener('click', () => {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            toggleBtn.innerHTML = isLight ? '<i class="fas fa-sun"></i> डार्क मोड' : '<i class="fas fa-moon"></i> लाइट मोड';
+        });
+    }
+    
+    initTheme();
+    resetBtn.addEventListener('click', () => resetConversation());
+    
+    resetConversation();
+</script>
+</body>
+</html>

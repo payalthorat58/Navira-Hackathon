@@ -1,0 +1,3593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Digital Sarthi | Easy Digital Training</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/shepherd.js@11.0.1/dist/css/shepherd.css" />
+  <script src="https://cdn.jsdelivr.net/npm/shepherd.js@11.0.1/dist/js/shepherd.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+      --bg-start:#f0f4ff; --bg-end:#e2e8f0;
+      --card-bg:rgba(255,255,255,0.92); --card-border:rgba(59,130,246,0.4);
+      --text-primary:#0f172a; --text-secondary:#1e293b; --text-muted:#475569;
+      --nav-bg:rgba(255,255,255,0.9); --accent:#2563eb; --accent-light:#3b82f6;
+      --accent-soft:#dbeafe; --progress-bg:#cbd5e1;
+      --module-bg:#ffffff; --module-hover:#eff6ff;
+      --phone-frame:#1e293b; --phone-screen:#f8faff;
+      --shadow:0 8px 20px rgba(0,0,0,0.1);
+      --step-inactive:#cbd5e1; --step-active:#2563eb;
+      --important-bg:#fef3c7;
+      --important-border:#f59e0b;
+    }
+    body.dark {
+      --bg-start:#0a0f1e; --bg-end:#010101;
+      --card-bg:rgba(18,25,45,0.92); --card-border:rgba(59,130,246,0.5);
+      --text-primary:#f0f4ff; --text-secondary:#e2edff; --text-muted:#9bb5e6;
+      --nav-bg:rgba(8,15,28,0.9); --accent:#3b82f6; --accent-soft:#1e3a8a;
+      --progress-bg:#1e2a3a; --module-bg:#1e293b; --module-hover:#2d3a5e;
+      --phone-frame:#111217; --phone-screen:#1a2130;
+      --shadow:0 8px 20px rgba(0,0,0,0.4);
+      --step-inactive:#334155;
+      --important-bg:#422006;
+      --important-border:#f59e0b;
+    }
+    body {
+      font-family:'Inter',sans-serif;
+      background:radial-gradient(circle at 20% 30%, var(--bg-start), var(--bg-end));
+      min-height:100vh; overflow:hidden; position:fixed;
+      width:100%; height:100vh; font-size:18px;
+    }
+    .blob {
+      position:fixed; width:55vw; height:55vw;
+      background:radial-gradient(circle, rgba(59,130,246,0.12), rgba(0,20,80,0));
+      border-radius:50%; filter:blur(90px); z-index:-2; pointer-events:none;
+      animation:floatGlow 20s infinite alternate;
+    }
+    @keyframes floatGlow {
+      0%{transform:translate(0,0) scale(1);opacity:0.4}
+      100%{transform:translate(6%,8%) scale(1.15);opacity:0.7}
+    }
+    .theme-toggle {
+      position:fixed; bottom:20px; right:20px;
+      background:var(--card-bg); backdrop-filter:blur(12px);
+      border:2px solid var(--accent); border-radius:60px; padding:12px 24px;
+      font-weight:700; font-size:1rem; color:var(--text-primary);
+      cursor:pointer; z-index:200; display:flex; align-items:center;
+      gap:10px; box-shadow:var(--shadow);
+    }
+    .navbar {
+      backdrop-filter:blur(20px); background:var(--nav-bg);
+      border-bottom:2px solid var(--accent); padding:1rem 2rem;
+      display:flex; justify-content:space-between; align-items:center;
+      flex-wrap:wrap; position:sticky; top:0; z-index:100;
+    }
+    .logo { font-weight:800; font-size:1.8rem; background:linear-gradient(135deg,var(--accent),var(--accent-light)); background-clip:text; -webkit-background-clip:text; color:transparent; }
+    .level-progress {
+      background:var(--module-bg); border-radius:60px; padding:0.6rem 1.2rem;
+      display:flex; align-items:center; gap:1.2rem; border:2px solid var(--accent);
+    }
+    .progress-label { font-size:1rem; font-weight:600; color:var(--text-secondary); }
+    .progress-bar-container { width:200px; height:12px; background:var(--progress-bg); border-radius:20px; overflow:hidden; }
+    .progress-fill { width:0%; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-light)); transition:width 0.5s ease; }
+    .points-badge { background:var(--accent-soft); padding:0.4rem 1rem; border-radius:40px; font-size:1rem; font-weight:700; color:var(--text-primary); }
+    .user-profile {
+      display:flex; align-items:center; gap:12px;
+      background:var(--module-bg); padding:0.5rem 1.2rem;
+      border-radius:60px; border:2px solid var(--accent); cursor:pointer;
+    }
+    .avatar {
+      background:linear-gradient(145deg,var(--accent),var(--accent-light));
+      width:45px; height:45px; border-radius:50%;
+      display:flex; align-items:center; justify-content:center;
+      font-size:1.4rem; color:white;
+    }
+    .medal-icon { font-size:1.6rem; }
+    .dashboard {
+      display:flex; gap:1.5rem; padding:1.2rem 1.8rem;
+      height:calc(100vh - 85px); overflow:hidden;
+    }
+    /* Left panel */
+    .levels-panel {
+      flex:0.9; min-width:280px; background:var(--card-bg);
+      backdrop-filter:blur(14px); border-radius:2rem;
+      border:2px solid var(--card-border); padding:1.2rem;
+      display:flex; flex-direction:column; overflow-y:auto;
+      box-shadow:var(--shadow);
+    }
+    .section-title {
+      font-weight:800; font-size:1.4rem; margin-bottom:1rem;
+      border-left:6px solid var(--accent); padding-left:14px;
+      color:var(--text-primary);
+    }
+    .module-card {
+      background:var(--module-bg); border-radius:1.5rem; margin-bottom:0.8rem;
+      padding:1rem; cursor:pointer; border:2px solid var(--card-border);
+      transition:all 0.2s; display:flex; flex-direction:column; gap:0.5rem;
+    }
+    .module-card.active { border:3px solid var(--accent); background:var(--module-hover); }
+    .module-card-header { display:flex; align-items:center; gap:1rem; }
+    .module-icon {
+      font-size:2rem; width:55px; height:55px; background:var(--accent-soft);
+      border-radius:1rem; display:flex; align-items:center; justify-content:center;
+    }
+    .module-info { flex:1; }
+    .module-title { font-weight:800; font-size:1.2rem; color:var(--text-primary); }
+    .module-desc { font-size:0.85rem; color:var(--text-muted); }
+    .module-status-badge {
+      background:var(--accent-soft); padding:0.2rem 0.8rem;
+      border-radius:30px; font-size:0.75rem; color:var(--accent); font-weight:700;
+    }
+    /* Steps chain inside module card */
+    .module-steps-chain {
+      display:none; padding:0.5rem 0 0.2rem 0.5rem; flex-direction:column; gap:0;
+    }
+    .module-card.active .module-steps-chain { display:flex; }
+    .step-chain-item {
+      display:flex; align-items:flex-start; gap:0.5rem; position:relative;
+    }
+    .step-chain-left { display:flex; flex-direction:column; align-items:center; }
+    .step-dot {
+      width:14px; height:14px; border-radius:50%;
+      background:var(--step-inactive); flex-shrink:0; margin-top:3px;
+      transition:background 0.4s;
+    }
+    .step-dot.done { background:#22c55e; }
+    .step-dot.current { background:var(--accent); box-shadow:0 0 0 3px rgba(37,99,235,0.3); animation:pulseDot 1.2s infinite; }
+    @keyframes pulseDot { 0%,100%{box-shadow:0 0 0 3px rgba(37,99,235,0.3)} 50%{box-shadow:0 0 0 6px rgba(37,99,235,0.15)} }
+    .step-connector { width:2px; height:18px; background:var(--step-inactive); margin:0 auto; transition:background 0.4s; }
+    .step-connector.done { background:#22c55e; }
+    .step-label { font-size:0.78rem; color:var(--step-inactive); font-weight:600; padding-top:1px; transition:color 0.4s; }
+    .step-label.done { color:#22c55e; }
+    .step-label.current { color:var(--accent); }
+
+    /* Middle panel */
+    .instruction-panel {
+      flex:1.2; background:var(--card-bg); backdrop-filter:blur(14px);
+      border-radius:2rem; border:2px solid var(--card-border); padding:1.5rem;
+      display:flex; flex-direction:column; box-shadow:var(--shadow); overflow-y:auto;
+    }
+    .welcome-box {
+      background:var(--accent-soft); border-radius:1.5rem;
+      padding:1.5rem; text-align:center;
+    }
+    .welcome-box h2 { font-size:1.8rem; margin-bottom:1rem; color:var(--accent); }
+    .welcome-box p { font-size:1.1rem; line-height:1.5; color:var(--text-secondary); }
+
+    /* Right panel */
+    .mobile-sim-panel {
+      flex:1; min-width:300px; display:flex;
+      justify-content:center; align-items:center;
+    }
+    .phone-frame {
+      background:var(--phone-frame); border-radius:2.5rem;
+      padding:12px 8px 16px 8px;
+      box-shadow:0 25px 40px rgba(0,0,0,0.4); width:320px;
+    }
+    .phone-notch {
+      width:90px; height:22px; background:var(--phone-frame);
+      border-radius:0 0 16px 16px; margin:0 auto 6px auto;
+    }
+    .phone-screen {
+      background:var(--phone-screen); border-radius:1.8rem;
+      height:580px; overflow:hidden; position:relative;
+      display:flex; flex-direction:column; align-items:center;
+      justify-content:center; color:var(--text-secondary);
+      font-size:1rem; text-align:center;
+    }
+    .demo-mobile-icon { font-size:4rem; margin-bottom:1rem; }
+
+    /* Shepherd */
+    .shepherd-element { background:var(--card-bg)!important; backdrop-filter:blur(16px); border:3px solid var(--accent)!important; border-radius:2rem!important; font-family:'Inter',sans-serif!important; box-shadow:0 20px 35px rgba(0,0,0,0.3)!important; }
+    .shepherd-title { font-size:1.5rem!important; font-weight:800!important; color:var(--accent)!important; }
+    .shepherd-text { font-size:1.2rem!important; line-height:1.5!important; padding:1rem 1.5rem!important; color:var(--text-secondary)!important; }
+    .shepherd-button { background:var(--accent)!important; border-radius:50px!important; font-size:1rem!important; font-weight:700!important; padding:0.6rem 1.2rem!important; }
+    .shepherd-footer { padding:0.8rem 1.5rem 1.5rem!important; }
+
+    /* Temp highlight ring on phone simulator */
+    .sim-highlight {
+      position:absolute; border-radius:12px; pointer-events:none; z-index:99;
+      box-shadow:0 0 0 3px #2563eb, 0 0 16px 4px rgba(37,99,235,0.5);
+      animation:simPulse 0.8s ease-in-out infinite alternate;
+      transition:all 0.3s;
+    }
+    @keyframes simPulse {
+      from{box-shadow:0 0 0 3px #2563eb, 0 0 12px 3px rgba(37,99,235,0.4)}
+      to{box-shadow:0 0 0 5px #3b82f6, 0 0 22px 7px rgba(59,130,246,0.3)}
+    }
+    /* Arrow overlay */
+    .sim-arrow {
+      position:absolute; z-index:100; pointer-events:none;
+      animation:arrowBounce 0.6s ease-in-out infinite alternate;
+    }
+    @keyframes arrowBounce { from{transform:translateY(0)} to{transform:translateY(-5px)} }
+
+    /* Instruction card in middle panel */
+    .instr-card {
+      background:var(--accent-soft); border-radius:1.5rem;
+      padding:1.2rem 1.5rem; margin-bottom:1rem;
+      border-left:5px solid var(--accent);
+    }
+    .instr-card.important {
+      background:var(--important-bg);
+      border-left-color:var(--important-border);
+    }
+    .instr-card h3 { color:var(--accent); font-size:1.3rem; margin-bottom:0.5rem; }
+    .instr-card.important h3 { color:var(--important-border); }
+    .instr-card p { font-size:1.05rem; line-height:1.6; color:var(--text-secondary); }
+    .instr-nav-btn {
+      background:var(--accent); color:white; border:none;
+      padding:12px 28px; border-radius:50px; font-size:1rem;
+      font-weight:700; cursor:pointer; margin-top:0.5rem;
+      transition:transform 0.2s, background 0.2s;
+    }
+    .instr-nav-btn:hover { transform:scale(1.04); background:var(--accent-light); }
+
+    /* GPay screens */
+    .gpay-screen { width:100%; height:100%; display:flex; flex-direction:column; background:#f1f5fb; }
+    .gpay-header { background:#4285F4; color:white; padding:14px 16px; font-size:1rem; font-weight:700; display:flex; align-items:center; gap:8px; }
+    .gpay-body { flex:1; overflow-y:auto; padding:12px; }
+    .gpay-field { background:white; border-radius:10px; padding:10px 14px; margin-bottom:10px; border:2px solid #e2e8f0; font-size:0.9rem; color:#334155; }
+    .gpay-field label { font-size:0.75rem; color:#94a3b8; display:block; margin-bottom:2px; }
+    .gpay-field input, .gpay-field select { width:100%; border:none; outline:none; font-size:0.95rem; color:#0f172a; background:transparent; }
+    .gpay-btn { background:#4285F4; color:white; border:none; width:100%; padding:12px; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; margin-top:4px; }
+    .gpay-upi-row { display:flex; gap:8px; margin-bottom:8px; }
+    .gpay-upi-app { flex:1; background:white; border-radius:10px; padding:10px 8px; text-align:center; font-size:0.75rem; color:#334155; border:2px solid #e2e8f0; cursor:pointer; }
+    .gpay-upi-app img { width:36px; height:36px; margin-bottom:4px; }
+    .gpay-pin-circle { width:14px; height:14px; border-radius:50%; background:#e2e8f0; display:inline-block; margin:0 4px; }
+    .gpay-pin-circle.filled { background:#4285F4; }
+    .gpay-numpad { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:10px; }
+    .gpay-num-btn { background:white; border:2px solid #e2e8f0; border-radius:10px; padding:12px; font-size:1.1rem; font-weight:700; cursor:pointer; color:#0f172a; text-align:center; }
+    .gpay-num-btn:active { background:#e2e8f0; }
+
+    /* Jiya animation / scam call */
+    .jiya-intro { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; padding:20px; background:#f1f5fb; }
+    .jiya-avatar { width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg,#f97316,#fb923c); display:flex; align-items:center; justify-content:center; font-size:3rem; margin-bottom:14px; box-shadow:0 8px 20px rgba(249,115,22,0.3); animation:jiyaPop 0.5s cubic-bezier(0.2,1.4,0.4,1) both; }
+    @keyframes jiyaPop { from{transform:scale(0)} to{transform:scale(1)} }
+    .jiya-name { font-size:1.3rem; font-weight:800; color:#0f172a; margin-bottom:6px; }
+    .jiya-desc { font-size:0.9rem; color:#64748b; text-align:center; line-height:1.5; }
+
+    /* Incoming call screen */
+    .call-screen { display:flex; flex-direction:column; align-items:center; justify-content:space-between; height:100%; background:linear-gradient(180deg,#1e3a5f,#0f172a); padding:28px 20px 32px; color:white; }
+    .call-contact { text-align:center; }
+    .call-avatar { width:80px; height:80px; border-radius:50%; background:#ef4444; display:flex; align-items:center; justify-content:center; font-size:2.5rem; margin:0 auto 10px; animation:ringPulse 1s infinite; }
+    @keyframes ringPulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,0.5)} 50%{box-shadow:0 0 0 14px rgba(239,68,68,0)} }
+    .call-label { font-size:0.85rem; color:#94a3b8; margin-bottom:4px; }
+    .call-name { font-size:1.4rem; font-weight:800; }
+    .call-actions { display:grid; grid-template-columns:1fr 1fr; gap:12px; width:100%; }
+    .call-btn { padding:13px; border-radius:14px; font-size:0.85rem; font-weight:700; border:none; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:5px; }
+    .call-btn i { font-size:1.4rem; }
+    .call-btn.pickup { background:#22c55e; color:white; }
+    .call-btn.decline { background:#ef4444; color:white; }
+    .call-btn.ignore { background:#64748b; color:white; }
+    .call-btn.nothing { background:#1e293b; color:#94a3b8; border:2px solid #334155; }
+
+    /* Active call screen */
+    .active-call { display:flex; flex-direction:column; align-items:center; justify-content:space-between; height:100%; background:linear-gradient(180deg,#1e3a5f,#0f172a); padding:28px 20px 28px; color:white; }
+    .active-call-opts { display:flex; flex-direction:column; gap:10px; width:100%; }
+    .active-call-opt-btn { padding:12px; border-radius:14px; font-size:0.88rem; font-weight:700; border:2px solid transparent; cursor:pointer; text-align:left; }
+    .active-call-opt-btn.safe { background:#064e3b; color:#34d399; border-color:#34d399; }
+    .active-call-opt-btn.danger { background:#7f1d1d; color:#fca5a5; border-color:#ef4444; }
+
+    /* Result screens */
+    .result-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; padding:20px; text-align:center; }
+    .result-screen.warning { background:linear-gradient(180deg,#7f1d1d,#450a0a); color:white; }
+    .result-screen.success { background:linear-gradient(180deg,#064e3b,#022c22); color:white; }
+    .result-icon { font-size:4rem; margin-bottom:12px; animation:jiyaPop 0.5s cubic-bezier(0.2,1.4,0.4,1) both; }
+    .result-title { font-size:1.5rem; font-weight:800; margin-bottom:8px; }
+    .result-desc { font-size:0.9rem; line-height:1.5; opacity:0.9; margin-bottom:16px; }
+    .result-continue-btn { background:white; color:#0f172a; border:none; padding:12px 28px; border-radius:50px; font-size:1rem; font-weight:700; cursor:pointer; }
+
+    /* confetti particle */
+    .confetti-particle {
+      position:absolute; width:8px; height:8px; border-radius:2px;
+      animation:confettiFall 1.5s ease-in forwards;
+    }
+    .otp-popup {
+      position:absolute;
+      top:18px;
+      left:50%;
+      transform:translateX(-50%) translateY(-20px);
+      width:88%;
+      max-width:280px;
+      background:rgba(15,23,42,0.95);
+      color:white;
+      border-radius:18px;
+      padding:14px 16px;
+      box-shadow:0 18px 40px rgba(0,0,0,0.24);
+      opacity:0;
+      z-index:101;
+      font-size:0.95rem;
+      animation:otpSlide 0.4s forwards;
+      line-height:1.4;
+    }
+    @keyframes otpSlide {
+      to { opacity:1; transform:translateX(-50%) translateY(0); }
+    }
+    @keyframes confettiFall {
+      0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+      100%{transform:translateY(200px) rotate(720deg);opacity:0}
+    }
+
+    .security-tip {
+      background:linear-gradient(135deg, #fef3c7, #ffedd5);
+      border:2px solid #f59e0b;
+      border-radius:12px;
+      padding:12px 16px;
+      margin-top:12px;
+      font-size:0.9rem;
+      color:#92400e;
+    }
+    .security-tip i {
+      color:#f59e0b;
+      margin-right:8px;
+    }
+
+    .input-highlight {
+      border-color: #2563eb !important;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.2) !important;
+    }
+
+    @media (max-width:1000px) {
+      body{overflow-y:auto;position:relative;height:auto}
+      .dashboard{flex-direction:column;height:auto}
+      .levels-panel{max-height:280px}
+    }
+    /* Shepherd highlight for mobile elements - MEDIUM SIZE STAYING IN MOBILE */
+.shepherd-highlight-element {
+  animation: mobilePulse 1s ease-in-out infinite;
+  position: relative;
+  z-index: 100;
+}
+
+@keyframes mobilePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.7);
+    border-color: #2563eb;
+  }
+  50% {
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.3);
+    border-color: #3b82f6;
+  }
+}
+
+/* Medium transparent shepherd step that stays inside mobile */
+.mobile-shepherd-step {
+  background: rgba(0, 0, 0, 0.9) !important;
+  backdrop-filter: blur(12px);
+  border: 2px solid #3b82f6 !important;
+  border-radius: 12px !important;
+  font-family: 'Inter', sans-serif !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  max-width: 220px !important;
+  min-width: 180px !important;
+  width: auto !important;
+  font-size: 12px !important;
+  position: fixed !important;
+  z-index: 9999 !important;
+}
+
+.mobile-shepherd-step .shepherd-title {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  color: #60a5fa !important;
+  padding: 6px 10px 2px 10px !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+.mobile-shepherd-step .shepherd-text {
+  font-size: 11px !important;
+  line-height: 1.4 !important;
+  padding: 4px 10px 8px 10px !important;
+  color: white !important;
+  background: transparent !important;
+}
+
+.mobile-shepherd-step .shepherd-footer {
+  padding: 4px 10px 8px 10px !important;
+  background: transparent !important;
+}
+
+.mobile-shepherd-step .shepherd-button {
+  background: #3b82f6 !important;
+  border-radius: 20px !important;
+  font-size: 10px !important;
+  font-weight: 600 !important;
+  padding: 4px 12px !important;
+  min-height: auto !important;
+}
+
+.mobile-shepherd-step .shepherd-arrow {
+  display: block !important;
+}
+
+.mobile-shepherd-step .shepherd-arrow:before {
+  background: rgba(0, 0, 0, 0.9) !important;
+  border: 2px solid #3b82f6 !important;
+}
+
+.mobile-shepherd-step .shepherd-cancel-icon {
+  font-size: 14px !important;
+  color: #94a3b8 !important;
+  opacity: 0.8;
+  padding: 4px !important;
+}
+
+/* Make sure shepherd tooltip stays within phone bounds */
+.phone-screen {
+  overflow: visible !important;
+  position: relative;
+}
+
+/* Highlight pulse for targeted element */
+.shepherd-highlight-element {
+  animation: mobilePulse 1s ease-in-out infinite;
+  position: relative;
+  z-index: 100;
+  box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.3);
+  border-radius: 8px;
+}
+
+@keyframes mobilePulse {
+  0%, 100% {
+    box-shadow: 0 0 0 2px #3b82f6, 0 0 0 4px rgba(59, 130, 246, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 0 4px #3b82f6, 0 0 0 8px rgba(59, 130, 246, 0.15);
+  }
+}
+
+.mobile-shepherd-step .shepherd-title {
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  color: #3b82f6 !important;
+  padding: 8px 12px 3px 12px !important;
+  margin: 0 !important;
+  background: transparent !important;
+  letter-spacing: 0.3px;
+}
+
+.mobile-shepherd-step .shepherd-text {
+  font-size: 12px !important;
+  line-height: 1.4 !important;
+  padding: 5px 12px 10px 12px !important;
+  color: #f0f4ff !important;
+  background: transparent !important;
+}
+
+.mobile-shepherd-step .shepherd-footer {
+  padding: 5px 12px 10px 12px !important;
+  background: transparent !important;
+}
+
+.mobile-shepherd-step .shepherd-button {
+  background: #3b82f6 !important;
+  border-radius: 24px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  padding: 5px 14px !important;
+  min-height: auto !important;
+  transition: all 0.2s ease;
+}
+
+.mobile-shepherd-step .shepherd-button:hover {
+  background: #2563eb !important;
+  transform: scale(1.02);
+}
+
+.mobile-shepherd-step .shepherd-arrow:before {
+  background: rgba(0, 0, 0, 0.85) !important;
+  border: 1.5px solid rgba(59, 130, 246, 0.6) !important;
+}
+
+.mobile-shepherd-step .shepherd-cancel-icon {
+  font-size: 16px !important;
+  color: #94a3b8 !important;
+  opacity: 0.8;
+  padding: 6px !important;
+}
+
+.mobile-shepherd-step .shepherd-cancel-icon:hover {
+  color: #ef4444 !important;
+}
+
+/* Position arrow correctly */
+.shepherd-arrow {
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));
+}
+
+/* Lighter modal overlay */
+.shepherd-modal-overlay-container {
+  background: rgba(0, 0, 0, 0.2) !important;
+  backdrop-filter: blur(3px);
+}
+
+/* Ensure tooltip stays within phone bounds */
+.phone-screen {
+  overflow: visible !important;
+  position: relative;
+}
+
+.mobile-shepherd-step[data-popper-placement^="top"] .shepherd-arrow {
+  bottom: -6px;
+}
+
+.mobile-shepherd-step[data-popper-placement^="bottom"] .shepherd-arrow {
+  top: -6px;
+}
+
+.mobile-shepherd-step[data-popper-placement^="left"] .shepherd-arrow {
+  right: -6px;
+}
+
+.mobile-shepherd-step[data-popper-placement^="right"] .shepherd-arrow {
+  left: -6px;
+}
+/* Make modal overlay transparent so phone remains clickable */
+.shepherd-modal-overlay-container {
+  background: rgba(0, 0, 0, 0.15) !important;
+  backdrop-filter: blur(2px);
+  pointer-events: none !important;
+}
+
+.shepherd-modal-overlay-container .shepherd-modal-overlay {
+  pointer-events: none !important;
+}
+
+/* Voice Controls */
+.voice-ctrl-container {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 12px;
+}
+.voice-btn {
+  background: var(--card-bg); color: var(--text-secondary); border: 2px solid var(--card-border);
+  padding: 6px 14px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+  display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+}
+.voice-btn:hover, .voice-btn:focus { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+
+/* Gender pill toggle */
+.gender-pill {
+  display: flex; align-items: center;
+  background: var(--progress-bg); border-radius: 30px;
+  padding: 3px; gap: 0; border: 2px solid var(--card-border);
+  font-size: 0.78rem; font-weight: 700;
+}
+.gender-pill button {
+  border: none; background: transparent; cursor: pointer;
+  padding: 4px 12px; border-radius: 24px; font-size: 0.78rem; font-weight: 700;
+  color: var(--text-muted); transition: all 0.2s;
+  white-space: nowrap;
+}
+.gender-pill button.active {
+  background: var(--accent); color: white;
+  box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+}
+.voice-divider { width: 1px; height: 20px; background: var(--card-border); margin: 0 2px; }
+.auto-read-toggle {
+  display: flex; align-items: center; gap: 6px; font-size: 0.82rem; color: var(--text-muted);
+  cursor: pointer; font-weight: 600; margin-top: 0;
+}
+.auto-read-toggle input { width: 15px; height: 15px; cursor: pointer; accent-color: var(--accent); }
+
+/* ── Extra Nav Buttons (left panel) ── */
+.panel-nav-divider {
+  height: 2px; background: var(--card-border); border-radius: 2px;
+  margin: 1rem 0 0.8rem 0;
+}
+.panel-nav-btn {
+  display: flex; align-items: center; gap: 12px;
+  width: 100%; padding: 0.85rem 1rem;
+  background: var(--module-bg); border: 2px solid var(--card-border);
+  border-radius: 1rem; cursor: pointer; text-decoration: none;
+  color: var(--text-primary); font-family: 'Inter', sans-serif;
+  font-size: 1rem; font-weight: 700;
+  transition: all 0.2s ease; margin-bottom: 0.6rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+.panel-nav-btn:hover {
+  background: var(--module-hover); border-color: var(--accent);
+  transform: translateX(3px) scale(1.01);
+  box-shadow: 0 4px 16px rgba(37,99,235,0.15);
+}
+.panel-nav-btn .pnb-icon {
+  width: 40px; height: 40px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem; flex-shrink: 0;
+}
+.panel-nav-btn .pnb-text { flex: 1; text-align: left; line-height: 1.3; }
+.panel-nav-btn .pnb-arrow {
+  font-size: 0.8rem; color: var(--text-muted); transition: transform 0.2s;
+}
+.panel-nav-btn:hover .pnb-arrow { transform: translateX(3px); color: var(--accent); }
+
+    /* Fast Translate Button */
+    #google_translate_element { display: none !important; }
+    .fast-translate-btn {
+      margin-left: auto; margin-right: 20px;
+      background-color: var(--module-bg);
+      border: 2px solid var(--accent);
+      border-radius: 60px;
+      padding: 6px 16px;
+      display: flex; align-items: center; gap: 8px;
+      cursor: pointer; transition: all 0.2s;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700; color: var(--accent);
+      font-size: 1rem;
+    }
+    .fast-translate-btn:hover { background-color: var(--accent-light); color: white; }
+    .goog-te-banner-frame.skiptranslate, .skiptranslate > iframe { display: none !important; }
+    body { top: 0px !important; }
+  </style>
+  <!-- Voiceover scripts: all TTS text is managed in voiceover_scripts.js -->
+  <script src="voiceover_scripts.js"></script>
+</head>
+<body>
+<div class="blob" style="top:-15%;left:-15%;"></div>
+<div class="blob" style="bottom:-20%;right:-10%;width:60vw;height:60vw;"></div>
+<div class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i> Dark Mode</div>
+
+<nav class="navbar">
+  <div class="logo"><i class="fas fa-shield-alt"></i> Digital Sarthi</div>
+  <div id="google_translate_element"></div>
+  <button id="fastTranslateBtn" class="fast-translate-btn" onclick="toggleTranslation()"><i class="fas fa-language"></i> हिंदी</button>
+  <div class="level-progress" id="progressSection">
+    <span class="progress-label"><i class="fas fa-chart-line"></i> Your Progress</span>
+    <div class="progress-bar-container"><div class="progress-fill" id="globalProgressFill"></div></div>
+    <div class="points-badge"><i class="fas fa-star"></i> <span id="totalPoints">0</span> / 100 pts</div>
+  </div>
+  <div class="user-profile" id="userProfile">
+    <div class="avatar">👤</div>
+    <span id="medalDisplay" class="medal-icon">⚪</span>
+    <span style="font-size:1rem;font-weight:600;">Learner</span>
+  </div>
+</nav>
+
+<div class="dashboard">
+  <div class="levels-panel" id="modulesPanel">
+    <div class="section-title"><i class="fas fa-cubes"></i> Training Modules</div>
+    <div id="modulesContainer"></div>
+
+    <!-- ── Extra Navigation Buttons ── -->
+    <div class="panel-nav-divider"></div>
+
+    <!-- Digi Quiz -->
+    <a href="#" id="navBtnDigiQuiz" class="panel-nav-btn"
+       onclick="openNavLink(event, 'REPLACE_WITH_DIGI_QUIZ_URL')" title="Digi Quiz">
+      <span class="pnb-icon" style="background:#dbeafe; color:#2563eb;"><i class="fas fa-question-circle"></i></span>
+      <span class="pnb-text">Digi Quiz</span>
+      <span class="pnb-arrow"><i class="fas fa-chevron-right"></i></span>
+    </a>
+
+    <!-- Scam AI Chatbot -->
+    <a href="#" id="navBtnScamChatbot" class="panel-nav-btn"
+       onclick="openNavLink(event, 'REPLACE_WITH_SCAM_CHATBOT_URL')" title="Scam Call Chatbot">
+      <span class="pnb-icon" style="background:#fce7f3; color:#db2777;"><i class="fas fa-robot"></i></span>
+      <span class="pnb-text">Scam AI<br><span style="font-size:0.82rem;font-weight:600;opacity:0.8;">Chatbot</span></span>
+      <span class="pnb-arrow"><i class="fas fa-chevron-right"></i></span>
+    </a>
+
+    <!-- Satya Check -->
+    <a href="#" id="navBtnSatyaCheck" class="panel-nav-btn"
+       onclick="openNavLink(event, 'REPLACE_WITH_SATYA_CHECK_URL')" title="Satya Check">
+      <span class="pnb-icon" style="background:#d1fae5; color:#059669;"><i class="fas fa-shield-alt"></i></span>
+      <span class="pnb-text">Satya Check<br><span style="font-size:0.82rem;font-weight:600;opacity:0.8;">Game</span></span>
+      <span class="pnb-arrow"><i class="fas fa-chevron-right"></i></span>
+    </a>
+
+    <!-- Community -->
+    <a href="#" id="navBtnCommunity" class="panel-nav-btn"
+       onclick="openNavLink(event, 'REPLACE_WITH_COMMUNITY_URL')" title="Community">
+      <span class="pnb-icon" style="background:#fef3c7; color:#d97706;"><i class="fas fa-users"></i></span>
+      <span class="pnb-text">Community</span>
+      <span class="pnb-arrow"><i class="fas fa-chevron-right"></i></span>
+    </a>
+  </div>
+
+  <div class="instruction-panel" id="instructionPanel">
+    <div class="welcome-box" id="welcomeBox">
+      <i class="fas fa-hands-helping" style="font-size:3rem;color:var(--accent);"></i>
+      <h2>Welcome to Digital Training</h2>
+      <p>👋 This guided tour will help you understand everything.<br>Follow the steps and earn 100 points!</p>
+      <button id="startTourBtn" style="margin-top:1rem;background:var(--accent);color:white;border:none;padding:12px 28px;border-radius:50px;font-size:1.1rem;font-weight:bold;cursor:pointer;">▶ Start Guided Tour</button>
+    </div>
+    <div id="dynamicInstruction" style="display:none;"></div>
+  </div>
+
+  <div class="mobile-sim-panel" id="mobilePanel">
+    <div class="phone-frame">
+      <div class="phone-notch"></div>
+      <div class="phone-screen" id="phoneScreen">
+        <i class="fas fa-mobile-alt demo-mobile-icon"></i>
+        <h3>📱 Mobile Simulator</h3>
+        <p>Click on a module to start<br>learning step by step!</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+//  NAV BUTTON HELPER — opens external link or shows placeholder alert
+// ============================================================
+function openNavLink(event, url) {
+  event.preventDefault();
+  if (!url || url.startsWith('REPLACE_WITH')) {
+    // Show a styled toast instead of a plain alert
+    const btn  = event.currentTarget;
+    const name = btn.title || 'This feature';
+    let toast  = document.getElementById('_navToast');
+    if (!toast) {
+      toast = document.createElement('div');
+      toast.id = '_navToast';
+      toast.style.cssText = [
+        'position:fixed','bottom:80px','left:50%',
+        'transform:translateX(-50%) translateY(20px)',
+        'background:rgba(15,23,42,0.92)','color:white',
+        'padding:12px 24px','border-radius:50px',
+        'font-family:Inter,sans-serif','font-size:0.95rem','font-weight:600',
+        'box-shadow:0 8px 24px rgba(0,0,0,0.3)','z-index:9999',
+        'opacity:0','transition:all 0.3s ease','pointer-events:none',
+        'border:2px solid rgba(59,130,246,0.5)'
+      ].join(';');
+      document.body.appendChild(toast);
+    }
+    toast.textContent = `🔗 ${name} — link will be added soon!`;
+    toast.style.opacity = '1';
+    toast.style.transform = 'translateX(-50%) translateY(0)';
+    clearTimeout(toast._timer);
+    toast._timer = setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateX(-50%) translateY(20px)';
+    }, 2800);
+    return;
+  }
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+// ===================== DATA =====================
+// ============================================================
+//  SPEECH SYNTHESIS — Natural Indian English Voice Engine
+// ============================================================
+
+let currentUtterance = null;
+let isAutoReadEnabled  = true;
+let availableVoices    = [];
+let _chromeKeepAlive   = null;   // fixes Chrome's 15-s cutoff bug
+let voiceGender        = 'male'; // 'male' | 'female'
+
+/* ── Load voices (Chrome fires onvoiceschanged; Firefox returns them sync) ── */
+function updateVoices() {
+  availableVoices = window.speechSynthesis.getVoices();
+}
+if (window.speechSynthesis) {
+  window.speechSynthesis.onvoiceschanged = updateVoices;
+  updateVoices(); // also call immediately for Firefox
+}
+
+/* ── Text pre-processor — makes TTS sound natural in Indian context ── */
+function preprocessForIndianTTS(raw) {
+  let t = raw.replace(/<[^>]*>?/gm, '');  // strip HTML
+
+  // Expand common abbreviations so the TTS pronounces them correctly
+  const expansions = {
+    'OTP'   : 'O T P',
+    'UPI'   : 'U P I',
+    'PIN'   : 'P I N',                   // read as letters not the word
+    'ATM'   : 'A T M',
+    'GPay'  : 'Google Pay',
+    'SMS'   : 'S M S',
+    'ID'    : 'I D',
+    'SBI'   : 'S B I',
+    'HDFC'  : 'H D F C',
+    'ICICI' : 'I C I C I',
+    'PNB'   : 'P N B',
+    'UIDAI' : 'U I D A I',
+    'e-Aadhaar' : 'e Aadhaar',
+    '₹'     : 'rupees',
+  };
+  for (const [abbr, expansion] of Object.entries(expansions)) {
+    // Replace whole-word occurrences only (word boundary aware)
+    t = t.replace(new RegExp(`\\b${abbr}\\b`, 'g'), expansion);
+  }
+
+  // Soften aggressive punctuation for a more conversational pause rhythm
+  t = t.replace(/\s*—\s*/g, ', ');   // em-dash → short pause
+  t = t.replace(/\s*!\s*/g, '. ');   // exclamation → full stop (calmer tone)
+  t = t.replace(/\s*\?\s*/g, '? ');  // keep question mark for rising tone
+  t = t.replace(/\.\.\./g, '. ');    // ellipsis → pause
+
+  // Numbers: add space so "10-digit" is read naturally
+  t = t.replace(/(\d+)-digit/gi, '$1 digit');
+  t = t.replace(/(\d+)-pin/gi, '$1 digit P I N');
+
+  return t.trim();
+}
+
+/* ── Pick the best available Indian English voice (gender-aware) ── */
+function pickIndianVoice(gender) {
+  if (availableVoices.length === 0) updateVoices();
+  const vv = availableVoices;
+  const g  = gender || voiceGender;
+
+  // Known Indian voice name fragments, split by gender
+  const maleHints   = ['ravi', 'neel', 'kumar', 'karan', 'arjun', 'raj', 'kabir'];
+  const femaleHints = ['heera', 'lekha', 'veena', 'priya', 'aditi', 'neerja', 'divya', 'deepa'];
+  const hints = g === 'female' ? femaleHints : maleHints;
+
+  // Priority 1 — named en-IN voice matching the chosen gender
+  for (const hint of hints) {
+    const v = vv.find(v => v.lang.startsWith('en-IN') && v.name.toLowerCase().includes(hint));
+    if (v) return v;
+  }
+
+  // Priority 2 — any en-IN voice (let the browser pick gender naturally)
+  const enIN = vv.find(v => v.lang === 'en-IN');
+  if (enIN) return enIN;
+
+  // Priority 3 — en-IN prefix variants (e.g. Google Neural en-IN-x-ene-network)
+  const enINprefix = vv.find(v => v.lang.startsWith('en-IN'));
+  if (enINprefix) return enINprefix;
+
+  // Priority 4 — hi-IN by gender hint
+  for (const hint of hints) {
+    const v = vv.find(v => v.lang.startsWith('hi-IN') && v.name.toLowerCase().includes(hint));
+    if (v) return v;
+  }
+
+  // Priority 5 — any hi-IN
+  const hiIN = vv.find(v => v.lang.startsWith('hi-IN'));
+  if (hiIN) return hiIN;
+
+  // Priority 6 — en-GB
+  const enGB = vv.find(v => v.lang === 'en-GB');
+  if (enGB) return enGB;
+
+  // Priority 7 — any English
+  return vv.find(v => v.lang.startsWith('en')) || null;
+}
+
+/* ── Chrome keep-alive: Chrome silently stops speaking after ~15 s ── */
+function _startChromeKeepAlive() {
+  _stopChromeKeepAlive();
+  _chromeKeepAlive = setInterval(() => {
+    if (window.speechSynthesis.speaking) {
+      window.speechSynthesis.pause();
+      window.speechSynthesis.resume();
+    } else {
+      _stopChromeKeepAlive();
+    }
+  }, 10000);
+}
+function _stopChromeKeepAlive() {
+  if (_chromeKeepAlive) { clearInterval(_chromeKeepAlive); _chromeKeepAlive = null; }
+}
+
+/* ── Main speak function ── */
+function speakText(text) {
+  if (!window.speechSynthesis) return;
+  stopSpeech();
+
+  const cleaned = preprocessForIndianTTS(text);
+  if (!cleaned) return;
+
+  currentUtterance        = new SpeechSynthesisUtterance(cleaned);
+  currentUtterance.volume = 1;
+
+  const voice = pickIndianVoice(voiceGender);
+  if (voice) currentUtterance.voice = voice;
+
+  // Tune rate & pitch by gender for a natural feel
+  if (voiceGender === 'female') {
+    currentUtterance.rate  = 0.86;   // slightly brighter female pace
+    currentUtterance.pitch = 1.08;   // a touch higher for feminine tone
+  } else {
+    currentUtterance.rate  = 0.74;   // calm Indian male conversational pace
+    currentUtterance.pitch = 0.92;   // slightly lower = warm, authoritative
+  }
+
+  currentUtterance.onstart = () => _startChromeKeepAlive();
+  currentUtterance.onend   = () => _stopChromeKeepAlive();
+  currentUtterance.onerror = () => _stopChromeKeepAlive();
+
+  window.speechSynthesis.speak(currentUtterance);
+}
+
+function speakElement(id) {
+  const el = document.getElementById(id);
+  if (el) speakText(el.innerText);
+}
+
+function pauseSpeech()  { if (window.speechSynthesis) window.speechSynthesis.pause();  }
+function resumeSpeech() { if (window.speechSynthesis) window.speechSynthesis.resume(); }
+function stopSpeech()   { _stopChromeKeepAlive(); if (window.speechSynthesis) window.speechSynthesis.cancel(); }
+
+function toggleAutoRead(checkbox) {
+  isAutoReadEnabled = checkbox.checked;
+  if (!isAutoReadEnabled) stopSpeech();
+}
+
+/* Switch gender globally and re-render all pill buttons on the page */
+function setVoiceGender(g) {
+  voiceGender = g;
+  stopSpeech();
+  // Update every pill toggle already in the DOM
+  document.querySelectorAll('.gender-pill button').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.gender === g);
+  });
+}
+
+function renderVoiceControls(textToRead) {
+  const safeText = textToRead.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+  return `
+    <div class="voice-ctrl-container">
+      <button class="voice-btn" onclick="speakText('${safeText}')">🔊 Listen</button>
+      <div class="voice-divider"></div>
+      <div class="gender-pill" title="Switch voice gender">
+        <button data-gender="male"   class="${voiceGender==='male'?'active':''}"   onclick="setVoiceGender('male')">♂ Male</button>
+        <button data-gender="female" class="${voiceGender==='female'?'active':''}" onclick="setVoiceGender('female')">♀ Female</button>
+      </div>
+      <div class="voice-divider"></div>
+      <label class="auto-read-toggle">
+        <input type="checkbox" ${isAutoReadEnabled ? 'checked' : ''} onchange="toggleAutoRead(this)"> Auto-read
+      </label>
+    </div>
+  `;
+}
+
+function handleAutoRead(textToRead) {
+  if (isAutoReadEnabled) {
+    setTimeout(() => speakText(textToRead), 350);
+  } else {
+    stopSpeech();
+  }
+}
+
+const modulesList = [
+  { id:0, name:"Learn Google Pay", icon:"fab fa-google-pay", color:"#4285F4", points:20 },
+  { id:1, name:"Learn DigiLocker",  icon:"fas fa-folder-open", color:"#3b82f6", points:20 },
+  { id:2, name:"Learn UIDAI",        icon:"fas fa-id-card",    color:"#f97316", points:20 },
+  { id:3, name:"Learn Email",        icon:"fas fa-envelope",   color:"#ea4335", points:20 },
+  { id:4, name:"Learn Phishing Safety", icon:"fas fa-fish",   color:"#ef4444", points:20 }
+];
+
+// GPay steps: each step has a title and array of instructions
+// Added 'important' flag and 'securityTips' for important steps
+const gpaySteps = [
+  {
+    id:"download",
+    title:"Download Google Pay",
+    instructions:[
+      { text:"Open the Play Store on your phone.", highlight:"playstore-icon", arrowDir:"down", action:"click" },
+      { text:"Tap the search box at the top.", highlight:"search-bar", arrowDir:"down", action:"click" },
+      { text:"Type 'Google Pay' and press Search.", highlight:"search-bar", arrowDir:"down", action:"type", value:"Google Pay" },
+      { text:"Tap 'Install' next to the Google Pay app .", highlight:"install-btn", arrowDir:"right", action:"click" }
+    ],
+    screen:"download"
+  },
+  {
+    id:"create-account",
+    title:"Create Your GPay Account",
+    instructions:[
+      { text:"Open the Google Pay app after installing.", highlight:"gpay-app-icon", arrowDir:"down", action:"click" },
+      { text:"Enter your mobile number linked to your bank.", highlight:"phone-input", arrowDir:"right", action:"type", value:"9876543210" },
+      { text:"You'll receive an OTP (One Time Password). Enter it to verify.", highlight:"otp-input", arrowDir:"right", important:true, guidelines:["🔒 OTP is confidential. Never share it with anyone!", "🏦 Banks will never ask for your OTP over call or SMS.", "⏰ OTP is valid for only a few minutes."], action:"type", value:"123456" },
+      { text:"Agree to the Terms & Conditions and tap 'Continue'.", highlight:"continue-btn", arrowDir:"down", action:"click" }
+    ],
+    screen:"create-account"
+  },
+  {
+    id:"link-bank",
+    title:"Link Your Bank Account",
+    instructions:[
+      { text:"On the home screen, tap your profile icon at the top right.", highlight:"profile-icon", arrowDir:"left", action:"click" },
+      { text:"Select 'Bank Account' from the menu.", highlight:"bank-menu", arrowDir:"right", action:"click" },
+      { text:"Choose your bank from the list.", highlight:"bank-list", arrowDir:"down", action:"click" },
+      { text:"GPay will automatically detect your registered mobile number and verify your account.", highlight:"verify-btn", arrowDir:"down", action:"click" },
+      { text:"Your bank account is now successfully linked!", highlight:"success-msg", arrowDir:"down", action:"wait" }
+    ],
+    screen:"link-bank"
+  },
+  {
+    id:"upi-pin",
+    title:"Set Up Your UPI PIN",
+    instructions:[
+      { text:"Go to 'Bank Account' settings and tap 'Set UPI PIN'.", highlight:"set-pin-btn", arrowDir:"right", action:"click" },
+      { text:"Enter the last 6 digits of your debit card number.", highlight:"card-input", arrowDir:"right", action:"type", value:"123456" },
+      { text:"Enter the expiry date of your debit card.", highlight:"expiry-input", arrowDir:"right", action:"type", value:"12/28" },
+      { text:"Create a 6-digit UPI PIN that only you will remember.", highlight:"pin-circles", arrowDir:"down", important:true, guidelines:["🔐 Never write down your PIN anywhere.", "🚫 Don't share your PIN with anyone, not even bank employees.", "👀 Make sure no one is watching when you enter your PIN.", "🔑 Choose a PIN that's hard to guess (avoid 123456, birthdate, etc.).", "⚠️ This PIN will be required for every transaction."], action:"numpad", value:"123456" },
+      { text:"Confirm your PIN by entering it again.", highlight:"confirm-pin", arrowDir:"down", action:"numpad", value:"123456" }
+    ],
+    screen:"upi-pin"
+  }
+];
+
+const digilockerSteps = [
+  {
+    id:"dl-download",
+    title:"Install from Play Store",
+    instructions:[
+      { text:"Open Play Store and search 'DigiLocker'.", highlight:"playstore-icon", arrowDir:"down" },
+      { text:"Tap 'Install' to download the authentic app published by NeGD.", highlight:"dl-install-btn", arrowDir:"right" }
+    ],
+    screen:"dl-download"
+  },
+  {
+    id:"dl-splash",
+    title:"Welcome to DigiLocker",
+    instructions:[
+      { text:"Open DigiLocker.", highlight:"dl-app-icon", arrowDir:"down" },
+      { text:"Tap 'Sign In' at the bottom to continue.", highlight:"dl-signin-btn", arrowDir:"down" }
+    ],
+    screen:"dl-splash"
+  },
+  {
+    id:"dl-login",
+    title:"Aadhaar Login",
+    instructions:[
+      { text:"Enter your 12-digit Aadhaar number.", highlight:"dl-aadhaar-input", arrowDir:"right" },
+      { text:"Enter your 6-digit Security PIN.", highlight:"dl-pin-input", arrowDir:"right" },
+      { text:"Tap 'Sign In' to proceed.", highlight:"dl-submit-login-btn", arrowDir:"down" }
+    ],
+    screen:"dl-login"
+  },
+  {
+    id:"dl-otp",
+    title:"OTP Verification",
+    instructions:[
+      { text:"Enter the 6-digit OTP sent via SMS to your registered mobile number.", highlight:"dl-otp-input", arrowDir:"right" },
+      { text:"Tap 'Submit' to securely access your documents.", highlight:"dl-submit-otp-btn", arrowDir:"down" }
+    ],
+    screen:"dl-otp"
+  },
+  {
+    id:"dl-view",
+    title:"Issued Documents Dashboard",
+    instructions:[
+      { text:"Welcome to your Dashboard! Scroll down to see your linked certificates.", highlight:"dl-dash-header", arrowDir:"down" },
+      { text:"Tap on 'Aadhaar Card' in your Issued Documents to view it.", highlight:"dl-aadhaar-doc", arrowDir:"right" },
+      { text:"Great! This digital ID is legally valid everywhere.", highlight:"dl-success-msg", arrowDir:"down" }
+    ],
+    screen:"dl-view"
+  }
+];
+
+const uidaiSteps = [
+  {
+    id:"uidai-open",
+    title:"Visit UIDAI Portal",
+    instructions:[
+      { text:"Open your browser and search 'myaadhaar.uidai.gov.in'.", highlight:"browser-icon", arrowDir:"down" },
+      { text:"Tap 'Download Aadhaar'.", highlight:"uidai-download-btn", arrowDir:"right" }
+    ],
+    screen:"uidai-open"
+  },
+  {
+    id:"uidai-auth",
+    title:"Authenticate & Download",
+    instructions:[
+      { text:"Enter your Aadhaar number.", highlight:"uidai-aadhaar-input", arrowDir:"right" },
+      { text:"Click 'Send OTP' and wait for the message.", highlight:"uidai-send-otp", arrowDir:"right" },
+      { text:"Enter the OTP and tap 'Verify & Download'.", highlight:"uidai-verify-btn", arrowDir:"down" },
+      { text:"Your e-Aadhaar PDF is downloaded!", highlight:"uidai-success", arrowDir:"down" }
+    ],
+    screen:"uidai-auth"
+  }
+];
+
+const emailSteps = [
+  {
+    id:"email-open",
+    title:"Open Email App",
+    instructions:[
+      { text:"Find and tap the 'Gmail' icon on your phone.", highlight:"gmail-icon", arrowDir:"down" },
+      { text:"Tap the 'Compose' button to start a new email.", highlight:"gmail-compose-btn", arrowDir:"right" }
+    ],
+    screen:"email-open"
+  },
+  {
+    id:"email-compose",
+    title:"Write & Send Email",
+    instructions:[
+      { text:"In the 'To' field, write the receiver's email address.", highlight:"email-to-input", arrowDir:"right" },
+      { text:"Write a short 'Subject' summarizing the email.", highlight:"email-subject-input", arrowDir:"right" },
+      { text:"Write your message and tap 'Send' (arrow icon) to finish.", highlight:"email-send-btn", arrowDir:"down" }
+    ],
+    screen:"email-compose"
+  }
+];
+
+let modules = modulesList.map(m => ({ ...m, completed:false, currentStep:0, currentInstr:0 }));
+let totalPoints = 0;
+let currentModuleId = null;
+let currentScreenHighlight = null;
+
+const gpayState = {
+  installed:false,
+  phoneNumber:'',
+  otpSent:false,
+  otpCode:'',
+  otpVerified:false,
+  selectedBank:'SBI',
+  upiPin:'',
+  payRecipient:'',
+  payAmount:'',
+  payNote:'',
+  searchText:'',
+  actionCompleted:false,
+  showingModuleIntro:false,
+  showingGuidelineCards:false,
+  currentGuidelineCardIndex:0
+};
+
+// ===================== UI UPDATE =====================
+
+// Module introductions
+const moduleIntros = {
+  download: {
+    title: "📱 Download Google Pay",
+    description: "Google Pay is a secure way to send money online to family and friends, or pay bills without visiting a bank.",
+    icon: "📱"
+  },
+  create_account: {
+    title: "👤 Create Your Google Pay Account",
+    description: "Set up your account safely with your mobile number and a secure One-Time Password (OTP).",
+    icon: "👤"
+  },
+  link_bank: {
+    title: "🏦 Link Your Bank Account",
+    description: "Connect your bank account to Google Pay so you can send and receive money securely.",
+    icon: "🏦"
+  },
+  upi_pin: {
+    title: "🔐 Set Your Security PIN",
+    description: "Create a personal security code that only you know. This PIN protects all your transactions.",
+    icon: "🔐"
+  }
+};
+
+function showModuleIntro(stepIndex) {
+  const step = gpaySteps[stepIndex];
+  const intro = moduleIntros[step.id] || { title: step.title, description: "Let's learn this module!", icon: "📍" };
+  
+  document.getElementById('welcomeBox').style.display = 'none';
+  const di = document.getElementById('dynamicInstruction');
+  di.style.display = 'block';
+  
+  di.innerHTML = `
+    <div class="module-intro-screen" style="display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:3rem 2rem;">
+      <img src="gpay.png" style="width:120px;height:120px;margin-top:2rem;margin-bottom:2rem;object-fit:contain;" alt="Module" />
+      <div style="font-size:2.2rem;font-weight:800;color:var(--accent);text-align:center;margin-bottom:1.5rem;">${intro.title}</div>
+      <div style="font-size:1.5rem;line-height:1.8;color:var(--text-secondary);text-align:center;margin-bottom:3rem;max-width:90%;">${intro.description}</div>
+      <button class="instr-nav-btn" onclick="skipModuleIntro(${stepIndex})" style="margin-top:1rem;min-height:60px;font-size:1.3rem;">
+        Let's Begin →
+      </button>
+    </div>
+  `;
+
+  document.getElementById('phoneScreen').innerHTML = `
+    <div class="gpay-screen" style="display:flex;align-items:center;justify-content:center;font-size:2rem;color:#cbd5e1;">
+      <div style="text-align:center;">
+        <div style="font-size:5rem;margin-bottom:1rem;">${intro.icon}</div>
+        <div style="font-weight:700;color:#64748b;">Get ready to learn</div>
+      </div>
+    </div>
+  `;
+}
+
+function skipModuleIntro(stepIndex) {
+  gpayState.showingModuleIntro = false;
+  const mod = modules[0];
+  mod.currentStep = stepIndex;
+  mod.currentInstr = 0;
+  showGpayStep(stepIndex, 0);
+}
+
+function showGuidelineFlashcards(guidelines, stepIndex, instrIndex) {
+  gpayState.showingGuidelineCards = true;
+  gpayState.currentGuidelineCardIndex = 0;
+  
+  const guidelineCards = guidelines.map(g => {
+    const isWarning = g.startsWith('🚫') || g.startsWith('⚠️') || g.startsWith('🔐') || g.startsWith('🚫');
+    return {
+      text: g,
+      type: isWarning ? 'dont' : 'do'
+    };
+  });
+
+  function renderGuidelineCard(index) {
+    if (index >= guidelineCards.length) {
+      gpayState.showingGuidelineCards = false;
+      return;
+    }
+
+    const card = guidelineCards[index];
+    const nextBtn = index < guidelineCards.length - 1 
+      ? `<button class="instr-nav-btn" onclick="nextGuidelineCard(${stepIndex}, ${instrIndex})" style="margin-top:1rem;">Next Card →</button>`
+      : `<button class="instr-nav-btn" onclick="continueFromGuidelines(${stepIndex}, ${instrIndex})" style="margin-top:1rem;background:#22c55e;">Got It! Let's Continue →</button>`;
+
+    const di = document.getElementById('dynamicInstruction');
+    di.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;text-align:center;">
+        <div style="font-size:3rem;margin-bottom:1rem;">${card.text.split(' ')[0]}</div>
+        <div class="guideline-type ${card.type}" style="margin-bottom:1rem;">${card.type === 'do' ? '✓ DO THIS' : '✗ DON\'T DO THIS'}</div>
+        <div class="guideline-text" style="margin-bottom:2rem;font-size:1.4rem;">${card.text}</div>
+        <div style="font-size:0.95rem;color:#94a3b8;margin-bottom:1.5rem;">Card ${index+1} of ${guidelineCards.length}</div>
+        ${nextBtn}
+      </div>
+    `;
+  }
+
+  renderGuidelineCard(0);
+}
+
+function nextGuidelineCard(stepIndex, instrIndex) {
+  gpayState.currentGuidelineCardIndex++;
+  const step = gpaySteps[stepIndex];
+  const instr = step.instructions[instrIndex];
+  showGuidelineFlashcards(instr.guidelines, stepIndex, instrIndex);
+}
+
+function continueFromGuidelines(stepIndex, instrIndex) {
+  gpayState.showingGuidelineCards = false;
+  gpayState.currentGuidelineCardIndex = 0;
+  showGpayStep(stepIndex, instrIndex);
+}
+function updateGlobalUI() {
+  document.getElementById('totalPoints').innerText = totalPoints;
+  document.getElementById('globalProgressFill').style.width = (totalPoints) + "%";
+  let medal = "⚪";
+  if (totalPoints >= 80) medal = "🥇 GOLD";
+  else if (totalPoints >= 50) medal = "🥈 SILVER";
+  else if (totalPoints >= 20) medal = "🥉 BRONZE";
+  document.getElementById('medalDisplay').innerHTML = medal;
+}
+
+function renderModules() {
+  const container = document.getElementById('modulesContainer');
+  container.innerHTML = '';
+  modules.forEach(mod => {
+    const isActive = currentModuleId === mod.id;
+    let steps = [];
+    if (mod.id === 0) steps = gpaySteps;
+    else if (mod.id === 1) steps = digilockerSteps;
+    else if (mod.id === 2) steps = uidaiSteps;
+    else if (mod.id === 3) steps = emailSteps;
+
+    const card = document.createElement('div');
+    card.className = `module-card ${isActive ? 'active' : ''}`;
+    card.setAttribute('data-module-id', mod.id);
+
+    let stepsHtml = '';
+    if (steps.length > 0) {
+      stepsHtml = `<div class="module-steps-chain">`;
+      steps.forEach((step, si) => {
+        const isDone = mod.currentStep > si || mod.completed;
+        const isCurrent = mod.currentStep === si && isActive;
+        const dotClass = isDone ? 'done' : (isCurrent ? 'current' : '');
+        const labelClass = isDone ? 'done' : (isCurrent ? 'current' : '');
+        const connClass = isDone ? 'done' : '';
+        stepsHtml += `
+          <div class="step-chain-item">
+            <div class="step-chain-left">
+              <div class="step-dot ${dotClass}"></div>
+              ${si < steps.length-1 ? `<div class="step-connector ${connClass}"></div>` : ''}
+            </div>
+            <span class="step-label ${labelClass}">${step.title}</span>
+          </div>`;
+      });
+      if (mod.id === 0) {
+        stepsHtml += `
+          <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(59,130,246,0.15);display:flex;flex-direction:column;gap:8px;">
+            <button class="guide-btn" onclick="event.stopPropagation(); startJiyaSequence()" style="background:linear-gradient(135deg, rgba(96,165,250,0.15), rgba(147,197,253,0.15));border:1px solid rgba(59,130,246,0.3);color:#0c4a6e;padding:8px 12px;font-size:0.9rem;margin:0;border-radius:10px;font-weight:600;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(10px);">
+              <i class="fas fa-user-circle" style="margin-right:6px;"></i>Help Jiya
+            </button>
+          </div>
+        `;
+      }
+      stepsHtml += `</div>`;
+    }
+
+    let status = mod.completed ? '✓ Completed' : 'Tap to begin';
+    if (mod.id === 0 && mod.currentStep > 0) status = `Step ${mod.currentStep+1}/${gpaySteps.length}`;
+    else if (mod.id === 1 && mod.currentStep > 0) status = `Step ${mod.currentStep+1}/${digilockerSteps.length}`;
+    else if (mod.id === 2 && mod.currentStep > 0) status = `Step ${mod.currentStep+1}/${uidaiSteps.length}`;
+    else if (mod.id === 3 && mod.currentStep > 0) status = `Step ${mod.currentStep+1}/${emailSteps.length}`;
+
+    card.innerHTML = `
+      <div class="module-card-header">
+        <div class="module-icon" style="background:${mod.color}20;color:${mod.color};"><i class="${mod.icon}"></i></div>
+        <div class="module-info">
+          <div class="module-title">${mod.name}</div>
+          <div class="module-desc">${status}</div>
+        </div>
+        <div class="module-status-badge">${mod.completed ? '✓' : mod.points+' pts'}</div>
+      </div>
+      ${stepsHtml}
+    `;
+    card.onclick = () => openModule(mod.id);
+    container.appendChild(card);
+  });
+}
+
+function moduleNext() {
+  const mod = modules[currentModuleId];
+  let stepsArray = gpaySteps;
+  if (currentModuleId === 1) stepsArray = digilockerSteps;
+  else if (currentModuleId === 2) stepsArray = uidaiSteps;
+  else if (currentModuleId === 3) stepsArray = emailSteps;
+
+  const currStep = mod.currentStep;
+  const currInstr = mod.currentInstr;
+  const step = stepsArray[currStep];
+  const isLastInstr = currInstr === step.instructions.length - 1;
+  const isLastStep = currStep === stepsArray.length - 1;
+
+  if (!isLastInstr) {
+    // Move to next instruction in same step
+    showModuleStep(currStep, currInstr + 1);
+  } else if (!isLastStep) {
+    // Move to next step
+    showModuleStep(currStep + 1, 0);
+  } else {
+    // Last step completed
+    if (currentModuleId === 0) {
+      // Trigger final check for GPay
+      completeModule(true);
+    } else {
+      completeModule(true);
+    }
+  }
+}
+
+function modulePrev() {
+  const mod = modules[currentModuleId];
+  let stepsArray = gpaySteps;
+  if (currentModuleId === 1) stepsArray = digilockerSteps;
+  else if (currentModuleId === 2) stepsArray = uidaiSteps;
+  else if (currentModuleId === 3) stepsArray = emailSteps;
+
+  const currStep = mod.currentStep;
+  const currInstr = mod.currentInstr;
+
+  if (currInstr > 0) {
+    // Move to previous instruction in same step
+    showModuleStep(currStep, currInstr - 1);
+  } else if (currStep > 0) {
+    // Move to previous step (last instruction)
+    const prevStep = stepsArray[currStep - 1];
+    showModuleStep(currStep - 1, prevStep.instructions.length - 1);
+  }
+}
+
+function completeModule(passed) {
+  const mod = modules[currentModuleId];
+  if (passed) {
+    mod.completed = true;
+    document.getElementById('welcomeBox').style.display = 'none';
+    const di = document.getElementById('dynamicInstruction');
+    di.style.display = 'block';
+    di.innerHTML = `
+      <div class="instr-card">
+        <h3 style="color:var(--accent);">✨ Congratulations!</h3>
+        <p>You've completed the ${modules[currentModuleId].name} module and earned ${modules[currentModuleId].points} points!</p>
+        <button class="instr-nav-btn" onclick="currentModuleId = -1; renderModules(); document.getElementById('welcomeBox').style.display = 'block'; document.getElementById('dynamicInstruction').style.display = 'none';">Back to Modules</button>
+      </div>`;
+    renderModules();
+  }
+}
+
+
+// ===================== OPEN MODULE =====================
+function openModule(modId) {
+  currentModuleId = modId;
+  renderModules();
+  const mod = modules[modId];
+  if (modId === 0) {
+    // Show module intro if starting a new step
+    if (mod.currentInstr === 0) {
+      showModuleIntro(mod.currentStep);
+    } else {
+      showGpayStep(mod.currentStep, mod.currentInstr);
+    }
+  } else if (modId === 1 || modId === 2 || modId === 3) {
+    // Start module directly without intro
+    showModuleStep(mod.currentStep, mod.currentInstr);
+  } else {
+    showComingSoon(mod);
+  }
+}
+
+function showComingSoon(mod) {
+  document.getElementById('welcomeBox').style.display = 'none';
+  document.getElementById('dynamicInstruction').style.display = 'block';
+  const comingSoonVoice = voiceFor('system', 'comingSoon');
+  document.getElementById('dynamicInstruction').innerHTML = `
+    <div class="instr-card">
+      <h3><i class="${mod.icon}" style="color:${mod.color}"></i> ${mod.name}</h3>
+      <p>This module is coming soon! Stay tuned for interactive lessons.</p>
+      ${renderVoiceControls(comingSoonVoice)}
+    </div>`;
+  handleAutoRead(comingSoonVoice);
+  document.getElementById('phoneScreen').innerHTML = `
+    <i class="${mod.icon}" style="font-size:4rem;margin-bottom:1rem;color:${mod.color};"></i>
+    <h3>${mod.name}</h3>
+    <p style="font-size:0.9rem;color:var(--text-muted);">Coming soon!</p>`;
+}
+
+function showModuleStep(stepIndex, instrIndex) {
+  const mod = modules[currentModuleId];
+  mod.currentStep = stepIndex;
+  mod.currentInstr = instrIndex;
+  renderModules();
+
+  let stepsArray = gpaySteps;
+  if (currentModuleId === 1) stepsArray = digilockerSteps;
+  else if (currentModuleId === 2) stepsArray = uidaiSteps;
+  else if (currentModuleId === 3) stepsArray = emailSteps;
+
+  const step = stepsArray[stepIndex];
+  const instr = step.instructions[instrIndex];
+  const isLastInstr = instrIndex === step.instructions.length - 1;
+  const isLastStep = stepIndex === stepsArray.length - 1;
+
+  // Instruction panel
+  document.getElementById('welcomeBox').style.display = 'none';
+  const di = document.getElementById('dynamicInstruction');
+  di.style.display = 'block';
+
+  const progressDots = step.instructions.map((_, i) =>
+    `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 3px;background:${i===instrIndex?'var(--accent)':'var(--progress-bg)'}"></span>`
+  ).join('');
+
+  // Determine module key for voiceover lookup
+  let moduleKey = 'system';
+  if (currentModuleId === 1) moduleKey = 'digilocker';
+  else if (currentModuleId === 2) moduleKey = 'uidai';
+  else if (currentModuleId === 3) moduleKey = 'email';
+  else if (currentModuleId === 4) moduleKey = 'phishing';
+
+  const voiceText = voiceFor(moduleKey, 'step', stepIndex, instrIndex);
+
+  di.innerHTML = `
+    <div class="instr-card">
+      <h3>📍 Step ${stepIndex+1} of ${stepsArray.length}: ${step.title}</h3>
+      <p>${instr.text}</p>
+      ${voiceText ? renderVoiceControls(voiceText) : ''}
+      <div style="margin-top:0.6rem;">${progressDots}</div>
+    </div>
+    <div style="display:flex;gap:0.8rem;flex-wrap:wrap;">
+      ${instrIndex > 0 || stepIndex > 0 ? `<button class="instr-nav-btn" style="background:#64748b;" onclick="modulePrev()">← Back</button>` : ''}
+      <button class="instr-nav-btn" onclick="moduleNext()">${isLastInstr && isLastStep && currentModuleId === 0 ? '🎯 Final Check' : isLastInstr && isLastStep ? '🎉 Finish Module' : isLastInstr ? 'Next Step →' : 'Got it →'}</button>
+    </div>
+  `;
+
+  if (voiceText) {
+    handleAutoRead(voiceText);
+  }
+
+  // Phone simulator
+  if (currentModuleId === 0) {
+    renderGpayScreen(step.screen, instr.highlight, instr.arrowDir);
+  } else {
+    renderExtraScreen(step.screen, instr.highlight, instr.arrowDir);
+  }
+}
+
+// ===================== GPAY FLOW =====================
+function showGpayStep(stepIndex, instrIndex) {
+  const mod = modules[0];
+  mod.currentStep = stepIndex;
+  mod.currentInstr = instrIndex;
+  renderModules();
+
+  const step = gpaySteps[stepIndex];
+  const instr = step.instructions[instrIndex];
+  const isLastInstr = instrIndex === step.instructions.length - 1;
+  const isLastStep = stepIndex === gpaySteps.length - 1;
+
+  // Reset action state - button starts DISABLED
+  gpayState.actionCompleted = false;
+
+  // Instruction panel
+  document.getElementById('welcomeBox').style.display = 'none';
+  const di = document.getElementById('dynamicInstruction');
+  di.style.display = 'block';
+
+  // ── Look up voiceover text from voiceover_scripts.js ──
+  const voiceText = voiceFor('gpay', 'step', stepIndex, instrIndex);
+
+  const progressDots = step.instructions.map((_, i) =>
+    `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin:0 3px;background:${i===instrIndex?'var(--accent)':'var(--progress-bg)'}"></span>`
+  ).join('');
+
+  di.innerHTML = `
+    <div class="instr-card">
+      <h3>📍 Step ${stepIndex+1} of ${gpaySteps.length}: ${step.title}</h3>
+      <p>"${instr.text}"</p>
+      ${instr.important ? `<div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin-top:10px;margin-bottom:10px;">
+        <div style="font-weight:700;color:#92400e;margin-bottom:8px;">⚠️ Important Guidelines:</div>
+        ${instr.guidelines ? instr.guidelines.map(g => `<div style="color:#92400e;font-size:0.9rem;margin-bottom:4px;">${g}</div>`).join('') : ''}
+      </div>` : ''}
+      <p style="color:#ef4444;margin-top:8px;font-weight:600;"><i class="fas fa-hand-pointer"></i> Perform action on your phone →</p>
+      ${renderVoiceControls(voiceText)}
+      <div style="margin-top:0.6rem;">${progressDots}</div>
+    </div>
+    <div style="display:flex;gap:0.8rem;flex-wrap:wrap;">
+      ${instrIndex > 0 || stepIndex > 0 ? `<button class="instr-nav-btn" style="background:#64748b;" onclick="gpayPrev()">← Back</button>` : ''}
+      <button id="nextBtn" class="instr-nav-btn" style="opacity:0.5;cursor:not-allowed;background:#cbd5e1;" disabled onclick="gpayNext()">⏳ Waiting for action...</button>
+    </div>
+  `;
+  handleAutoRead(voiceText);
+
+  // Phone simulator - render correct screen for this instruction
+  renderGpayScreen(step.screen, stepIndex, instrIndex);
+  
+  // Show Shepherd highlight for 3 seconds showing what to do
+  setTimeout(() => {
+    showActionHighlight(stepIndex, instrIndex, instr);
+  }, 500);
+}
+
+function renderGpayScreen(screen, stepIndex, instrIndex) {
+  const ps = document.getElementById('phoneScreen');
+  let html = '';
+  
+   // DOWNLOAD STEP
+  if (screen === 'download') {
+    if (instrIndex === 0) {
+      // HOME SCREEN - Click Play Store icon
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="background:#667eea;text-align:center;">🏠 Home</div>
+        <div class="gpay-body" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px;">
+          <div class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#FFB80D;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;">📱</div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Phone</div>
+          </div>
+          <div class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#34A853;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;">📧</div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Gmail</div>
+          </div>
+          <div id="home-playstore" class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:0.2s;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#f97316;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;"><i class="fab fa-google-play"></i></div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Play Store</div>
+          </div>
+          <div class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#EA4335;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;">📍</div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Maps</div>
+          </div>
+          <div class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#FBBC04;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;">📷</div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Photos</div>
+          </div>
+          <div class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#5F6368;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;">⚙️</div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Settings</div>
+          </div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 1) {
+      // PLAY STORE - Empty search bar (step 1: tap search bar)
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="background:#f97316;"><i class="fab fa-google-play" style="font-size:1.4rem;"></i> Play Store</div>
+        <div class="gpay-body">
+          <div id="search-bar" class="gpay-field" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <i class="fas fa-search" style="color:#94a3b8;"></i>
+            <span id="search-bar-text" style="color:#94a3b8;flex:1;">Search apps &amp; games</span>
+          </div>
+          <div style="text-align:center;padding:40px 20px;color:#94a3b8;">
+            <i class="fas fa-search" style="font-size:3rem;margin-bottom:12px;opacity:0.5;"></i>
+            <p style="font-size:0.85rem;">Tap the search bar to find apps</p>
+          </div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 2) {
+      // PLAY STORE - Search input with button (step 2: type and search)
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="background:#f97316;"><i class="fab fa-google-play" style="font-size:1.4rem;"></i> Play Store</div>
+        <div class="gpay-body">
+          <div id="search-bar" class="gpay-field" style="display:flex;align-items:center;gap:8px;">
+            <i class="fas fa-search" style="color:#94a3b8;"></i>
+            <input type="text" id="search-input-field" placeholder="Search apps &amp; games" style="border:none;outline:none;background:transparent;flex:1;color:#1e293b;font-size:1rem;padding:8px 0;" value="${gpayState.searchText || ''}" autofocus />
+            <button id="search-btn" style="padding:6px 16px;font-size:0.9rem;background:#4285F4;color:white;border:none;cursor:pointer;border-radius:6px;font-weight:600;white-space:nowrap;flex-shrink:0;">Search</button>
+          </div>
+          <div style="text-align:center;padding:40px 20px;color:#94a3b8;">
+            <i class="fas fa-keyboard" style="font-size:3rem;margin-bottom:12px;opacity:0.5;"></i>
+            <p style="font-size:0.85rem;">Type "Google Pay" and tap Search</p>
+          </div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 3) {
+      // PLAY STORE - Search results with Install button (step 3: click install)
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="background:#f97316;"><i class="fab fa-google-play" style="font-size:1.4rem;"></i> Play Store</div>
+        <div class="gpay-body">
+          <div id="search-bar" class="gpay-field" style="display:flex;align-items:center;gap:8px;">
+            <i class="fas fa-search" style="color:#94a3b8;"></i>
+            <span style="color:#1e293b;flex:1;">Google Pay</span>
+          </div>
+          <div style="background:white;border-radius:14px;padding:14px;margin-bottom:10px;border:2px solid #e2e8f0;">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div id="playstore-icon" style="width:56px;height:56px;border-radius:12px;background:#4285F4;display:flex;align-items:center;justify-content:center;font-size:1.8rem;color:white;"><i class="fab fa-google-pay"></i></div>
+              <div style="flex:1;">
+                <div style="font-weight:700;font-size:0.95rem;">Google Pay</div>
+                <div style="font-size:0.75rem;color:#64748b;">Google LLC · Finance</div>
+                <div style="font-size:0.75rem;color:#22c55e;">★ 4.6 · Free</div>
+              </div>
+              <button id="install-btn" class="gpay-btn" style="width:auto;padding:8px 20px;margin-top:0;">${gpayState.installed ? 'Installed' : 'Install'}</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    }
+  }
+  // CREATE ACCOUNT STEP
+  else if (screen === 'create-account') {
+    if (instrIndex === 0) {
+      // Show HOME SCREEN - user must click Google Pay app
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="background:#667eea;text-align:center;">🏠 Home</div>
+        <div class="gpay-body" style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px;">
+          <div class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#FFB80D;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;">📱</div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Phone</div>
+          </div>
+          <div class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#34A853;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;">📧</div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Gmail</div>
+          </div>
+          <div id="home-gpay" class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;cursor:pointer;transition:0.2s;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#4285F4;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;"><i class="fab fa-google-pay"></i></div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Google Pay</div>
+          </div>
+          <div class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#EA4335;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;">📍</div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Maps</div>
+          </div>
+          <div class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#FBBC04;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;">📷</div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Photos</div>
+          </div>
+          <div class="gpay-app-icon" style="display:flex;flex-direction:column;align-items:center;">
+            <div style="width:50px;height:50px;border-radius:12px;background:#5F6368;display:flex;align-items:center;justify-content:center;font-size:1.8rem;margin-bottom:6px;">⚙️</div>
+            <div style="font-size:0.7rem;text-align:center;color:#1e293b;">Settings</div>
+          </div>
+        </div>
+      </div>`;
+     } else if (instrIndex === 1) {
+      // ACCOUNT CREATION - Enter Mobile Number
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header"><i class="fab fa-google-pay" style="font-size:1.6rem;"></i> Google Pay Setup</div>
+        <div class="gpay-body">
+          <div style="text-align:center;padding:10px 0 16px;"><div style="width:64px;height:64px;border-radius:16px;background:#4285F4;display:inline-flex;align-items:center;justify-content:center;font-size:2rem;color:white;"><i class="fab fa-google-pay"></i></div><div style="margin-top:8px;font-weight:700;">Welcome to Google Pay</div></div>
+          <div id="phone-input" class="gpay-field"><label>Mobile Number</label><input type="tel" id="phone-input-field" inputmode="numeric" pattern="[0-9]*" maxlength="10" placeholder="9876543210" value="${gpayState.phoneNumber}" /></div>
+          <div id="continue-btn" class="gpay-btn" style="opacity:0.5;cursor:not-allowed;" disabled>Continue</div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 2) {
+      // ACCOUNT CREATION - Enter OTP
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header"><i class="fab fa-google-pay" style="font-size:1.6rem;"></i> Google Pay Setup</div>
+        <div class="gpay-body">
+          <div style="text-align:center;padding:10px 0 16px;"><div style="width:64px;height:64px;border-radius:16px;background:#4285F4;display:inline-flex;align-items:center;justify-content:center;font-size:2rem;color:white;"><i class="fab fa-google-pay"></i></div><div style="margin-top:8px;font-weight:700;">Verify Your Number</div></div>
+          <div class="gpay-field"><label>Mobile Number</label><input type="tel" value="${gpayState.phoneNumber}" readonly style="background:#f1f5f9;" /></div>
+          <button id="get-otp-btn" class="gpay-btn" style="background:#22c55e;margin-bottom:12px;width:100%;">Get OTP</button>
+          <div id="otp-input" class="gpay-field"><label>OTP (Sent to your number)</label><input type="text" id="otp-input-field" inputmode="numeric" pattern="[0-9]*" maxlength="6" placeholder="Enter 6-digit OTP" readonly /></div>
+          <div id="continue-btn" class="gpay-btn" style="opacity:0.5;cursor:not-allowed;" disabled>Continue</div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 3) {
+      // ACCOUNT CREATION - Terms & Conditions + Continue
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header"><i class="fab fa-google-pay" style="font-size:1.6rem;"></i> Google Pay Setup</div>
+        <div class="gpay-body">
+          <div style="text-align:center;padding:10px 0 16px;"><div style="width:64px;height:64px;border-radius:16px;background:#22c55e;display:inline-flex;align-items:center;justify-content:center;font-size:2rem;color:white;"><i class="fas fa-check-circle"></i></div><div style="margin-top:8px;font-weight:700;color:#166534;">Number Verified!</div></div>
+          <div class="gpay-field" style="background:#f0fdf4;border-color:#22c55e;">
+            <label style="color:#166534;">✓ Mobile Number Verified</label>
+            <input type="tel" value="${gpayState.phoneNumber}" readonly style="background:transparent;" />
+          </div>
+          <div id="terms-checkbox" class="gpay-field" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+            <input type="checkbox" id="terms-agree" style="width:18px;height:18px;cursor:pointer;" />
+            <label style="margin:0;cursor:pointer;font-size:0.85rem;">I agree to the <strong>Terms & Conditions</strong> and <strong>Privacy Policy</strong></label>
+          </div>
+          <button id="continue-btn" class="gpay-btn" style="opacity:0.5;cursor:not-allowed;" disabled>Continue</button>
+        </div>
+      </div>`;
+    }
+  }
+  // LINK BANK STEP
+  else if (screen === 'link-bank') {
+    if (instrIndex === 0) {
+      // Step 0: Home screen with profile icon
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="display:flex;justify-content:space-between;"><span><i class="fab fa-google-pay"></i> Google Pay</span><div id="profile-icon" style="width:30px;height:30px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;color:#4285F4;font-size:1rem;cursor:pointer;">👤</div></div>
+        <div class="gpay-body">
+          <div style="text-align:center;padding:40px 20px;color:#94a3b8;">
+            <i class="fas fa-user-circle" style="font-size:3rem;margin-bottom:12px;opacity:0.5;"></i>
+            <p style="font-size:0.85rem;">Tap the profile icon at the top right</p>
+          </div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 1) {
+      // Step 1: Bank Account menu option
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="display:flex;justify-content:space-between;"><span><i class="fab fa-google-pay"></i> Google Pay</span><div style="width:30px;height:30px;"></div></div>
+        <div class="gpay-body">
+          <div id="bank-menu" class="gpay-field" style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+            <i class="fas fa-university" style="color:#4285F4;font-size:1.3rem;"></i>
+            <span style="font-weight:600;">Bank Account</span>
+            <i class="fas fa-chevron-right" style="margin-left:auto;color:#94a3b8;"></i>
+          </div>
+          <div style="text-align:center;padding:30px 20px;color:#94a3b8;">
+            <i class="fas fa-hand-pointer" style="font-size:2rem;margin-bottom:8px;opacity:0.5;"></i>
+            <p style="font-size:0.8rem;">Tap on Bank Account</p>
+          </div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 2) {
+      // Step 2: Bank selection list
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header"><i class="fas fa-university"></i> Select Bank</div>
+        <div class="gpay-body">
+          <div style="font-size:0.8rem;color:#64748b;margin-bottom:8px;">Choose your bank account</div>
+          <div id="bank-list">
+            ${['SBI','HDFC','ICICI','Axis','PNB'].map(b=>`<div class="gpay-field bank-item" style="cursor:pointer;display:flex;align-items:center;gap:8px;" data-bank="${b}"><i class="fas fa-landmark" style="color:#4285F4;"></i>${b} Bank</div>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 3) {
+      // Step 3: Verify account
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header"><i class="fas fa-shield-alt"></i> Verify Account</div>
+        <div class="gpay-body">
+          <div class="gpay-field" style="background:#f0fdf4;border-color:#22c55e;">
+            <label style="color:#166534;">✓ Selected Bank</label>
+            <input type="text" value="${gpayState.selectedBank} Bank" readonly style="background:transparent;font-weight:600;" />
+          </div>
+          <div class="gpay-field">
+            <label>Registered Mobile Number</label>
+            <input type="tel" value="${gpayState.phoneNumber}" readonly />
+          </div>
+          <button id="verify-btn" class="gpay-btn">Verify & Link Account</button>
+        </div>
+      </div>`;
+    } else if (instrIndex === 4) {
+      // Step 4: Success message
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="background:#22c55e;"><i class="fas fa-check-circle"></i> Success!</div>
+        <div class="gpay-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+          <div style="font-size:4rem;margin-bottom:16px;">✅</div>
+          <div style="font-size:1.2rem;font-weight:700;color:#166534;margin-bottom:8px;">Bank Account Linked!</div>
+          <div style="font-size:0.85rem;color:#64748b;margin-bottom:24px;">Your ${gpayState.selectedBank} Bank account has been successfully linked to Google Pay.</div>
+          <button id="done-btn" class="gpay-btn" style="background:#22c55e;width:auto;padding:12px 32px;">Done</button>
+        </div>
+      </div>`;
+    }
+  }
+  // UPI PIN STEP
+  else if (screen === 'upi-pin') {
+    if (instrIndex === 0) {
+      // Step 0: Set UPI PIN button
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header"><i class="fas fa-lock"></i> Bank Account</div>
+        <div class="gpay-body">
+          <div class="gpay-field" style="background:#f0fdf4;border-color:#22c55e;">
+            <label style="color:#166534;">✓ Bank Linked</label>
+            <input type="text" value="${gpayState.selectedBank} Bank" readonly style="background:transparent;font-weight:600;" />
+          </div>
+          <button id="set-pin-btn" class="gpay-btn" style="background:#6366f1;margin-top:20px;">Set UPI PIN</button>
+          <div style="text-align:center;margin-top:20px;color:#94a3b8;font-size:0.75rem;">
+            <i class="fas fa-shield-alt"></i> UPI PIN is required for transactions
+          </div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 1) {
+      // Step 1: Enter Debit Card Number
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header"><i class="fas fa-credit-card"></i> Verify Debit Card</div>
+        <div class="gpay-body">
+          <div id="card-input" class="gpay-field"><label>Last 6 digits of Debit Card</label><input type="password" id="card-input-field" placeholder="••••••" maxlength="6" inputmode="numeric" autofocus /></div>
+          <div style="font-size:0.7rem;color:#94a3b8;margin-top:8px;text-align:center;">Enter the last 6 digits of your debit card</div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 2) {
+      // Step 2: Enter Expiry Date
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header"><i class="fas fa-calendar-alt"></i> Card Expiry</div>
+        <div class="gpay-body">
+          <div class="gpay-field" style="background:#f0fdf4;border-color:#22c55e;">
+            <label style="color:#166534;">✓ Card Number</label>
+            <input type="password" value="••••••" readonly style="background:transparent;" />
+          </div>
+          <div id="expiry-input" class="gpay-field"><label>Card Expiry Date</label><input type="text" id="expiry-input-field" placeholder="MM / YY" maxlength="5" autofocus /></div>
+          <div style="font-size:0.7rem;color:#94a3b8;margin-top:8px;text-align:center;">Enter the expiry date shown on your card</div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 3) {
+      // Step 3: Create UPI PIN
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header"><i class="fas fa-key"></i> Create UPI PIN</div>
+        <div class="gpay-body">
+          <div style="text-align:center;margin:10px 0 6px;font-size:0.85rem;color:#64748b;">Enter your new 6-digit UPI PIN</div>
+          <div id="pin-container" style="position:relative;">
+            <div id="pin-circles" style="text-align:center;margin-bottom:6px;">
+              ${Array(6).fill('<span class="gpay-pin-circle"></span>').join('')}
+            </div>
+            <input type="password" id="hidden-pin-input" maxlength="6" inputmode="numeric" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" />
+            <div style="text-align:center;margin-top:4px;">
+              <i id="toggle-pin-visibility" class="fas fa-eye-slash" style="color:#94a3b8;cursor:pointer;font-size:0.9rem;"></i>
+              <span style="font-size:0.7rem;color:#94a3b8;margin-left:5px;">Show/Hide PIN</span>
+            </div>
+          </div>
+          <div class="gpay-numpad" id="gpay-numpad">
+            ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(n=>`<button class="gpay-num-btn" data-key="${n}">${n}</button>`).join('')}
+          </div>
+        </div>
+      </div>`;
+    } else if (instrIndex === 4) {
+      // Step 4: Confirm UPI PIN
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header"><i class="fas fa-check-double"></i> Confirm UPI PIN</div>
+        <div class="gpay-body">
+          <div style="text-align:center;margin:10px 0 6px;font-size:0.85rem;color:#64748b;">Confirm your 6-digit UPI PIN</div>
+          <div id="confirm-pin-container" style="position:relative;">
+            <div id="confirm-pin-circles" style="text-align:center;margin-bottom:6px;">
+              ${Array(6).fill('<span class="gpay-pin-circle"></span>').join('')}
+            </div>
+            <input type="password" id="hidden-confirm-pin-input" maxlength="6" inputmode="numeric" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" />
+            <div style="text-align:center;margin-top:4px;">
+              <i id="toggle-confirm-pin-visibility" class="fas fa-eye-slash" style="color:#94a3b8;cursor:pointer;font-size:0.9rem;"></i>
+              <span style="font-size:0.7rem;color:#94a3b8;margin-left:5px;">Show/Hide PIN</span>
+            </div>
+          </div>
+          <div class="gpay-numpad" id="gpay-numpad-confirm">
+            ${[1,2,3,4,5,6,7,8,9,'',0,'⌫'].map(n=>`<button class="gpay-num-btn" data-key="${n}">${n}</button>`).join('')}
+          </div>
+          <div id="pin-match-error" style="display:none;color:#ef4444;font-size:0.75rem;text-align:center;margin-top:8px;">❌ PINs do not match! Please try again.</div>
+        </div>
+      </div>`;
+    }
+  }
+  // SEND MONEY STEP
+  else if (screen === 'send-money') {
+    html = `
+    <div class="gpay-screen">
+      <div class="gpay-header"><i class="fas fa-paper-plane"></i> New Payment</div>
+      <div class="gpay-body">
+        <button id="new-payment-btn" class="gpay-btn" style="background:#22c55e;margin-bottom:12px;">+ New Payment</button>
+        <div id="recipient-input" class="gpay-field"><label>UPI ID or Mobile Number</label><input type="text" id="recipient-input-field" placeholder="name@upi or 98765XXXXX" /></div>
+        <div id="amount-input" class="gpay-field"><label>Amount (₹)</label><input type="number" id="amount-input-field" placeholder="0.00" /></div>
+        <div id="note-input" class="gpay-field"><label>Note (optional)</label><input type="text" id="note-input-field" placeholder="For groceries..." /></div>
+        <button id="pay-btn" class="gpay-btn">Pay Now</button>
+        <div id="pin-input" class="gpay-field" style="margin-top:10px;"><label>Enter UPI PIN</label><div style="text-align:center;">${Array(6).fill('<span class="gpay-pin-circle"></span>').join('')}</div></div>
+      </div>
+    </div>`;
+  }
+
+  ps.innerHTML = html;
+  initGpayInteractions(screen, stepIndex, instrIndex);
+}
+
+function initGpayInteractions(screen, stepIndex, instrIndex) {
+  const ps = document.getElementById('phoneScreen');
+  if (!ps) return;
+
+   if (screen === 'download') {
+    // Step 0: Home screen - Click Play Store
+    const homePlayStore = document.getElementById('home-playstore');
+    if (homePlayStore && instrIndex === 0) {
+      homePlayStore.addEventListener('click', () => {
+        homePlayStore.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          homePlayStore.style.transform = 'scale(1)';
+          enableNextButton();
+        }, 200);
+      });
+    }
+    
+    // Step 1: Play Store - Click search bar
+    const searchBar = document.getElementById('search-bar');
+    if (searchBar && instrIndex === 1) {
+      searchBar.addEventListener('click', () => {
+        searchBar.style.borderColor = '#2563eb';
+        enableNextButton();
+      });
+    }
+    
+    // Step 2: Play Store - Type and click Search
+    const searchInput = document.querySelector('#search-input-field');
+    const searchBtn = document.getElementById('search-btn');
+    if (searchInput && instrIndex === 2) {
+      searchInput.focus();
+      
+      searchInput.addEventListener('input', (e) => {
+        gpayState.searchText = e.target.value;
+      });
+      
+      searchBtn?.addEventListener('click', () => {
+        if (gpayState.searchText.toLowerCase().includes('google pay') || gpayState.searchText.toLowerCase().includes('pay')) {
+          searchBtn.textContent = 'Searching...';
+          searchBtn.disabled = true;
+          setTimeout(() => {
+            enableNextButton();
+          }, 500);
+        } else {
+          alert('Please type "Google Pay" in the search box');
+        }
+      });
+    }
+    
+    // Step 3: Play Store - Click Install button
+    const installBtn = document.getElementById('install-btn');
+    if (installBtn && instrIndex === 3) {
+      installBtn.addEventListener('click', () => {
+        if (gpayState.installed) return;
+        gpayState.installed = true;
+        installBtn.textContent = 'Installing...';
+        installBtn.disabled = true;
+        setTimeout(() => {
+          installBtn.textContent = 'Installed ✓';
+          installBtn.style.background = '#22c55e';
+          enableNextButton();
+        }, 900);
+      });
+    }
+  }
+  else if (screen === 'create-account') {
+    // Handle home screen click
+    const homeGpay = document.getElementById('home-gpay');
+    if (homeGpay && instrIndex === 0) {
+      homeGpay.addEventListener('click', () => {
+        homeGpay.parentElement.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          homeGpay.parentElement.style.transform = 'scale(1)';
+          enableNextButton();
+        }, 200);
+      });
+    }
+    
+    // Handle account creation screen
+    const phoneInput = document.querySelector('#phone-input-field');
+    const otpInput = document.querySelector('#otp-input-field');
+    const continueBtn = document.getElementById('continue-btn');
+    const getOtpBtn = document.getElementById('get-otp-btn');
+
+    if (phoneInput && instrIndex === 1) {
+      phoneInput.readOnly = false;
+      phoneInput.value = gpayState.phoneNumber;
+      phoneInput.focus();
+      
+      phoneInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/[^0-9]/g, '');
+        if (value.length > 10) value = value.slice(0, 10);
+        e.target.value = value;
+        gpayState.phoneNumber = value;
+        
+        // Enable button when 10 digits entered
+        if (value.length === 10) {
+          enableNextButton();
+        }
+      });
+    }
+
+    // Handle Get OTP button
+    if (getOtpBtn && instrIndex === 2) {
+      getOtpBtn.addEventListener('click', () => {
+        // Generate random 6-digit OTP
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        gpayState.otpCode = otp;
+        gpayState.otpSent = true;
+        
+        // Update button
+        getOtpBtn.textContent = 'OTP Sent ✓';
+        getOtpBtn.style.background = '#22c55e';
+        getOtpBtn.disabled = true;
+        
+        // Enable OTP input field
+        otpInput.removeAttribute('readonly');
+        otpInput.readOnly = false;
+        otpInput.focus();
+        
+        // Show OTP popup with the code
+        showOtpPopup(`Your OTP is: <strong style="font-size:1.3rem;letter-spacing:2px;">${otp}</strong>`);
+        
+        // Show Shepherd highlight for OTP input
+        showActionHighlight(1, 2, {text: 'Enter the OTP you received'});
+      });
+    }
+
+    if (otpInput && instrIndex === 2) {
+      otpInput.addEventListener('input', (e) => {
+        let value = e.target.value.replace(/[^0-9]/g, '');
+        if (value.length > 6) value = value.slice(0, 6);
+        e.target.value = value;
+        gpayState.otpCode = value;
+        
+        // Enable button when 6 digits entered
+        if (value.length === 6) {
+          enableNextButton();
+        }
+      });
+    }
+
+    // Handle Terms & Conditions checkbox for instruction 3
+    if (instrIndex === 3) {
+      const termsCheckbox = document.getElementById('terms-agree');
+      const continueBtnTerms = document.getElementById('continue-btn');
+      
+      if (termsCheckbox && continueBtnTerms) {
+        termsCheckbox.addEventListener('change', (e) => {
+          if (e.target.checked) {
+            continueBtnTerms.disabled = false;
+            continueBtnTerms.style.opacity = '1';
+            continueBtnTerms.style.cursor = 'pointer';
+          } else {
+            continueBtnTerms.disabled = true;
+            continueBtnTerms.style.opacity = '0.5';
+            continueBtnTerms.style.cursor = 'not-allowed';
+          }
+        });
+        
+        continueBtnTerms.addEventListener('click', () => {
+          if (termsCheckbox.checked) {
+            gpayState.otpVerified = true;
+            continueBtnTerms.textContent = 'Verified ✓';
+            continueBtnTerms.style.background = '#22c55e';
+            removeOtpPopup();
+            enableNextButton();
+          }
+        });
+      }
+    }
+    
+    continueBtn?.addEventListener('click', () => {
+      if (instrIndex === 1) {
+        if (gpayState.phoneNumber.length === 10) {
+          enableNextButton();
+        }
+      }
+    });
+  }
+  else if (screen === 'link-bank') {
+    const profileIcon = document.getElementById('profile-icon');
+    const bankMenu = document.getElementById('bank-menu');
+    const bankItems = ps.querySelectorAll('.bank-item');
+    const verifyBtn = document.getElementById('verify-btn');
+    const doneBtn = document.getElementById('done-btn');
+    
+    if (instrIndex === 0) {
+      profileIcon?.addEventListener('click', () => {
+        enableNextButton();
+      });
+    }
+    else if (instrIndex === 1) {
+      bankMenu?.addEventListener('click', () => {
+        enableNextButton();
+      });
+    }
+    else if (instrIndex === 2) {
+      bankItems.forEach(item => {
+        item.addEventListener('click', () => {
+          bankItems.forEach(i => i.style.borderColor = '#e2e8f0');
+          item.style.borderColor = '#2563eb';
+          gpayState.selectedBank = item.dataset.bank;
+          enableNextButton();
+        });
+      });
+    }
+    else if (instrIndex === 3) {
+      verifyBtn?.addEventListener('click', () => {
+        verifyBtn.textContent = 'Linking...';
+        verifyBtn.disabled = true;
+        setTimeout(() => {
+          enableNextButton();
+        }, 900);
+      });
+    }
+    else if (instrIndex === 4) {
+      doneBtn?.addEventListener('click', () => {
+        enableNextButton();
+      });
+    }
+  }  else if (screen === 'upi-pin') {
+    const setPinBtn = document.getElementById('set-pin-btn');
+    const cardInput = document.querySelector('#card-input-field');
+    const expiryInput = document.querySelector('#expiry-input-field');
+    let debitCardNumber = '';
+    let expiryDate = '';
+    
+    // Track card and expiry validation
+    let isCardValid = false;
+    let isExpiryValid = false;
+    
+    // Handle Set PIN button (instrIndex === 0)
+    if (setPinBtn && instrIndex === 0) {
+      setPinBtn.addEventListener('click', () => {
+        enableNextButton();
+      });
+    }
+    
+    // Handle Card Input (instrIndex === 1)
+if (cardInput && instrIndex === 1) {
+  // Create a container for card input with verify button
+  const cardContainer = cardInput.closest('.gpay-field');
+  if (cardContainer && !document.getElementById('verify-card-btn')) {
+    // Add a verify button below card input
+    const verifyBtn = document.createElement('button');
+    verifyBtn.id = 'verify-card-btn';
+    verifyBtn.className = 'gpay-btn';
+    verifyBtn.textContent = '✓ Verify Debit Card';
+    verifyBtn.style.marginTop = '12px';
+    verifyBtn.style.background = '#64748b';
+    verifyBtn.style.cursor = 'not-allowed';
+    verifyBtn.disabled = true;
+    cardContainer.parentNode.insertBefore(verifyBtn, cardContainer.nextSibling);
+  }
+  
+  cardInput.focus();
+  
+  // Remove any existing value
+  cardInput.value = '';
+  debitCardNumber = '';
+  isCardValid = false;
+  
+  cardInput.addEventListener('input', (e) => {
+    let value = e.target.value.replace(/[^0-9]/g, '');
+    if (value.length > 6) value = value.slice(0, 6);
+    e.target.value = value;
+    debitCardNumber = value;
+    const verifyBtn = document.getElementById('verify-card-btn');
+    
+    if (value.length === 6) {
+      // Enable verify button
+      if (verifyBtn) {
+        verifyBtn.disabled = false;
+        verifyBtn.style.background = '#22c55e';
+        verifyBtn.style.cursor = 'pointer';
+        verifyBtn.textContent = '✓ Verify Card';
+      }
+      // Show visual feedback
+      cardInput.style.borderColor = '#22c55e';
+      cardInput.style.boxShadow = '0 0 0 2px rgba(34,197,94,0.2)';
+    } else {
+      if (verifyBtn) {
+        verifyBtn.disabled = true;
+        verifyBtn.style.background = '#64748b';
+        verifyBtn.style.cursor = 'not-allowed';
+        verifyBtn.textContent = '✓ Verify Debit Card';
+      }
+      cardInput.style.borderColor = '#e2e8f0';
+      cardInput.style.boxShadow = 'none';
+      isCardValid = false;
+    }
+  });
+  
+  // Add click handler for verify button
+  const verifyCardBtn = document.getElementById('verify-card-btn');
+  if (verifyCardBtn) {
+    verifyCardBtn.addEventListener('click', () => {
+      if (debitCardNumber.length === 6) {
+        isCardValid = true;
+        
+        // Show success message
+        showOtpPopup('✅ Debit card verified! Now enter expiry date.', false);
+        setTimeout(() => removeOtpPopup(), 2000);
+        
+        // Disable verify button after verification
+        verifyCardBtn.disabled = true;
+        verifyCardBtn.style.background = '#22c55e';
+        verifyCardBtn.textContent = '✓ Verified';
+        
+        // Add green checkmark next to card input
+        const checkmark = document.createElement('i');
+        checkmark.className = 'fas fa-check-circle';
+        checkmark.style.color = '#22c55e';
+        checkmark.style.position = 'absolute';
+        checkmark.style.right = '12px';
+        checkmark.style.top = '50%';
+        checkmark.style.transform = 'translateY(-50%)';
+        checkmark.style.fontSize = '1.2rem';
+        
+        // Remove any existing checkmark
+        const oldCheck = cardContainer.querySelector('.fa-check-circle');
+        if (oldCheck) oldCheck.remove();
+        
+        cardContainer.style.position = 'relative';
+        cardContainer.appendChild(checkmark);
+        
+        // IMMEDIATELY enable the Next button
+        enableNextButton();
+        const nextBtn = document.getElementById('nextBtn');
+        if (nextBtn) {
+          nextBtn.textContent = '✓ Continue to Expiry →';
+        }
+        
+        // Auto-advance to expiry field after 1 second
+        setTimeout(() => {
+          const expiryField = document.querySelector('#expiry-input-field');
+          if (expiryField) {
+            // Scroll to expiry field
+            expiryField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            expiryField.focus();
+            // Add highlight to expiry field
+            expiryField.classList.add('input-highlight');
+            setTimeout(() => {
+              expiryField.classList.remove('input-highlight');
+            }, 1000);
+          }
+        }, 800);
+      }
+    });
+  }
+}
+    
+    // Handle Expiry Input (instrIndex === 2)
+if (expiryInput && instrIndex === 2) {
+  // Create container for expiry input with verify button
+  const expiryContainer = expiryInput.closest('.gpay-field');
+  if (expiryContainer && !document.getElementById('verify-expiry-btn')) {
+    // Add a verify button below expiry input
+    const verifyExpiryBtn = document.createElement('button');
+    verifyExpiryBtn.id = 'verify-expiry-btn';
+    verifyExpiryBtn.className = 'gpay-btn';
+    verifyExpiryBtn.textContent = '✓ Verify Expiry Date';
+    verifyExpiryBtn.style.marginTop = '12px';
+    verifyExpiryBtn.style.background = '#64748b';
+    verifyExpiryBtn.style.cursor = 'not-allowed';
+    verifyExpiryBtn.disabled = true;
+    expiryContainer.parentNode.insertBefore(verifyExpiryBtn, expiryContainer.nextSibling);
+  }
+  
+  expiryInput.focus();
+  expiryInput.value = '';
+  isExpiryValid = false;
+  
+  expiryInput.addEventListener('input', (e) => {
+    let value = e.target.value.replace(/[^0-9]/g, '');
+    if (value.length > 4) value = value.slice(0, 4);
+    
+    // Auto-format as MM/YY
+    if (value.length >= 2) {
+      if (value.length === 2) {
+        // Check if month is valid (01-12)
+        const month = parseInt(value);
+        if (month < 1 || month > 12) {
+          expiryInput.style.borderColor = '#ef4444';
+          isExpiryValid = false;
+        } else {
+          expiryInput.style.borderColor = '#e2e8f0';
+          isExpiryValid = false;
+        }
+        value = value;
+      } else if (value.length === 3) {
+        value = value.slice(0, 2) + '/' + value.slice(2);
+        expiryInput.style.borderColor = '#e2e8f0';
+        isExpiryValid = false;
+      } else if (value.length === 4) {
+        const month = parseInt(value.slice(0, 2));
+        const year = parseInt(value.slice(2, 4));
+        const currentDate = new Date();
+        const currentYear = currentDate.getFullYear() % 100;
+        const currentMonth = currentDate.getMonth() + 1;
+        
+        value = value.slice(0, 2) + '/' + value.slice(2);
+        
+        // Validate expiry date - Accept cards valid until end of the entered month
+        if (month >= 1 && month <= 12) {
+          // Card is valid if: year is in future OR (year is current AND month is current or future)
+          const isValidYear = year >= currentYear;
+          const isValidMonth = (year > currentYear) || (year === currentYear && month >= currentMonth);
+          
+          if (isValidYear && isValidMonth) {
+            isExpiryValid = true;
+            expiryInput.style.borderColor = '#22c55e';
+          } else {
+            isExpiryValid = false;
+            expiryInput.style.borderColor = '#ef4444';
+            showOtpPopup('⚠️ Card has expired! Please use a valid card.', true);
+            setTimeout(() => removeOtpPopup(), 3000);
+          }
+        } else {
+          isExpiryValid = false;
+          expiryInput.style.borderColor = '#ef4444';
+        }
+      }
+    } else {
+      isExpiryValid = false;
+      expiryInput.style.borderColor = '#e2e8f0';
+    }
+    
+    e.target.value = value;
+    expiryDate = value;
+    
+    // Enable/disable verify button
+    const verifyExpiryBtn = document.getElementById('verify-expiry-btn');
+    if (verifyExpiryBtn) {
+      if (isExpiryValid && value.length === 5) {
+        verifyExpiryBtn.disabled = false;
+        verifyExpiryBtn.style.background = '#22c55e';
+        verifyExpiryBtn.style.cursor = 'pointer';
+        verifyExpiryBtn.textContent = '✓ Verify Expiry';
+      } else {
+        verifyExpiryBtn.disabled = true;
+        verifyExpiryBtn.style.background = '#64748b';
+        verifyExpiryBtn.style.cursor = 'not-allowed';
+        verifyExpiryBtn.textContent = '✓ Verify Expiry Date';
+      }
+    }
+  });
+  
+  // Add click handler for verify expiry button
+  const verifyExpiryBtn = document.getElementById('verify-expiry-btn');
+  if (verifyExpiryBtn) {
+    verifyExpiryBtn.addEventListener('click', () => {
+      if (isExpiryValid && expiryDate.length === 5) {
+        // Show success message
+        showOtpPopup('✅ Card verified! You can now create your UPI PIN.', false);
+        setTimeout(() => removeOtpPopup(), 2000);
+        
+        // Disable verify button after verification
+        verifyExpiryBtn.disabled = true;
+        verifyExpiryBtn.style.background = '#22c55e';
+        verifyExpiryBtn.textContent = '✓ Verified';
+        
+        // Add checkmark
+        const checkmark = document.createElement('i');
+        checkmark.className = 'fas fa-check-circle';
+        checkmark.style.color = '#22c55e';
+        checkmark.style.position = 'absolute';
+        checkmark.style.right = '12px';
+        checkmark.style.top = '50%';
+        checkmark.style.transform = 'translateY(-50%)';
+        checkmark.style.fontSize = '1.2rem';
+        
+        const oldCheck = expiryContainer.querySelector('.fa-check-circle');
+        if (oldCheck) oldCheck.remove();
+        
+        expiryContainer.style.position = 'relative';
+        expiryContainer.appendChild(checkmark);
+        
+        // Enable the main Next button
+        const nextBtn = document.getElementById('nextBtn');
+        if (nextBtn) {
+          nextBtn.disabled = false;
+          nextBtn.style.opacity = '1';
+          nextBtn.style.cursor = 'pointer';
+          nextBtn.style.background = 'var(--accent)';
+          nextBtn.textContent = '✓ Continue to Create PIN →';
+        }
+      }
+    });
+  }
+}
+    
+    // For Create PIN step (instrIndex === 3)
+    if (instrIndex === 3) {
+      let upiPinValue = '';
+      const pinCircles = document.querySelectorAll('#pin-circles .gpay-pin-circle');
+      const hiddenPinInput = document.getElementById('hidden-pin-input');
+      const numButtons = document.querySelectorAll('#gpay-numpad .gpay-num-btn');
+      const toggleEye = document.getElementById('toggle-pin-visibility');
+      let isPinVisible = false;
+      
+      const updatePinDisplay = () => {
+        pinCircles.forEach((circle, index) => {
+          circle.classList.toggle('filled', index < upiPinValue.length);
+        });
+        if (hiddenPinInput) {
+          hiddenPinInput.value = upiPinValue;
+        }
+      };
+      
+      // Handle numpad clicks
+      numButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const key = button.dataset.key || button.textContent.trim();
+          if (!key || key === '') return;
+          
+          if (key === '⌫') {
+            upiPinValue = upiPinValue.slice(0, -1);
+          } else if (upiPinValue.length < 6 && /^\d+$/.test(key)) {
+            upiPinValue += key;
+            // Add haptic feedback effect
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => { button.style.transform = 'scale(1)'; }, 100);
+          }
+          
+          updatePinDisplay();
+          
+          if (upiPinValue.length === 6) {
+            gpayState.upiPin = upiPinValue;
+            // Show success feedback
+            showOtpPopup('✅ PIN created! Now confirm your PIN.', false);
+            setTimeout(() => removeOtpPopup(), 1500);
+            enableNextButton();
+          }
+        });
+      });
+      
+      // Focus handling
+      if (hiddenPinInput) {
+        hiddenPinInput.addEventListener('focus', () => {});
+        hiddenPinInput.addEventListener('input', (e) => {
+          let val = e.target.value.replace(/[^0-9]/g, '');
+          if (val.length > 6) val = val.slice(0, 6);
+          upiPinValue = val;
+          updatePinDisplay();
+          if (upiPinValue.length === 6) {
+            gpayState.upiPin = upiPinValue;
+            showOtpPopup('✅ PIN created! Now confirm your PIN.', false);
+            setTimeout(() => removeOtpPopup(), 1500);
+            enableNextButton();
+          }
+        });
+      }
+      
+     // Toggle PIN visibility
+      const toggleEyeIcon = document.getElementById('toggle-pin-visibility');
+      if (toggleEyeIcon) {
+        toggleEyeIcon.addEventListener('click', () => {
+          isPinVisible = !isPinVisible;
+          const hiddenInput = document.getElementById('hidden-pin-input');
+          if (hiddenInput) {
+            hiddenInput.type = isPinVisible ? 'text' : 'password';
+          }
+          toggleEyeIcon.className = isPinVisible ? 'fas fa-eye' : 'fas fa-eye-slash';
+        });
+      }
+      
+      // Auto-focus on the hidden input
+      setTimeout(() => {
+        if (hiddenPinInput) hiddenPinInput.focus();
+        // Show tooltip for PIN creation
+        showOtpPopup('🔐 Create a 6-digit PIN (like ATM PIN)', false);
+        setTimeout(() => removeOtpPopup(), 3000);
+      }, 500);
+    }
+    
+    // For Confirm PIN step (instrIndex === 4)
+    if (instrIndex === 4) {
+      let confirmPinValue = '';
+      const confirmPinCircles = document.querySelectorAll('#confirm-pin-circles .gpay-pin-circle');
+      const hiddenConfirmInput = document.getElementById('hidden-confirm-pin-input');
+      const numButtons = document.querySelectorAll('#gpay-numpad-confirm .gpay-num-btn');
+      const toggleEye = document.getElementById('toggle-confirm-pin-visibility');
+      const errorDiv = document.getElementById('pin-match-error');
+      let isPinVisible = false;
+      
+      const updateConfirmPinDisplay = () => {
+        confirmPinCircles.forEach((circle, index) => {
+          circle.classList.toggle('filled', index < confirmPinValue.length);
+        });
+        if (hiddenConfirmInput) {
+          hiddenConfirmInput.value = confirmPinValue;
+        }
+      };
+      
+      // Handle numpad clicks
+      numButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          const key = button.dataset.key || button.textContent.trim();
+          if (!key || key === '') return;
+          
+          if (key === '⌫') {
+            confirmPinValue = confirmPinValue.slice(0, -1);
+            if (errorDiv) errorDiv.style.display = 'none';
+            // Add haptic feedback
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => { button.style.transform = 'scale(1)'; }, 100);
+          } else if (confirmPinValue.length < 6 && /^\d+$/.test(key)) {
+            confirmPinValue += key;
+            if (errorDiv) errorDiv.style.display = 'none';
+            button.style.transform = 'scale(0.95)';
+            setTimeout(() => { button.style.transform = 'scale(1)'; }, 100);
+          }
+          
+          updateConfirmPinDisplay();
+          
+          if (confirmPinValue.length === 6) {
+            // Check if PIN matches
+            if (confirmPinValue === gpayState.upiPin) {
+              // Show success message
+              showOtpPopup('✅ UPI PIN created successfully!', false);
+              setTimeout(() => removeOtpPopup(), 1500);
+              enableNextButton();
+            } else {
+              if (errorDiv) {
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = '❌ PINs do not match! Please try again.';
+                // Shake animation for error
+                errorDiv.style.animation = 'none';
+                setTimeout(() => { errorDiv.style.animation = ''; }, 10);
+              }
+              // Clear and reset for retry
+              setTimeout(() => {
+                confirmPinValue = '';
+                updateConfirmPinDisplay();
+                if (errorDiv) errorDiv.style.display = 'none';
+                if (hiddenConfirmInput) hiddenConfirmInput.focus();
+                // Show error popup
+                showOtpPopup('❌ PIN mismatch! Please re-enter your PIN.', true);
+                setTimeout(() => removeOtpPopup(), 2000);
+              }, 1500);
+            }
+          }
+        });
+      });
+      
+      // Focus handling
+      if (hiddenConfirmInput) {
+        hiddenConfirmInput.addEventListener('focus', () => {});
+        hiddenConfirmInput.addEventListener('input', (e) => {
+          let val = e.target.value.replace(/[^0-9]/g, '');
+          if (val.length > 6) val = val.slice(0, 6);
+          confirmPinValue = val;
+          updateConfirmPinDisplay();
+          if (confirmPinValue.length === 6) {
+            if (confirmPinValue === gpayState.upiPin) {
+              showOtpPopup('✅ UPI PIN created successfully!', false);
+              setTimeout(() => removeOtpPopup(), 1500);
+              enableNextButton();
+            } else {
+              if (errorDiv) {
+                errorDiv.style.display = 'block';
+                errorDiv.textContent = '❌ PINs do not match! Please try again.';
+              }
+              setTimeout(() => {
+                confirmPinValue = '';
+                updateConfirmPinDisplay();
+                if (errorDiv) errorDiv.style.display = 'none';
+              }, 1500);
+            }
+          }
+        });
+      }
+      
+ // Toggle PIN visibility
+      const toggleConfirmEyeIcon = document.getElementById('toggle-confirm-pin-visibility');
+      if (toggleConfirmEyeIcon) {
+        toggleConfirmEyeIcon.addEventListener('click', () => {
+          isPinVisible = !isPinVisible;
+          const hiddenInput = document.getElementById('hidden-confirm-pin-input');
+          if (hiddenInput) {
+            hiddenInput.type = isPinVisible ? 'text' : 'password';
+          }
+          toggleConfirmEyeIcon.className = isPinVisible ? 'fas fa-eye' : 'fas fa-eye-slash';
+        });
+      }
+      
+      // Auto-focus on the hidden input
+      setTimeout(() => {
+        if (hiddenConfirmInput) hiddenConfirmInput.focus();
+        // Show tooltip for PIN confirmation
+        showOtpPopup('🔐 Re-enter your UPI PIN to confirm', false);
+        setTimeout(() => removeOtpPopup(), 3000);
+      }, 500);
+    }
+  }
+
+  else if (screen === 'send-money') {
+    const newPaymentBtn = document.getElementById('new-payment-btn');
+    const recipientInput = document.querySelector('#recipient-input-field');
+    const amountInput = document.querySelector('#amount-input-field');
+    const noteInput = document.querySelector('#note-input-field');
+    const payBtn = document.getElementById('pay-btn');
+    
+    newPaymentBtn?.addEventListener('click', () => {
+      if (recipientInput) recipientInput.focus();
+    });
+
+    // Handle recipient input for instruction 1
+    if (recipientInput && instrIndex === 1) {
+      recipientInput.focus();
+      recipientInput.addEventListener('input', (e) => {
+        gpayState.payRecipient = e.target.value;
+        if (e.target.value.trim().length > 0) {
+          enableNextButton();
+        }
+      });
+    }
+
+    // Handle amount input for instruction 2
+    if (amountInput && instrIndex === 2) {
+      amountInput.focus();
+      amountInput.addEventListener('input', (e) => {
+        gpayState.payAmount = e.target.value;
+        if (parseFloat(e.target.value) > 0) {
+          enableNextButton();
+        }
+      });
+    }
+
+    // Handle note input for instruction 3
+    if (noteInput && instrIndex === 3) {
+      noteInput.focus();
+      noteInput.addEventListener('input', (e) => {
+        gpayState.payNote = e.target.value;
+        enableNextButton(); // Notes are optional, so enable on any input
+      });
+    }
+
+    // Handle pay button click for instruction 4
+    payBtn?.addEventListener('click', () => {
+      if (instrIndex === 4) {
+        if (!gpayState.payRecipient || !gpayState.payAmount) {
+          alert('Please enter recipient and amount');
+          return;
+        }
+        payBtn.textContent = 'Processing...';
+        payBtn.disabled = true;
+        enableNextButton();
+        setTimeout(() => {
+          payBtn.textContent = 'Processing...';
+        }, 100);
+      }
+    });
+  }
+}
+
+function handleCreateAccountContinue(phoneInput, otpInput, continueBtn) {
+  if (!phoneInput || !otpInput || !continueBtn) return;
+  const number = phoneInput.value.trim();
+  
+  if (!gpayState.otpSent) {
+    if (number.length !== 10) {
+      alert('Please enter a valid 10-digit mobile number');
+      phoneInput.focus();
+      return;
+    }
+    gpayState.phoneNumber = number;
+    gpayState.otpCode = generateOtp();
+    gpayState.otpSent = true;
+    gpayState.otpVerified = false;
+    continueBtn.textContent = 'Verify OTP';
+    showOtpPopup(`Your OTP is ${gpayState.otpCode}. Enter it in the field below.`, false);
+    otpInput.focus();
+    return;
+  }
+
+  const otpValue = otpInput.value.trim();
+  if (otpValue === gpayState.otpCode) {
+    gpayState.otpVerified = true;
+    continueBtn.textContent = 'Verified ✓';
+    continueBtn.disabled = true;
+    showOtpPopup('OTP verified successfully!', false);
+    setTimeout(() => {
+      continueBtn.textContent = 'Continue';
+      continueBtn.disabled = false;
+      removeOtpPopup();
+    }, 900);
+  } else {
+    alert('Wrong OTP entered. Please try again.');
+    otpInput.focus();
+  }
+}
+
+function renderExtraScreen(screen, highlightId, arrowDir) {
+  const ps = document.getElementById('phoneScreen');
+  let html = '';
+
+  if (currentModuleId === 1) { // DigiLocker
+    const logoUrl = 'https://play-lh.googleusercontent.com/EqNJ0V0N0vzNKxdOl-Uz4OW5t8b4BhROYEKvQVqi1s1O_Ng2E_AobK1YB5hVFvpD5Yk=w240-h480';
+    if (screen === 'dl-download') {
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="background:white; color:#333; display:flex; padding:10px;">
+          <div id="playstore-icon" class="gpay-field" style="flex:1; margin:0; padding:10px; border-radius:24px; background:#f1f3f4; display:flex; align-items:center; cursor:pointer;">
+            <i class="fas fa-search" style="margin-right:10px; color:#5f6368;"></i> DigiLocker
+          </div>
+          <div style="margin-left:10px; width:36px; height:36px; border-radius:50%; background:#0f9d58; color:white; display:flex; align-items:center; justify-content:center;">U</div>
+        </div>
+        <div class="gpay-body">
+          <div style="display:flex; gap:16px; align-items:center; margin-bottom:20px;">
+            <img src="${logoUrl}" style="width:72px; border-radius:16px; box-shadow:0 1px 4px rgba(0,0,0,0.2);">
+            <div>
+              <h2 style="margin:0; font-size:1.2rem;">DigiLocker</h2>
+              <p style="margin:0; color:#01875f; font-size:0.85rem; font-weight:600;">National eGovernance Division</p>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:space-between; text-align:center; margin-bottom:20px; font-size:0.8rem;">
+            <div><strong>4.3 ★</strong><br><span style="color:#64748b;">2M reviews</span></div>
+            <div><strong>100M+</strong><br><span style="color:#64748b;">Downloads</span></div>
+            <div><strong>3+</strong><br><span style="color:#64748b;">Rated for 3+</span></div>
+          </div>
+          <button id="dl-install-btn" onclick="handleDlInstall(this)" class="gpay-btn" style="background:#01875f;">Install</button>
+        </div>
+      </div>`;
+    } else if (screen === 'dl-splash') {
+      html = `
+      <div class="gpay-screen" style="background:white; justify-content:center;">
+        <div class="gpay-body" style="text-align:center; display:flex; flex-direction:column; justify-content:center; height:100%;">
+          <div style="margin-bottom:40px;">
+            <img id="dl-app-icon" src="${logoUrl}" style="width:100px; cursor:pointer;">
+            <h2 style="color:#1e1e1e; margin:10px 0;">DigiLocker</h2>
+            <p style="color:#757575;">Document wallet to Empower Citizens</p>
+          </div>
+          <button id="dl-signin-btn" onclick="moduleNext()" class="gpay-btn" style="background:#0056b3; margin-bottom:10px;">Sign In</button>
+          <button class="gpay-btn" style="background:white; color:#0056b3; border:2px solid #0056b3;">Create Account</button>
+        </div>
+      </div>`;
+    } else if (screen === 'dl-login') {
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="background:white; color:#333;"><i class="fas fa-arrow-left" style="margin-right:10px;"></i> Sign In to your account</div>
+        <div class="gpay-body">
+          <div style="background:white; border-radius:12px; padding:16px; box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+            <div style="display:flex; border-bottom:1px solid #ddd; margin-bottom:16px;">
+              <div style="flex:1; text-align:center; padding-bottom:8px; border-bottom:2px solid #0056b3; color:#0056b3; font-weight:bold;">Aadhaar/Mobile</div>
+              <div style="flex:1; text-align:center; padding-bottom:8px; color:#666;">Username</div>
+            </div>
+            <div class="gpay-field" style="margin-bottom:10px; border:none; padding:0;">
+              <label style="display:block; margin-bottom:5px; font-size:0.85rem; color:#666;">Aadhaar / Mobile Number</label>
+              <input id="dl-aadhaar-input" type="tel" placeholder="Enter Aadhaar Number" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+            </div>
+            <div class="gpay-field" style="margin-bottom:20px; border:none; padding:0;">
+              <label style="display:block; margin-bottom:5px; font-size:0.85rem; color:#666;">6 digit security PIN</label>
+              <input id="dl-pin-input" type="password" placeholder="Enter security PIN" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px;">
+            </div>
+            <button id="dl-submit-login-btn" onclick="moduleNext()" class="gpay-btn" style="background:#0056b3;">Sign In</button>
+          </div>
+        </div>
+      </div>`;
+    } else if (screen === 'dl-otp') {
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="background:white; color:#333;"><i class="fas fa-arrow-left" style="margin-right:10px;"></i> OTP Authentication</div>
+        <div class="gpay-body">
+          <div style="background:white; border-radius:12px; padding:20px; box-shadow:0 1px 3px rgba(0,0,0,0.1); text-align:center;">
+             <i class="fas fa-comment-dots" style="font-size:2rem; color:#0056b3; margin-bottom:10px;"></i>
+             <h3 style="margin:0 0 10px;">Enter OTP</h3>
+             <p style="font-size:0.9rem; color:#666; margin-bottom:20px;">OTP sent to your mobile number ending in ****1234.</p>
+             <div class="gpay-field" style="margin-bottom:20px; border:none; padding:0;">
+               <input id="dl-otp-input" type="tel" placeholder="X X X X X X" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; text-align:center; letter-spacing:8px; font-size:1.2rem;">
+             </div>
+             <button id="dl-submit-otp-btn" class="gpay-btn" style="background:#0056b3;">Submit</button>
+          </div>
+        </div>
+      </div>`;
+    } else if (screen === 'dl-view') {
+      html = `
+      <div class="gpay-screen">
+        <div class="gpay-header" style="background:#0056b3; display:flex; justify-content:space-between; padding:20px;">
+          <div><div style="font-size:0.8rem;">Welcome,</div><div style="font-weight:bold; font-size:1.2rem;">Rahul Sharma</div></div>
+          <div style="width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.2); display:flex; align-items:center; justify-content:center;"><i class="fas fa-user"></i></div>
+        </div>
+        <div class="gpay-body" style="padding-top:16px;">
+          <h3 style="margin-top:0;">Issued Documents (2)</h3>
+          <div id="dl-aadhaar-doc" class="gpay-field" style="display:flex; align-items:center; gap:16px; border-left:4px solid #0056b3; margin-bottom:10px; cursor:pointer;" onclick="showAadhaarPopup()">
+            <i class="fas fa-id-card" style="font-size:1.5rem; color:#0056b3;"></i>
+            <div><div style="font-weight:bold;">Aadhaar Card</div><div style="font-size:0.8rem; color:#666;">UIDAI</div></div>
+          </div>
+          <div id="dl-pan-doc" class="gpay-field" style="display:flex; align-items:center; gap:16px; border-left:4px solid #fd7e14; margin-bottom:10px; cursor:pointer;" onclick="showPanPopup()">
+            <i class="far fa-address-card" style="font-size:1.5rem; color:#fd7e14;"></i>
+            <div><div style="font-weight:bold;">PAN Verification Record</div><div style="font-size:0.8rem; color:#666;">Income Tax Department</div></div>
+          </div>
+          <div id="dl-success-msg" style="padding:10px; background:#d4edda; color:#155724; border-radius:8px; text-align:center; font-weight:bold; font-size:0.9rem;">
+            ✓ Auth Success
+          </div>
+        </div>
+      </div>`;
+    }
+  }
+  else if (currentModuleId === 2) { // UIDAI
+    if (screen === 'uidai-open') {
+      html = `<div class="gpay-screen">
+        <div class="gpay-header" style="background:#9a3412;"><i class="fas fa-id-card"></i> UIDAI</div>
+        <div class="gpay-body" style="text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+          <div id="browser-icon" style="width:72px;height:72px;background:#f97316;color:white;border-radius:20px;font-size:2.5rem;display:flex;align-items:center;justify-content:center;margin-bottom:30px;"><i class="fas fa-globe"></i></div>
+          <h2 style="margin-bottom:10px;">Aadhaar Portal</h2>
+          <p style="color:#666; margin-bottom:30px;">Access your digital identity securely.</p>
+          <button id="uidai-download-btn" onclick="moduleNext()" class="gpay-btn" style="background:#f97316;">Download Aadhaar</button>
+        </div>
+      </div>`;
+    } else if (screen === 'uidai-auth') {
+      html = `<div class="gpay-screen">
+        <div class="gpay-header" style="background:#9a3412;"><i class="fas fa-shield-alt"></i> Authentication</div>
+        <div class="gpay-body">
+          <div style="background:white; border-radius:12px; padding:20px; text-align:center;">
+            <i class="fas fa-lock" style="font-size:2rem; color:#9a3412; margin-bottom:15px;"></i>
+            <div style="margin-bottom:20px;">
+              <input id="uidai-aadhaar-input" type="text" placeholder="12-digit Aadhaar Number" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; text-align:center; font-size:1.1rem; letter-spacing:2px;">
+            </div>
+            <button id="uidai-send-otp" onclick="moduleNext()" class="gpay-btn" style="background:#64748b; margin-bottom:20px;">Send OTP</button>
+            <div style="margin-bottom:20px;">
+              <input type="text" placeholder="Enter OTP" style="width:100%; padding:10px; border:1px solid #ccc; border-radius:8px; text-align:center; font-size:1.1rem; letter-spacing:4px;">
+            </div>
+            <button id="uidai-verify-btn" onclick="moduleNext()" class="gpay-btn" style="background:#22c55e;">Verify & Download</button>
+            <div id="uidai-success" style="opacity:0; color:#16a34a; font-weight:bold; margin-top:20px; transition:opacity 0.5s;">✓ e-Aadhaar Downloaded!</div>
+          </div>
+        </div>
+      </div>`;
+    }
+  } // End UIDAI
+  else if (currentModuleId === 3) { // Email
+    if (screen === 'email-open') {
+      html = `<div class="gpay-screen">
+        <div class="gpay-header" style="background:#b91c1c;"><i class="fas fa-envelope"></i> Email</div>
+        <div class="gpay-body" style="text-align:center; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+          <div id="gmail-icon" style="width:72px;height:72px;background:#ea4335;color:white;border-radius:20px;font-size:2.5rem;display:flex;align-items:center;justify-content:center;margin-bottom:30px;"><i class="fas fa-envelope-open"></i></div>
+          <h2 style="margin-bottom:10px;">Your Mailbox</h2>
+          <p style="color:#666; margin-bottom:30px;">Zero unread emails.</p>
+          <button id="gmail-compose-btn" onclick="moduleNext()" class="gpay-btn" style="background:#ea4335;">Compose</button>
+        </div>
+      </div>`;
+    } else if (screen === 'email-compose') {
+      html = `<div class="gpay-screen">
+        <div class="gpay-header" style="background:#b91c1c;"><i class="fas fa-pen"></i> Compose Mail</div>
+        <div class="gpay-body">
+          <div style="background:white; border-radius:12px; padding:0; overflow:hidden;">
+            <div style="padding:15px; border-bottom:1px solid #eee;">
+              <input id="email-to-input" type="email" placeholder="To: email@example.com" style="width:100%; border:none; outline:none; font-size:1rem; color:#333;">
+            </div>
+            <div style="padding:15px; border-bottom:1px solid #eee;">
+              <input id="email-subject-input" type="text" placeholder="Subject" style="width:100%; border:none; outline:none; font-size:1rem; color:#333;">
+            </div>
+            <div style="padding:15px;">
+              <textarea placeholder="Compose email" style="width:100%; border:none; outline:none; font-size:1rem; color:#333; height:150px; resize:none;"></textarea>
+            </div>
+          </div>
+          <button id="email-send-btn" onclick="moduleNext()" class="gpay-btn" style="background:#22c55e; margin-top:20px;">Send <i class="fas fa-paper-plane" style="margin-left:5px;"></i></button>
+        </div>
+      </div>`;
+    }
+  }
+
+  ps.innerHTML = html;
+  
+  if (currentModuleId === 1) {
+    initDigilockerInteractions(screen);
+  }
+
+  if (highlightId) {
+    setTimeout(() => {
+      addSimHighlight(highlightId, arrowDir);
+    }, 400);
+  }
+}
+
+function initDigilockerInteractions(screen) {
+  if (screen === 'dl-otp') {
+    window.dlCurrentOtp = generateOtp();
+    setTimeout(() => {
+      showOtpPopup('Your DigiLocker OTP is ' + window.dlCurrentOtp, false);
+      setTimeout(() => {
+        removeOtpPopup();
+      }, 6000);
+    }, 1000);
+
+    const submitBtn = document.getElementById('dl-submit-otp-btn');
+    const otpInput = document.getElementById('dl-otp-input');
+    if (submitBtn && otpInput) {
+      submitBtn.addEventListener('click', () => {
+        const val = otpInput.value.replace(/[^0-9]/g, '');
+        if (val === window.dlCurrentOtp) {
+          showOtpPopup('OTP verified successfully!', false);
+          submitBtn.style.background = '#22c55e';
+          submitBtn.textContent = 'Verified ✔';
+          submitBtn.disabled = true;
+          setTimeout(() => removeOtpPopup(), 2000);
+        } else {
+          showOtpPopup('Wrong OTP entered. Please try again.', true);
+          otpInput.style.borderColor = '#ef4444';
+          setTimeout(() => otpInput.style.borderColor = '#ccc', 500);
+        }
+      });
+    }
+  }
+}
+
+function handleDlInstall(btn) {
+  if (btn.disabled) return;
+  btn.textContent = 'Installing...';
+  btn.style.opacity = '0.8';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = 'Installed';
+    btn.style.opacity = '1';
+    btn.style.background = '#22c55e';
+  }, 1500);
+}
+
+function showAadhaarPopup() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:9999;cursor:pointer;';
+  
+  const imageContainer = document.createElement('div');
+  imageContainer.style.cssText = 'position:relative;background:white;border-radius:12px;overflow:auto;box-shadow:0 10px 40px rgba(0,0,0,0.3);max-height:95vh;max-width:95vw;';
+  
+  const img = document.createElement('img');
+  img.src = 'A_sample_of_Aadhaar_card.jpg';
+  img.style.cssText = 'width:100%;height:auto;display:block;';
+  
+  const closeBtn = document.createElement('button');
+  closeBtn.innerHTML = '✕';
+  closeBtn.style.cssText = 'position:fixed;top:20px;right:20px;background:#ef4444;color:white;border:none;width:40px;height:40px;border-radius:50%;font-size:1.2rem;cursor:pointer;display:flex;align-items:center;justify-content:center;font-weight:bold;z-index:10000;';
+  
+  closeBtn.onclick = (e) => {
+    e.stopPropagation();
+    overlay.remove();
+  };
+  
+  overlay.onclick = () => overlay.remove();
+  
+  imageContainer.appendChild(img);
+  overlay.appendChild(imageContainer);
+  overlay.appendChild(closeBtn);
+  document.body.appendChild(overlay);
+}
+
+function generateOtp() {
+  return String(Math.floor(Math.random() * 900000) + 100000);
+}
+
+function showOtpPopup(message, isError = false) {
+  const ps = document.getElementById('phoneScreen');
+  if (!ps) return;
+  let popup = ps.querySelector('.otp-popup');
+  const content = `<strong>${isError ? 'Attention' : 'New message received'}</strong><div style="margin-top:6px;font-size:0.95rem;line-height:1.4;">${message}</div>`;
+  if (!popup) {
+    popup = document.createElement('div');
+    popup.className = 'otp-popup';
+    ps.appendChild(popup);
+  }
+  popup.innerHTML = content;
+  popup.style.background = isError ? 'rgba(220,38,38,0.95)' : 'rgba(15,23,42,0.95)';
+  popup.style.opacity = '1';
+  popup.style.transform = 'translateX(-50%) translateY(0)';
+}
+
+function removeOtpPopup() {
+  const ps = document.getElementById('phoneScreen');
+  if (!ps) return;
+  const popup = ps.querySelector('.otp-popup');
+  if (popup) popup.remove();
+}
+
+function addSimHighlight(elId, arrowDir) {
+  const ps = document.getElementById('phoneScreen');
+  const el = document.getElementById(elId) || document.querySelector(`#${elId}-field`)?.closest('.gpay-field');
+  if (!el) return;
+
+  // Remove old overlays
+  ps.querySelectorAll('.sim-highlight,.sim-arrow').forEach(e=>e.remove());
+
+  const psRect = ps.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+
+  const overlay = document.createElement('div');
+  overlay.className = 'sim-highlight';
+  overlay.style.top = (elRect.top - psRect.top - 4) + 'px';
+  overlay.style.left = (elRect.left - psRect.left - 4) + 'px';
+  overlay.style.width = (elRect.width + 8) + 'px';
+  overlay.style.height = (elRect.height + 8) + 'px';
+  ps.appendChild(overlay);
+
+  // Arrow
+  const arrow = document.createElement('div');
+  arrow.className = 'sim-arrow';
+  
+  let arrowDirection = arrowDir || 'down';
+  let arrowSvg = '';
+  
+  if (arrowDirection === 'down') {
+    arrowSvg = `<svg width="32" height="32" viewBox="0 0 32 32">
+      <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2563eb"/></marker></defs>
+      <line x1="16" y1="4" x2="16" y2="28" stroke="#2563eb" stroke-width="3" marker-end="url(#ah)"/>
+    </svg>`;
+  } else if (arrowDirection === 'right') {
+    arrowSvg = `<svg width="32" height="32" viewBox="0 0 32 32">
+      <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2563eb"/></marker></defs>
+      <line x1="4" y1="16" x2="28" y2="16" stroke="#2563eb" stroke-width="3" marker-end="url(#ah)"/>
+    </svg>`;
+  } else if (arrowDirection === 'left') {
+    arrowSvg = `<svg width="32" height="32" viewBox="0 0 32 32">
+      <defs><marker id="ah" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#2563eb"/></marker></defs>
+      <line x1="28" y1="16" x2="4" y2="16" stroke="#2563eb" stroke-width="3" marker-end="url(#ah)"/>
+    </svg>`;
+  }
+  
+  arrow.innerHTML = arrowSvg;
+
+  let arrowTop = elRect.top - psRect.top - 35;
+  let arrowLeft = elRect.left - psRect.left + elRect.width/2 - 16;
+  
+  if (arrowDirection === 'right') { 
+    arrowLeft = elRect.left - psRect.left - 40; 
+    arrowTop = elRect.top - psRect.top + elRect.height/2 - 16; 
+  }
+  if (arrowDirection === 'left') { 
+    arrowLeft = elRect.right - psRect.left + 8; 
+    arrowTop = elRect.top - psRect.top + elRect.height/2 - 16; 
+  }
+  
+  arrow.style.top = arrowTop + 'px';
+  arrow.style.left = arrowLeft + 'px';
+  ps.appendChild(arrow);
+
+  // Remove after 6s
+  setTimeout(() => { overlay.remove(); arrow.remove(); }, 6000);
+}
+
+// ===================== JIYA SCAM SEQUENCE =====================
+function startJiyaSequence() {
+  document.getElementById('welcomeBox').style.display = 'none';
+  const di = document.getElementById('dynamicInstruction');
+  di.style.display = 'block';
+  const meetJiyaVoice = voiceFor('gpay', 'narrative', 'meetJiya');
+  di.innerHTML = `
+    <div class="instr-card" style="background:linear-gradient(135deg,#fff7ed,#ffedd5);border-left-color:#f97316;">
+      <h3 style="color:#ea580c;">👋 Meet Jiya!</h3>
+      <p>You've learned all about Google Pay. Now let's see if you can help <strong>Jiya</strong> stay safe from fraud!</p>
+      <p style="margin-top:0.5rem;">Jiya is a regular user just like you. She will receive a call from an unknown number. Help her make the right choice!</p>
+      ${renderVoiceControls(meetJiyaVoice)}
+    </div>
+    <button class="instr-nav-btn" onclick="showJiyaOnPhone()">Meet Jiya on her phone →</button>
+  `;
+  handleAutoRead(meetJiyaVoice);
+
+  document.getElementById('phoneScreen').innerHTML = `
+    <div class="jiya-intro">
+      <div class="jiya-avatar">👩</div>
+      <div class="jiya-name">Meet Jiya</div>
+      <div class="jiya-desc">She just set up her Google Pay and is excited to use it!</div>
+    </div>`;
+}
+
+function showJiyaOnPhone() {
+  const di = document.getElementById('dynamicInstruction');
+  const jiyaRingingVoice = voiceFor('gpay', 'narrative', 'jiyaPhoneRinging');
+  di.innerHTML = `
+    <div class="instr-card" style="background:linear-gradient(135deg,#fff1f2,#ffe4e6);border-left-color:#ef4444;">
+      <h3 style="color:#dc2626;">📱 Jiya's Phone is Ringing!</h3>
+      <p>An unknown number is calling Jiya. What should she do?</p>
+      <p style="margin-top:0.5rem;">Look at Jiya's phone and choose wisely!</p>
+      ${renderVoiceControls(jiyaRingingVoice)}
+    </div>
+  `;
+  handleAutoRead(jiyaRingingVoice);
+
+  document.getElementById('phoneScreen').innerHTML = `
+    <div class="call-screen">
+      <div class="call-contact">
+        <div style="font-size:0.8rem;color:#94a3b8;margin-bottom:16px;">📳 Incoming Call</div>
+        <div class="call-avatar">🔔</div>
+        <div class="call-label">Unknown Number</div>
+        <div class="call-name">+91 XXXXX XXXXX</div>
+        <div style="margin-top:6px;background:#1e3a5f;border-radius:20px;padding:4px 12px;font-size:0.78rem;color:#94a3b8;">⚠️ Not in contacts</div>
+      </div>
+      <div class="call-actions">
+        <button class="call-btn pickup" onclick="handleCallAction('pickup')"><i class="fas fa-phone"></i>Pick up</button>
+        <button class="call-btn decline" onclick="handleCallAction('decline')"><i class="fas fa-phone-slash"></i>Decline</button>
+        <button class="call-btn ignore" onclick="handleCallAction('ignore')"><i class="fas fa-bell-slash"></i>Ignore</button>
+        <button class="call-btn nothing" onclick="handleCallAction('nothing')"><i class="fas fa-ellipsis-h"></i>Do Nothing</button>
+      </div>
+    </div>`;
+}
+
+function handleCallAction(action) {
+  if (action === 'pickup') {
+    showActiveCallScreen();
+  } else {
+    showSafeResult();
+  }
+}
+
+function showActiveCallScreen() {
+  const di = document.getElementById('dynamicInstruction');
+  const jiyaPickedUpVoice = voiceFor('gpay', 'narrative', 'jiyaPickedUp');
+  di.innerHTML = `
+    <div class="instr-card" style="background:linear-gradient(135deg,#fff7ed,#ffedd5);border-left-color:#f97316;">
+      <h3 style="color:#ea580c;">📞 Jiya Picked Up</h3>
+      <p>The caller claims to be from her bank. He says there's a problem with her account and asks for her UPI PIN to "fix" it. What should Jiya say?</p>
+      ${renderVoiceControls(jiyaPickedUpVoice)}
+    </div>
+  `;
+  handleAutoRead(jiyaPickedUpVoice);
+
+  document.getElementById('phoneScreen').innerHTML = `
+    <div class="active-call">
+      <div style="text-align:center;">
+        <div class="call-avatar" style="width:60px;height:60px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 8px;">🔴</div>
+        <div style="font-size:0.85rem;color:#94a3b8;">On Call · 0:22</div>
+        <div style="font-size:1rem;font-weight:700;margin:8px 0;color:white;">Unknown: +91 XXXXX XXXXX</div>
+        <div style="background:#1e3a5f;border-radius:12px;padding:10px;font-size:0.82rem;color:#cbd5e1;line-height:1.5;text-align:left;margin:10px 0;">
+          🗣️ <em>"Hello, I'm calling from your bank. We have detected suspicious activity on your Google Pay account. Please share your 6-digit UPI PIN to verify your identity."</em>
+        </div>
+      </div>
+      <div class="active-call-opts">
+        <button class="active-call-opt-btn danger" onclick="handleCallResponse('share')">🔓 "Sure, my PIN is 4 2 1 8 3 7"</button>
+        <button class="active-call-opt-btn safe" onclick="handleCallResponse('refuse')">🚫 "I will never share my PIN"</button>
+        <button class="active-call-opt-btn safe" onclick="handleCallResponse('hangup')">📵 Hang up immediately</button>
+        <button class="active-call-opt-btn danger" onclick="handleCallResponse('share2')">"Let me check my phone and tell you"</button>
+      </div>
+    </div>`;
+}
+
+function handleCallResponse(choice) {
+  if (choice === 'share' || choice === 'share2') {
+    showWarningResult();
+  } else {
+    showSafeResult();
+  }
+}
+
+function showWarningResult() {
+  spawnConfetti(false);
+  const warningVoice = voiceFor('gpay', 'narrative', 'warningResult');
+  document.getElementById('dynamicInstruction').innerHTML = `
+    <div class="instr-card" style="background:linear-gradient(135deg,#fef2f2,#fee2e2);border-left-color:#ef4444;">
+      <h3 style="color:#dc2626;">⚠️ This Was a Scam Attempt!</h3>
+      <p>Jiya shared her UPI PIN with a stranger. <strong>Real banks NEVER ask for your UPI PIN, OTP, or password over the phone.</strong></p>
+      <p style="margin-top:0.5rem;">Remember: If someone calls asking for your PIN or OTP — it's always a scam. Hang up immediately!</p>
+      ${renderVoiceControls(warningVoice)}
+    </div>
+    <button class="instr-nav-btn" style="background:#ef4444;" onclick="completeGpayModule(false)">Try Again Next Time →</button>
+  `;
+  handleAutoRead(warningVoice);
+  document.getElementById('phoneScreen').innerHTML = `
+    <div class="result-screen warning">
+      <div class="result-icon">⚠️</div>
+      <div class="result-title">Scam Alert!</div>
+      <div class="result-desc">Never share your UPI PIN or OTP with anyone — not even someone claiming to be from your bank.</div>
+      <button class="result-continue-btn" onclick="completeGpayModule(false)">I Understand</button>
+    </div>`;
+}
+
+function showSafeResult() {
+  spawnConfetti(true);
+  const safeVoice = voiceFor('gpay', 'narrative', 'safeResult');
+  document.getElementById('dynamicInstruction').innerHTML = `
+    <div class="instr-card" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left-color:#22c55e;">
+      <h3 style="color:#16a34a;">🎉 Great Job! Jiya is Safe!</h3>
+      <p>You made the right choice! Real banks and Google Pay will <strong>never</strong> call you asking for your UPI PIN or OTP.</p>
+      <p style="margin-top:0.5rem;">If you receive such calls, always decline or hang up immediately. You've earned your Google Pay points!</p>
+      ${renderVoiceControls(safeVoice)}
+    </div>
+    <button class="instr-nav-btn" onclick="completeGpayModule(true)">Claim Your Points 🏆</button>
+  `;
+  handleAutoRead(safeVoice);
+  document.getElementById('phoneScreen').innerHTML = `
+    <div class="result-screen success">
+      <div class="result-icon">🎉</div>
+      <div class="result-title">Excellent!</div>
+      <div class="result-desc">Jiya stayed safe because of you. You know how to spot a scam call!</div>
+      <button class="result-continue-btn" onclick="completeGpayModule(true)">Claim Points!</button>
+    </div>`;
+}
+
+function completeGpayModule(passed) {
+  const mod = modules[0];
+  if (!mod.completed) {
+    mod.completed = true;
+    if (passed) {
+      totalPoints += mod.points;
+    } else {
+      totalPoints += Math.floor(mod.points * 0.5);
+    }
+    updateGlobalUI();
+    renderModules();
+  }
+
+  const di = document.getElementById('dynamicInstruction');
+  di.innerHTML = `
+    <div class="instr-card" style="background:var(--accent-soft);">
+      <h3>✅ Google Pay Module Complete!</h3>
+      <p>You've finished the Google Pay learning module. You earned <strong>${passed ? modules[0].points : Math.floor(modules[0].points*0.5)} points</strong>!</p>
+      <p style="margin-top:0.5rem;">Explore other modules in the left panel to earn all 100 points and reach Gold status!</p>
+      ${renderVoiceControls(voiceFor('gpay', 'narrative', 'moduleComplete'))}
+    </div>
+  `;
+  handleAutoRead(voiceFor('gpay', 'narrative', 'moduleComplete'));
+  document.getElementById('phoneScreen').innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:20px;text-align:center;">
+      <div style="font-size:4rem;margin-bottom:12px;">🏆</div>
+      <div style="font-size:1.3rem;font-weight:800;color:var(--accent);">Module Complete!</div>
+      <div style="font-size:0.9rem;color:var(--text-muted);margin-top:8px;">Google Pay — ${passed ? modules[0].points : Math.floor(modules[0].points*0.5)} pts earned</div>
+    </div>`;
+}
+
+function spawnConfetti(success) {
+  const ps = document.getElementById('phoneScreen');
+  const colors = success
+    ? ['#22c55e','#4ade80','#86efac','#facc15','#fbbf24']
+    : ['#ef4444','#f97316','#fca5a5','#fed7aa'];
+  for (let i=0; i<24; i++) {
+    const p = document.createElement('div');
+    p.className = 'confetti-particle';
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      top:${Math.random()*30}%;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-delay:${Math.random()*0.5}s;
+      transform:rotate(${Math.random()*360}deg);
+    `;
+    ps.appendChild(p);
+    setTimeout(()=>p.remove(), 2000);
+  }
+}
+
+function enableNextButton() {
+  const btn = document.getElementById('nextBtn');
+  if (btn) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.style.cursor = 'pointer';
+    btn.style.background = 'var(--accent)';
+    btn.textContent = 'Got it →';
+    gpayState.actionCompleted = true;
+  }
+}
+
+function showActionHighlight(stepIndex, instrIndex, instr) {
+  if (typeof Shepherd === 'undefined') return;
+  
+  // Clear any existing tutorials
+  if (window.tempTour) {
+    window.tempTour.complete();
+    window.tempTour = null;
+  }
+  
+  // Map instruction to element that needs to be highlighted (within phone screen)
+  let highlightSelector = '';
+  let targetElement = null;
+  
+  // Get the phone screen element
+  const phoneScreen = document.getElementById('phoneScreen');
+  if (!phoneScreen) return;
+  
+  if (stepIndex === 0) { // Download
+    if (instrIndex === 0) highlightSelector = '#home-playstore';
+    else if (instrIndex === 1) highlightSelector = '#search-bar';
+    else if (instrIndex === 2) highlightSelector = '#search-input-field';
+    else if (instrIndex === 3) highlightSelector = '#install-btn';
+  } else if (stepIndex === 1) { // Create Account
+    if (instrIndex === 0) highlightSelector = '#home-gpay';
+    else if (instrIndex === 1) highlightSelector = '#phone-input-field';
+    else if (instrIndex === 2) highlightSelector = '#otp-input-field';
+    else if (instrIndex === 3) highlightSelector = '#continue-btn';
+  } else if (stepIndex === 2) { // Link Bank
+    if (instrIndex === 0) highlightSelector = '#profile-icon';
+    else if (instrIndex === 1) highlightSelector = '#bank-menu';
+    else if (instrIndex === 2) highlightSelector = '.bank-item';
+    else if (instrIndex === 3 || instrIndex === 4) highlightSelector = '#verify-btn';
+  } else if (stepIndex === 3) { // UPI PIN
+    if (instrIndex === 0) highlightSelector = '#set-pin-btn';
+    else if (instrIndex === 1) highlightSelector = '#card-input-field';
+    else if (instrIndex === 2) highlightSelector = '#expiry-input-field';
+    else if (instrIndex === 3) highlightSelector = '.gpay-numpad';
+    else if (instrIndex === 4) highlightSelector = '.gpay-numpad';
+  }
+  
+  if (!highlightSelector) return;
+  
+  // Special handling for bank items - highlight first bank item
+  if (highlightSelector === '.bank-item') {
+    targetElement = phoneScreen.querySelector('.bank-item');
+    if (!targetElement) return;
+  } else {
+    targetElement = phoneScreen.querySelector(highlightSelector);
+    if (!targetElement) return;
+  }
+  
+  // Remove previous highlight class
+  document.querySelectorAll('.shepherd-highlight-element').forEach(el => {
+    el.classList.remove('shepherd-highlight-element');
+  });
+  
+  // Add highlight class to target element
+  targetElement.classList.add('shepherd-highlight-element');
+  
+  // Ensure the phone screen container has proper positioning
+  phoneScreen.style.position = 'relative';
+  phoneScreen.style.overflow = 'visible';
+  
+  // Get action instruction with emoji
+  let actionHint = '';
+  let actionEmoji = '';
+  if (instr.action === 'click') {
+    actionEmoji = '🔘';
+    actionHint = 'Click here';
+  } else if (instr.action === 'type') {
+    actionEmoji = '⌨️';
+    actionHint = 'Type here';
+  } else if (instr.action === 'numpad') {
+    actionEmoji = '🔢';
+    actionHint = 'Tap numbers on keypad';
+  } else {
+    actionEmoji = '👆';
+    actionHint = 'Tap here';
+  }
+  
+  // Clean and shorten instruction text if needed
+  let shortText = instr.text;
+  if (shortText.length > 80) {
+    shortText = shortText.substring(0, 77) + '...';
+  }
+  
+  // Create small transparent Shepherd tour attached to the phone screen element
+  const tour = new Shepherd.Tour({
+    useModalOverlay: false, // Disable modal overlay to keep within phone
+    defaultStepOptions: {
+      classes: 'custom-shepherd mobile-shepherd-step',
+      scrollTo: false,
+      popperOptions: {
+        placement: instr.arrowDir === 'down' ? 'bottom' : (instr.arrowDir === 'right' ? 'right' : 'left'),
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset: [0, 10]
+            }
+          },
+          {
+            name: 'preventOverflow',
+            options: {
+              boundary: phoneScreen,
+              padding: 8,
+              altAxis: true
+            }
+          },
+          {
+            name: 'flip',
+            options: {
+              fallbackPlacements: ['top', 'bottom', 'left', 'right'],
+              boundary: phoneScreen,
+              padding: 8
+            }
+          }
+        ]
+      }
+    }
+  });
+  
+  tour.addStep({
+    id: 'mobile-highlight-step',
+    title: `Instruction`,
+    text: `${shortText}\n\n${actionHint}`,
+    attachTo: {
+      element: targetElement,
+      on: instr.arrowDir === 'down' ? 'bottom' : (instr.arrowDir === 'right' ? 'right' : 'left')
+    },
+    buttons: [
+      {
+        text: '✓ Got it',
+        action: () => {
+          targetElement.classList.remove('shepherd-highlight-element');
+          tour.complete();
+          window.tempTour = null;
+        }
+      }
+    ],
+    cancelIcon: {
+      enabled: true
+    }
+  });
+  
+  window.tempTour = tour;
+  
+  // Small delay to ensure DOM is ready
+  setTimeout(() => {
+    if (tour && targetElement) {
+      tour.start();
+    }
+  }, 100);
+  
+  // Auto-remove highlight after 8 seconds if user doesn't interact
+  setTimeout(() => {
+    if (window.tempTour === tour) {
+      targetElement.classList.remove('shepherd-highlight-element');
+      if (tour && tour.isActive()) {
+        tour.complete();
+      }
+      window.tempTour = null;
+    }
+  }, 8000);
+}
+function gpayNext() {
+  const mod = modules[0];
+  const step = gpaySteps[mod.currentStep];
+  if (mod.currentInstr < step.instructions.length - 1) {
+    showGpayStep(mod.currentStep, mod.currentInstr + 1);
+  } else if (mod.currentStep < gpaySteps.length - 1) {
+    showGpayStep(mod.currentStep + 1, 0);
+  } else {
+    startJiyaSequence();
+  }
+}
+
+function gpayPrev() {
+  const mod = modules[0];
+  if (mod.currentInstr > 0) {
+    showGpayStep(mod.currentStep, mod.currentInstr - 1);
+  } else if (mod.currentStep > 0) {
+    const prevStep = gpaySteps[mod.currentStep - 1];
+    showGpayStep(mod.currentStep - 1, prevStep.instructions.length - 1);
+  }
+}
+
+// ===================== TOUR =====================
+let tour = null;
+function startTour() {
+  if (tour) tour.cancel();
+  document.getElementById('welcomeBox').style.display = 'none';
+  const di = document.getElementById('dynamicInstruction');
+  di.style.display = 'block';
+  di.innerHTML = `<div class="welcome-box" style="background:var(--accent-soft);"><i class="fas fa-compass" style="font-size:2rem;color:var(--accent);"></i><h2>Tour Active</h2><p>Follow the highlighted steps to learn the app!</p></div>`;
+
+  tour = new Shepherd.Tour({
+    useModalOverlay:true,
+    defaultStepOptions:{
+      classes:'shepherd-theme-arrows',
+      scrollTo:{behavior:'smooth',block:'center'},
+      cancelIcon:{enabled:true}
+    }
+  });
+
+  // Tour step voice texts (sourced from voiceover_scripts.js)
+  const tourVoice = {
+    profile:  voiceFor('system', 'system', 'tourProfile'),
+    progress: voiceFor('system', 'system', 'tourProgress'),
+    modules:  voiceFor('system', 'system', 'tourModules'),
+    mobile:   voiceFor('system', 'system', 'tourMobile'),
+    start:    voiceFor('system', 'system', 'tourEnd'),
+  };
+
+  // Speak the tour start intro
+  handleAutoRead(voiceFor('system', 'system', 'tourStart'));
+
+  tour.addStep({
+    id:'profile-step',
+    title:'👤 Your Profile',
+    text:'Here you can see your name and the medal you earn as you complete modules.',
+    attachTo:{element:'#userProfile',on:'bottom'},
+    buttons:[{text:'Next →',action:()=>tour.next()}],
+    when:{ show(){ handleAutoRead(tourVoice.profile); }}
+  });
+  tour.addStep({
+    id:'progress-step',
+    title:'📊 Your Progress',
+    text:'This shows your total points out of 100. Complete all modules to earn a Gold medal! 🥇',
+    attachTo:{element:'#progressSection',on:'bottom'},
+    buttons:[{text:'← Back',action:()=>tour.back()},{text:'Next →',action:()=>tour.next()}],
+    when:{ show(){ handleAutoRead(tourVoice.progress); }}
+  });
+  tour.addStep({
+    id:'modules-step',
+    title:'📚 Training Modules',
+    text:'All your lessons are here. Click any card to start learning step by step!',
+    attachTo:{element:'#modulesPanel',on:'right'},
+    buttons:[{text:'← Back',action:()=>tour.back()},{text:'Next →',action:()=>tour.next()}],
+    when:{ show(){ handleAutoRead(tourVoice.modules); }}
+  });
+  tour.addStep({
+    id:'mobile-step',
+    title:'📱 Mobile Simulator',
+    text:'This phone shows you exactly how the apps look and work. You\'ll practise right here!',
+    attachTo:{element:'#mobilePanel',on:'left'},
+    buttons:[{text:'← Back',action:()=>tour.back()},{text:'Next →',action:()=>tour.next()}],
+    when:{ show(){ handleAutoRead(tourVoice.mobile); }}
+  });
+  tour.addStep({
+    id:'start-step',
+    title:'🚀 Let\'s Get Started!',
+    text:'You\'re all set! Let\'s start with <strong>Google Pay</strong> — click on the Google Pay card to begin your first lesson.',
+    attachTo:{element:'.module-card',on:'right'},
+    buttons:[{text:'← Back',action:()=>tour.back()},{text:'Let\'s Start!',action:()=>{
+      tour.complete();
+      document.getElementById('welcomeBox').style.display = 'none';
+      const d = document.getElementById('dynamicInstruction');
+      d.style.display = 'block';
+      const tourEndVoice = voiceFor('system', 'system', 'tourEnd');
+      d.innerHTML = `
+        <div class="instr-card" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-left-color:#2563eb;">
+          <h3>👆 Let's Start with Google Pay!</h3>
+          <p>Click on the <strong>Learn Google Pay</strong> card on the left to begin your first step-by-step lesson. You'll learn everything from downloading the app to sending money safely!</p>
+          ${renderVoiceControls(tourEndVoice)}
+        </div>`;
+      handleAutoRead(tourEndVoice);
+    }}],
+    when:{ show(){ handleAutoRead(tourVoice.start); }}
+  });
+
+  tour.on('cancel', () => {
+    stopSpeech();
+    document.getElementById('welcomeBox').style.display = 'none';
+    const d = document.getElementById('dynamicInstruction');
+    d.style.display = 'block';
+    const tourCancelVoice = voiceFor('system', 'system', 'tourEnd');
+    d.innerHTML = `
+      <div class="instr-card" style="background:linear-gradient(135deg,#eff6ff,#dbeafe);border-left-color:#2563eb;">
+        <h3>👆 Let's Start with Google Pay!</h3>
+        <p>Click on the <strong>Learn Google Pay</strong> card on the left to begin your first step-by-step lesson. You'll learn everything from downloading the app to sending money safely!</p>
+        ${renderVoiceControls(tourCancelVoice)}
+      </div>`;
+    handleAutoRead(tourCancelVoice);
+  });
+
+  tour.on('complete', () => {
+    stopSpeech();
+  });
+
+  tour.start();
+}
+
+// ===================== THEME =====================
+let isDark = false;
+document.getElementById('themeToggle').addEventListener('click',()=>{
+  isDark = !isDark;
+  document.body.classList.toggle('dark', isDark);
+  document.getElementById('themeToggle').innerHTML = isDark
+    ? '<i class="fas fa-sun"></i> Light Mode'
+    : '<i class="fas fa-moon"></i> Dark Mode';
+});
+
+// ===================== INIT =====================
+renderModules();
+updateGlobalUI();
+
+document.getElementById('startTourBtn').addEventListener('click', startTour);
+
+setTimeout(()=>{
+  if (!localStorage.getItem('tourCompleted2')) {
+    startTour();
+    localStorage.setItem('tourCompleted2','true');
+  }
+}, 800);
+
+const s = document.createElement('style');
+s.textContent = `.module-card:hover{transform:translateX(4px);}`;
+document.head.appendChild(s);
+</script>
+
+<!-- Google Translate Setup & Fast Toggle -->
+<script type="text/javascript">
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage: 'en', includedLanguages: 'hi,en'}, 'google_translate_element');
+}
+
+let currentLang = 'en';
+function toggleTranslation() {
+  const select = document.querySelector('.goog-te-combo');
+  if(!select) return; // Not loaded yet
+  
+  currentLang = currentLang === 'en' ? 'hi' : 'en';
+  select.value = currentLang;
+  select.dispatchEvent(new Event('change'));
+  
+  const btn = document.getElementById('fastTranslateBtn');
+  if(currentLang === 'hi') {
+    btn.innerHTML = '<i class="fas fa-language"></i> English';
+    btn.style.backgroundColor = 'var(--accent)';
+    btn.style.color = 'white';
+  } else {
+    btn.innerHTML = '<i class="fas fa-language"></i> हिंदी';
+    btn.style.backgroundColor = 'var(--module-bg)';
+    btn.style.color = 'var(--accent)';
+  }
+}
+</script>
+<link rel="preconnect" href="https://translate.googleapis.com">
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+</html>

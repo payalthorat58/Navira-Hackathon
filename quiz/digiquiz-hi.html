@@ -1,0 +1,1368 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>डिजिक्विज़ – जिया को सुरक्षित रखने में मदद करें</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg1: #020b18;
+  --bg2: #051630;
+  --bg3: #0a2444;
+  --blue1: #1a5fb4;
+  --blue2: #2e86de;
+  --blue3: #4fa3e8;
+  --ice: #7ec8e3;
+  --glass: rgba(10,37,69,0.55);
+  --glass2: rgba(4,18,40,0.75);
+  --border: rgba(78,163,232,0.22);
+  --border2: rgba(78,163,232,0.5);
+  --text: #f0f6ff;
+  --muted: rgba(240,246,255,0.6);
+  --faint: rgba(240,246,255,0.35);
+  --green: #22d37a;
+  --red: #ff5c6a;
+  --gold: #ffd166;
+  --r: 20px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;min-height:100%;overflow-x:hidden}
+body{
+  font-family:'Sora',sans-serif;
+  background:var(--bg1);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+
+/* ── BACKGROUND ── */
+.bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+.bg-canvas::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(46,134,222,0.12) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(13,59,122,0.16) 0%,transparent 55%),
+    linear-gradient(160deg,#020b18 0%,#051630 45%,#0a2444 80%,#020b18 100%);
+}
+.bg-orb{
+  position:absolute;border-radius:50%;filter:blur(80px);
+  animation:orbFloat 8s ease-in-out infinite;
+  pointer-events:none;
+}
+.bg-orb.o1{width:500px;height:500px;top:-150px;left:-100px;background:rgba(30,100,200,0.08);animation-delay:0s}
+.bg-orb.o2{width:400px;height:400px;bottom:-100px;right:-80px;background:rgba(78,163,232,0.07);animation-delay:3s}
+.bg-orb.o3{width:300px;height:300px;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(46,134,222,0.05);animation-delay:1.5s}
+
+@keyframes orbFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-30px) scale(1.05)}}
+
+/* ── MAIN WRAPPER ── */
+#app{
+  position:relative;z-index:10;
+  width:100%;max-width:680px;
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1.5rem;
+}
+
+/* ── SCREEN BASE ── */
+.screen{
+  width:100%;
+  display:none;
+  opacity:0;
+  transform:translateY(24px);
+  transition:opacity 0.5s cubic-bezier(0.22,1,0.36,1),transform 0.5s cubic-bezier(0.22,1,0.36,1);
+}
+.screen.active{display:flex;flex-direction:column;align-items:center}
+.screen.visible{opacity:1;transform:translateY(0)}
+
+/* ══════════════════════════════════════════
+   INTRO SCREEN
+══════════════════════════════════════════ */
+#screen-intro{gap:2rem;text-align:center}
+
+.intro-badge{
+  font-family:'Space Mono',monospace;
+  font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;
+  color:var(--ice);
+  background:rgba(78,163,232,0.1);
+  border:1px solid rgba(78,163,232,0.3);
+  padding:0.4rem 1.2rem;border-radius:40px;
+  animation:badgePulse 2.5s ease-in-out infinite;
+}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(78,163,232,0)}50%{box-shadow:0 0 20px rgba(78,163,232,0.35)}}
+
+/* Jiya Avatar */
+.avatar-wrap{position:relative;width:140px;height:140px;margin:0 auto}
+.avatar-ring{
+  position:absolute;inset:-10px;border-radius:50%;
+  border:2px solid transparent;
+  background:linear-gradient(135deg,#2e86de,#7ec8e3,#1a5fb4) border-box;
+  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:destination-out;
+  mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  mask-composite:exclude;
+  animation:ringRotate 4s linear infinite;
+}
+@keyframes ringRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.avatar-glow{
+  position:absolute;inset:-20px;border-radius:50%;
+  background:radial-gradient(circle,rgba(46,134,222,0.25) 0%,transparent 70%);
+  animation:avatarGlow 2s ease-in-out infinite alternate;
+}
+@keyframes avatarGlow{from{transform:scale(0.9);opacity:0.6}to{transform:scale(1.1);opacity:1}}
+.avatar-face{
+  width:140px;height:140px;border-radius:50%;
+  background:linear-gradient(145deg,#0d3b7a,#1a5fb4,#2e86de);
+  display:flex;align-items:center;justify-content:center;
+  font-size:4rem;
+  box-shadow:0 0 40px rgba(46,134,222,0.4),0 8px 32px rgba(0,0,0,0.3);
+  position:relative;z-index:1;
+  overflow:hidden;
+}
+.avatar-face::after{
+  content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:linear-gradient(135deg,transparent 40%,rgba(126,200,227,0.15) 50%,transparent 60%);
+  animation:avatarShimmer 3s ease-in-out infinite;
+}
+@keyframes avatarShimmer{0%{transform:translateX(-100%) rotate(0deg)}100%{transform:translateX(100%) rotate(0deg)}}
+
+.intro-title{
+  font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;letter-spacing:-0.02em;line-height:1.1;
+  background:linear-gradient(135deg,#f0f6ff 0%,#7ec8e3 50%,#4fa3e8 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.intro-subtitle{
+  font-size:clamp(0.9rem,2.5vw,1.05rem);font-weight:300;
+  color:var(--muted);line-height:1.7;max-width:420px;
+}
+.intro-subtitle em{color:var(--ice);font-style:normal;font-weight:500}
+
+.intro-stats{
+  display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;
+}
+.stat-chip{
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:12px;padding:0.8rem 1.4rem;
+  display:flex;flex-direction:column;align-items:center;gap:0.2rem;
+  backdrop-filter:blur(16px);
+}
+.stat-chip .num{font-size:1.5rem;font-weight:700;color:var(--blue3)}
+.stat-chip .lbl{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--faint)}
+
+/* ── BUTTONS ── */
+.btn-primary{
+  display:inline-flex;align-items:center;justify-content:center;gap:0.6rem;
+  padding:1rem 2.8rem;border-radius:50px;
+  background:linear-gradient(135deg,#1a5fb4,#2e86de,#4fa3e8);
+  color:#fff;font-family:'Sora',sans-serif;font-size:1rem;font-weight:600;
+  border:none;cursor:pointer;
+  box-shadow:0 4px 30px rgba(46,134,222,0.45),0 1px 0 rgba(255,255,255,0.1) inset;
+  transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.25s ease;
+  position:relative;overflow:hidden;
+  letter-spacing:0.03em;
+}
+.btn-primary::before{
+  content:'';position:absolute;top:-50%;left:-60%;
+  width:200%;height:200%;
+  background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,0.15) 50%,transparent 60%);
+  transform:translateX(-100%);transition:transform 0.5s ease;
+}
+.btn-primary:hover::before{transform:translateX(100%)}
+.btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 8px 40px rgba(46,134,222,0.6)}
+.btn-primary:active{transform:scale(0.97)}
+
+/* ══════════════════════════════════════════
+   QUIZ SCREEN
+══════════════════════════════════════════ */
+#screen-quiz{gap:1.4rem;width:100%}
+
+/* Progress */
+.progress-head{
+  width:100%;display:flex;align-items:center;justify-content:space-between;
+  font-size:0.78rem;letter-spacing:0.08em;font-weight:500;color:var(--muted);
+}
+.progress-head .q-label{font-family:'Space Mono',monospace;color:var(--ice)}
+.score-badge{
+  background:rgba(34,211,122,0.12);border:1px solid rgba(34,211,122,0.3);
+  border-radius:20px;padding:0.25rem 0.8rem;
+  font-size:0.72rem;font-weight:600;color:var(--green);
+  font-family:'Space Mono',monospace;
+}
+.progress-bar-track{
+  width:100%;height:5px;border-radius:10px;
+  background:rgba(78,163,232,0.12);border:1px solid rgba(78,163,232,0.15);overflow:hidden;
+}
+.progress-bar-fill{
+  height:100%;border-radius:10px;
+  background:linear-gradient(90deg,#1a5fb4,#4fa3e8);
+  transition:width 0.6s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:0 0 10px rgba(79,163,232,0.6);
+}
+
+/* Scenario Card */
+.scenario-card{
+  width:100%;
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:var(--r);
+  backdrop-filter:blur(24px);
+  overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,0.3),0 0 0 1px rgba(78,163,232,0.05);
+  min-height:200px;
+  display:flex;flex-direction:column;
+  position:relative;
+}
+.scenario-header{
+  padding:0.9rem 1.4rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0.7rem;
+  font-size:0.75rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;
+  color:var(--muted);background:rgba(4,18,40,0.4);
+}
+.scenario-type-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+  background:var(--blue3);
+  box-shadow:0 0 8px var(--blue3);
+  animation:dotBlink 1.5s ease-in-out infinite;
+}
+@keyframes dotBlink{0%,100%{opacity:1}50%{opacity:0.3}}
+.scenario-body{padding:1.5rem;flex:1;display:flex;flex-direction:column;justify-content:center}
+
+/* SMS Bubble */
+.sms-bubble-wrap{display:flex;flex-direction:column;gap:0.6rem}
+.sms-sender{font-size:0.72rem;color:var(--faint);margin-bottom:0.2rem;font-family:'Space Mono',monospace}
+.sms-bubble{
+  align-self:flex-start;max-width:90%;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:4px 18px 18px 18px;
+  padding:0.9rem 1.1rem;
+  font-size:0.92rem;line-height:1.6;
+  position:relative;
+}
+.sms-bubble.typing::after{
+  content:'';display:inline-block;width:6px;height:6px;
+  border-radius:50%;background:var(--blue3);margin-left:6px;
+  animation:typingDot 0.8s ease-in-out infinite;vertical-align:middle;
+}
+@keyframes typingDot{0%,100%{opacity:0.3;transform:scale(0.8)}50%{opacity:1;transform:scale(1)}}
+.sms-link{color:#ff6b6b;text-decoration:underline;font-family:'Space Mono',monospace;font-size:0.82rem}
+.sms-time{font-size:0.65rem;color:var(--faint);text-align:right;margin-top:0.5rem}
+
+/* Call Screen */
+.call-screen{
+  display:flex;flex-direction:column;align-items:center;gap:1rem;padding:1rem 0;
+}
+.call-avatar{
+  width:72px;height:72px;border-radius:50%;
+  background:linear-gradient(135deg,#1a3a6b,#2e6cb5);
+  display:flex;align-items:center;justify-content:center;font-size:1.8rem;
+  position:relative;
+}
+.call-ring{
+  position:absolute;inset:-8px;border-radius:50%;
+  border:2px solid rgba(78,163,232,0.4);
+  animation:callRing 1.2s ease-out infinite;
+}
+.call-ring2{
+  position:absolute;inset:-18px;border-radius:50%;
+  border:2px solid rgba(78,163,232,0.2);
+  animation:callRing 1.2s ease-out infinite 0.4s;
+}
+.call-ring3{
+  position:absolute;inset:-28px;border-radius:50%;
+  border:2px solid rgba(78,163,232,0.1);
+  animation:callRing 1.2s ease-out infinite 0.8s;
+}
+@keyframes callRing{0%{transform:scale(0.9);opacity:1}100%{transform:scale(1.5);opacity:0}}
+.call-name{font-size:1.1rem;font-weight:600}
+.call-sub{font-size:0.78rem;color:var(--muted)}
+.call-status{
+  font-size:0.7rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--green);
+  animation:statusPulse 1s ease-in-out infinite;
+}
+@keyframes statusPulse{0%,100%{opacity:1}50%{opacity:0.4}}
+.call-msg{
+  background:rgba(255,80,90,0.08);border:1px solid rgba(255,80,90,0.2);
+  border-radius:12px;padding:0.8rem 1.1rem;
+  font-size:0.9rem;line-height:1.5;text-align:center;font-weight:500;color:#ffb3b8;
+  max-width:340px;
+}
+.call-actions{display:flex;gap:1.5rem;margin-top:0.3rem}
+.call-btn{
+  width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:1.4rem;
+  transition:transform 0.2s ease;
+}
+.call-btn.accept{background:#22d37a;box-shadow:0 4px 20px rgba(34,211,122,0.4)}
+.call-btn.decline{background:#ff5c6a;box-shadow:0 4px 20px rgba(255,92,106,0.4)}
+.call-btn:hover{transform:scale(1.1)}
+
+/* Email Card */
+.email-card{
+  background:rgba(4,18,40,0.6);border:1px solid var(--border);
+  border-radius:12px;padding:1rem 1.2rem;
+  animation:emailSlide 0.5s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+@keyframes emailSlide{from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)}}
+.email-from{display:flex;align-items:flex-start;gap:0.7rem;margin-bottom:0.8rem}
+.email-ico{
+  width:36px;height:36px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,#2e86de,#4fa3e8);
+  display:flex;align-items:center;justify-content:center;font-size:0.9rem;
+}
+.email-from-meta{}
+.email-sender-name{font-size:0.85rem;font-weight:600}
+.email-sender-addr{font-size:0.72rem;color:#ff8c8c;font-family:'Space Mono',monospace}
+.email-subject{font-size:0.95rem;font-weight:600;margin-bottom:0.5rem}
+.email-body{font-size:0.85rem;color:var(--muted);line-height:1.6}
+.email-highlight{color:var(--gold);font-weight:600}
+
+/* WhatsApp */
+.wa-wrap{display:flex;flex-direction:column;gap:0.5rem}
+.wa-header{display:flex;align-items:center;gap:0.6rem;margin-bottom:0.5rem}
+.wa-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#075e54,#128c7e);display:flex;align-items:center;justify-content:center;font-size:0.9rem}
+.wa-name{font-size:0.82rem;font-weight:600;color:#25d366}
+.wa-online{font-size:0.65rem;color:var(--faint)}
+.wa-bubble{
+  background:rgba(37,211,102,0.08);border:1px solid rgba(37,211,102,0.15);
+  border-radius:4px 18px 18px 18px;
+  padding:0.9rem 1.1rem;max-width:88%;
+  font-size:0.9rem;line-height:1.6;
+}
+.wa-amount{color:#ffd166;font-size:1.1rem;font-weight:700}
+.wa-btn-msg{
+  display:inline-flex;align-items:center;gap:0.4rem;
+  background:rgba(37,211,102,0.15);border:1px solid rgba(37,211,102,0.3);
+  border-radius:20px;padding:0.35rem 0.9rem;margin-top:0.6rem;
+  font-size:0.75rem;color:#25d366;cursor:pointer;width:fit-content;
+}
+
+/* OTP */
+.otp-wrap{display:flex;flex-direction:column;gap:0.9rem}
+.otp-header{
+  display:flex;align-items:center;gap:0.8rem;
+  background:rgba(255,93,106,0.06);border:1px solid rgba(255,93,106,0.15);
+  border-radius:12px;padding:0.8rem 1rem;
+}
+.otp-icon{font-size:1.5rem}
+.otp-title{font-size:0.85rem;font-weight:600}
+.otp-from{font-size:0.7rem;color:var(--faint)}
+.otp-code-wrap{
+  background:rgba(4,18,40,0.7);border:1px solid var(--border);
+  border-radius:12px;padding:1rem 1.2rem;
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+}
+.otp-label{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--faint)}
+.otp-code{
+  font-family:'Space Mono',monospace;font-size:2rem;font-weight:700;
+  letter-spacing:0.3em;color:var(--gold);
+  text-shadow:0 0 20px rgba(255,209,102,0.5);
+}
+.otp-msg{font-size:0.82rem;color:var(--muted);text-align:center;line-height:1.6}
+.otp-alert{
+  background:rgba(255,92,106,0.1);border:1px solid rgba(255,92,106,0.25);
+  border-radius:10px;padding:0.7rem 1rem;font-size:0.82rem;color:#ffb3b8;
+  display:flex;align-items:center;gap:0.5rem;
+}
+
+/* Question Text */
+.q-text{
+  width:100%;font-size:clamp(0.95rem,2.5vw,1.08rem);font-weight:500;
+  line-height:1.65;color:var(--text);
+}
+.q-text span{color:var(--ice)}
+
+/* Options */
+.options-grid{width:100%;display:flex;flex-direction:column;gap:0.75rem}
+.option-btn{
+  width:100%;padding:1rem 1.3rem;
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:14px;backdrop-filter:blur(16px);
+  color:var(--text);font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:400;
+  text-align:left;cursor:pointer;
+  display:flex;align-items:flex-start;gap:0.9rem;
+  transition:all 0.25s cubic-bezier(0.22,1,0.36,1);
+  position:relative;overflow:hidden;line-height:1.5;
+}
+.option-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(78,163,232,0) 0%,rgba(78,163,232,0.06) 100%);
+  opacity:0;transition:opacity 0.25s ease;
+}
+.option-btn:hover::before{opacity:1}
+.option-btn:hover{border-color:var(--border2);transform:translateX(4px);box-shadow:0 4px 20px rgba(46,134,222,0.15)}
+.option-btn:active{transform:scale(0.98)}
+.opt-letter{
+  width:26px;height:26px;border-radius:8px;flex-shrink:0;
+  background:rgba(78,163,232,0.12);border:1px solid rgba(78,163,232,0.25);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Space Mono',monospace;font-size:0.7rem;font-weight:700;color:var(--blue3);
+  margin-top:1px;
+}
+.option-btn.correct{
+  border-color:rgba(34,211,122,0.7) !important;
+  background:rgba(34,211,122,0.1) !important;
+  box-shadow:0 0 24px rgba(34,211,122,0.2) !important;
+}
+.option-btn.correct .opt-letter{background:rgba(34,211,122,0.2);border-color:rgba(34,211,122,0.5);color:var(--green)}
+.option-btn.wrong{
+  border-color:rgba(255,92,106,0.6) !important;
+  background:rgba(255,92,106,0.08) !important;
+}
+.option-btn.wrong .opt-letter{background:rgba(255,92,106,0.15);border-color:rgba(255,92,106,0.4);color:var(--red)}
+.option-btn:disabled{cursor:not-allowed}
+
+/* Feedback Popup */
+.feedback-popup{
+  position:fixed;top:0;left:0;right:0;
+  z-index:999;
+  display:flex;flex-direction:column;align-items:center;
+  padding-top:2rem;
+  pointer-events:none;
+}
+.feedback-pill{
+  display:flex;flex-direction:column;align-items:center;gap:0.4rem;
+  padding:1rem 2rem;border-radius:20px;
+  backdrop-filter:blur(24px);
+  border:1px solid;
+  box-shadow:0 16px 48px rgba(0,0,0,0.4);
+  transform:translateY(-100px);
+  transition:transform 0.45s cubic-bezier(0.34,1.56,0.64,1),opacity 0.45s ease;
+  opacity:0;text-align:center;
+  max-width:340px;
+  pointer-events:all;
+}
+.feedback-pill.show{transform:translateY(0);opacity:1}
+.feedback-pill.correct{
+  background:rgba(22,40,30,0.9);border-color:rgba(34,211,122,0.5);
+}
+.feedback-pill.wrong{
+  background:rgba(40,16,20,0.9);border-color:rgba(255,92,106,0.5);
+}
+.fp-emoji{font-size:1.8rem}
+.fp-title{font-size:1rem;font-weight:700}
+.feedback-pill.correct .fp-title{color:var(--green)}
+.feedback-pill.wrong .fp-title{color:var(--red)}
+.fp-sub{font-size:0.8rem;color:var(--muted)}
+
+/* Explanation */
+.explanation-box{
+  width:100%;
+  background:rgba(46,134,222,0.07);border:1px solid rgba(46,134,222,0.2);
+  border-radius:14px;padding:1rem 1.2rem;
+  font-size:0.85rem;line-height:1.65;color:var(--muted);
+  display:none;animation:explainIn 0.4s ease forwards;
+}
+@keyframes explainIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.explanation-box strong{color:var(--ice);font-weight:600}
+.explanation-box .explain-head{
+  display:flex;align-items:center;gap:0.5rem;font-weight:600;font-size:0.88rem;
+  color:var(--text);margin-bottom:0.5rem;
+}
+
+.btn-next{
+  display:none;align-items:center;justify-content:center;gap:0.5rem;
+  padding:0.9rem 2.2rem;border-radius:50px;
+  background:linear-gradient(135deg,#1a5fb4,#2e86de);
+  color:#fff;font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:600;
+  border:none;cursor:pointer;
+  box-shadow:0 4px 24px rgba(46,134,222,0.35);
+  transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1),box-shadow 0.25s ease;
+  width:100%;
+}
+.btn-next:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(46,134,222,0.5)}
+.btn-next.show{display:flex}
+
+/* ══════════════════════════════════════════
+   FINAL SCREEN
+══════════════════════════════════════════ */
+#screen-final{gap:1.8rem;text-align:center;padding:2rem 1rem}
+
+.final-card{
+  width:100%;
+  background:var(--glass);border:1px solid var(--border);
+  border-radius:24px;backdrop-filter:blur(24px);
+  padding:2.5rem 2rem;
+  display:flex;flex-direction:column;align-items:center;gap:1.6rem;
+  box-shadow:0 12px 60px rgba(0,0,0,0.4);
+  position:relative;overflow:hidden;
+}
+.final-card::before{
+  content:'';position:absolute;top:-60%;left:-30%;width:160%;height:160%;
+  background:radial-gradient(ellipse,rgba(46,134,222,0.08) 0%,transparent 60%);
+  pointer-events:none;
+}
+
+.badge-wrap{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:0.8rem;
+}
+.badge-icon{
+  width:100px;height:100px;border-radius:50%;
+  background:linear-gradient(135deg,#0d3b7a,#2e86de,#7ec8e3);
+  display:flex;align-items:center;justify-content:center;font-size:2.8rem;
+  box-shadow:0 0 60px rgba(46,134,222,0.5),0 8px 32px rgba(0,0,0,0.3);
+  animation:badgeBounce 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+@keyframes badgeBounce{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+.badge-label{
+  font-family:'Space Mono',monospace;font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;
+  color:var(--ice);background:rgba(78,163,232,0.12);border:1px solid rgba(78,163,232,0.3);
+  border-radius:20px;padding:0.3rem 1rem;
+}
+.badge-title{font-size:1.4rem;font-weight:700;color:var(--gold)}
+
+.score-display{display:flex;flex-direction:column;align-items:center;gap:0.4rem}
+.score-num{
+  font-size:4rem;font-weight:800;
+  background:linear-gradient(135deg,#f0f6ff,#7ec8e3);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  font-family:'Space Mono',monospace;line-height:1;
+}
+.score-label{font-size:0.78rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--faint)}
+
+.final-msg{font-size:1.1rem;font-weight:500;line-height:1.6;color:var(--muted)}
+.final-msg strong{color:var(--text)}
+
+.stars-row{display:flex;gap:0.4rem;justify-content:center;font-size:1.5rem}
+
+.btn-replay{
+  display:inline-flex;align-items:center;gap:0.6rem;
+  padding:0.9rem 2.2rem;border-radius:50px;
+  background:transparent;border:1.5px solid var(--border2);
+  color:var(--text);font-family:'Sora',sans-serif;font-size:0.9rem;font-weight:500;
+  cursor:pointer;backdrop-filter:blur(12px);
+  transition:all 0.25s ease;
+}
+.btn-replay:hover{background:rgba(78,163,232,0.1);border-color:rgba(78,163,232,0.6);transform:translateY(-2px)}
+
+/* Confetti */
+.confetti-piece{
+  position:fixed;pointer-events:none;z-index:9999;
+  width:8px;height:8px;border-radius:2px;
+  animation:confettiFall linear forwards;
+}
+@keyframes confettiFall{
+  0%{transform:translateY(-20px) rotate(0deg);opacity:1}
+  100%{transform:translateY(100vh) rotate(720deg);opacity:0}
+}
+
+/* Transition overlay */
+#transition-overlay{
+  position:fixed;inset:0;z-index:5000;
+  background:var(--bg2);
+  opacity:0;pointer-events:none;
+  transition:opacity 0.35s ease;
+}
+#transition-overlay.show{opacity:1;pointer-events:all}
+
+/* ── RESPONSIVE ── */
+@media(max-width:480px){
+  .intro-stats{gap:0.8rem}
+  .stat-chip{padding:0.6rem 1rem}
+  .option-btn{padding:0.85rem 1rem;font-size:0.85rem}
+  .scenario-body{padding:1rem}
+}
+/* 🌗 THEME TOGGLE BUTTON */
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  background: var(--glass);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(10px);
+
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: var(--text);
+
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(78,163,232,0.4);
+}
+
+/* 🌞 LIGHT MODE VARIABLES */
+body.light-mode {
+  --bg1: #f0f6ff;
+  --bg2: #dbeafe;
+  --bg3: #eff6ff;
+
+  --blue1: #0d47a1;
+  --blue2: #1565c0;
+  --blue3: #1976d2;
+  --ice: #0d7377;
+  --glass: rgba(255,255,255,0.75);
+  --glass2: rgba(255,255,255,0.9);
+  --border: rgba(13,115,119,0.25);
+  --border2: rgba(13,115,119,0.4);
+
+  --text: #0a2540;
+  --muted: rgba(10,37,64,0.75);
+  --faint: rgba(10,37,64,0.45);
+  --green: #00796b;
+  --red: #c62828;
+  --gold: #f57f17;
+}
+
+/* ── LIGHT MODE SPECIFIC STYLES ── */
+body.light-mode .bg-canvas::before {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 20%, rgba(13,115,119,0.08) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 80%, rgba(21,101,192,0.08) 0%,transparent 55%),
+    linear-gradient(160deg,#f0f6ff 0%,#dbeafe 45%,#eff6ff 80%,#f0f6ff 100%);
+}
+
+body.light-mode .bg-orb.o1 {
+  background:rgba(25,118,210,0.06);
+}
+
+body.light-mode .bg-orb.o2 {
+  background:rgba(13,115,119,0.05);
+}
+
+body.light-mode .bg-orb.o3 {
+  background:rgba(25,118,210,0.04);
+}
+
+body.light-mode .avatar-ring {
+  background:linear-gradient(135deg,#1976d2,#0d7377,#0d47a1) border-box;
+}
+
+body.light-mode .avatar-face {
+  background:linear-gradient(145deg,#0d47a1,#1565c0,#1976d2);
+}
+
+body.light-mode .intro-title {
+  background:linear-gradient(135deg,#0a2540 0%,#0d7377 50%,#1565c0 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+body.light-mode .btn-primary {
+  background:linear-gradient(135deg,#0d47a1,#1565c0,#1976d2);
+  box-shadow:0 4px 30px rgba(13,71,161,0.3),0 1px 0 rgba(0,0,0,0.05) inset;
+}
+
+body.light-mode .btn-primary:hover {
+  box-shadow:0 8px 40px rgba(13,71,161,0.4);
+}
+
+body.light-mode .progress-bar-fill {
+  background:linear-gradient(90deg,#0d47a1,#1976d2);
+  box-shadow:0 0 10px rgba(25,118,210,0.5);
+}
+
+body.light-mode .sms-link {
+  color:#d32f2f;
+}
+
+body.light-mode .call-avatar {
+  background:linear-gradient(135deg,#0d47a1,#1565c0);
+}
+
+body.light-mode .call-msg {
+  background:rgba(198,40,40,0.08);
+  border:1px solid rgba(198,40,40,0.25);
+  color:#b71c1c;
+}
+
+body.light-mode .email-ico {
+  background:linear-gradient(135deg,#1976d2,#1565c0);
+}
+
+body.light-mode .wa-avatar {
+  background:linear-gradient(135deg,#00796b,#00897b);
+}
+
+body.light-mode .badge-icon {
+  background:linear-gradient(135deg,#0d47a1,#1976d2,#0d7377);
+  box-shadow:0 0 60px rgba(13,71,161,0.4),0 8px 32px rgba(0,0,0,0.15);
+}
+
+body.light-mode .btn-next {
+  background:linear-gradient(135deg,#0d47a1,#1565c0);
+  box-shadow:0 4px 24px rgba(13,71,161,0.3);
+}
+
+body.light-mode .btn-next:hover {
+  box-shadow:0 8px 32px rgba(13,71,161,0.4);
+}
+
+body.light-mode .final-card {
+  box-shadow:0 12px 60px rgba(0,0,0,0.1);
+}
+
+body.light-mode .score-num {
+  background:linear-gradient(135deg,#0a2540,#0d7377);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+
+body.light-mode .scenario-body {
+  background:rgba(255,255,255,0.4);
+}
+
+body.light-mode .explanation-box {
+  background:rgba(25,118,210,0.08);
+  border:1px solid rgba(25,118,210,0.25);
+  color:rgba(10,37,64,0.8);
+}
+
+body.light-mode .explanation-box strong {
+  color:#0d47a1;
+}
+
+body.light-mode .sms-bubble {
+  background:rgba(255,255,255,0.6);
+  border:1px solid rgba(13,115,119,0.2);
+  color:rgba(10,37,64,0.85);
+}
+
+body.light-mode .email-card {
+  background:rgba(255,255,255,0.5);
+  border:1px solid rgba(25,118,210,0.2);
+}
+
+body.light-mode .email-sender-addr {
+  color:#d32f2f;
+}
+
+body.light-mode .otp-code {
+  color:#f57f17;
+  text-shadow:0 0 20px rgba(245,127,23,0.3);
+}
+
+body.light-mode .otp-alert {
+  background:rgba(198,40,40,0.08);
+  border:1px solid rgba(198,40,40,0.2);
+  color:rgba(198,40,40,0.85);
+}
+
+body.light-mode #transition-overlay {
+  background:#dbeafe;
+}
+
+body.light-mode .feedback-pill.correct {
+  background:rgba(13,115,119,0.95);
+  border-color:rgba(0,121,107,0.6);
+}
+
+body.light-mode .feedback-pill.wrong {
+  background:rgba(179,38,30,0.95);
+  border-color:rgba(211,47,47,0.6);
+}
+
+body.light-mode .feedback-pill.correct .fp-title {
+  color:#4caf50;
+}
+
+body.light-mode .feedback-pill.wrong .fp-title {
+  color:#ff6b6b;
+}
+
+body.light-mode .fp-title {
+  color:#ffffff;
+}
+
+body.light-mode .fp-sub {
+  color:rgba(255,255,255,0.85);
+}
+
+body.light-mode .opt-letter {
+  background:rgba(25,118,210,0.15);
+  border:1px solid rgba(25,118,210,0.35);
+  color:#1565c0;
+}
+
+body.light-mode .option-btn:hover {
+  border-color:rgba(25,118,210,0.5);
+}
+
+body.light-mode .option-btn.correct {
+  border-color:rgba(0,121,107,0.7) !important;
+  background:rgba(0,121,107,0.12) !important;
+  box-shadow:0 0 24px rgba(0,121,107,0.2) !important;
+}
+
+body.light-mode .option-btn.correct .opt-letter {
+  background:rgba(0,121,107,0.25);
+  border-color:rgba(0,121,107,0.5);
+  color:#00796b;
+}
+
+body.light-mode .option-btn.wrong {
+  border-color:rgba(211,47,47,0.5) !important;
+  background:rgba(211,47,47,0.1) !important;
+}
+
+body.light-mode .option-btn.wrong .opt-letter {
+  background:rgba(211,47,47,0.15);
+  border-color:rgba(211,47,47,0.4);
+  color:#c62828;
+}
+</style>
+</head>
+<body>
+
+<!-- Background -->
+<div class="bg-canvas">
+  <div class="bg-orb o1"></div>
+  <div class="bg-orb o2"></div>
+  <div class="bg-orb o3"></div>
+</div>
+
+<!-- Transition overlay -->
+<div id="transition-overlay"></div>
+
+<!-- Feedback popup -->
+<div class="feedback-popup" id="feedbackPopup">
+  <div class="feedback-pill" id="feedbackPill">
+    <div class="fp-emoji" id="fpEmoji"></div>
+    <div class="fp-title" id="fpTitle"></div>
+    <div class="fp-sub" id="fpSub"></div>
+  </div>
+</div>
+<br>
+<button id="themeToggle" class="theme-toggle">🌙</button>
+<!-- APP -->
+<div id="app">
+  <!-- ═══ INTRO SCREEN ═══ -->
+  <div class="screen" id="screen-intro">
+    <span class="intro-badge">🛡️ &nbsp;डिजिटल सुरक्षा क्विज़</span>
+
+    <div class="avatar-wrap">
+      <div class="avatar-glow"></div>
+      <div class="avatar-ring"></div>
+      <div class="avatar-face">👧</div>
+    </div>
+
+    <h1 class="intro-title">जिया को<br/>ऑनलाइन सुरक्षित रखने में मदद करें</h1>
+    <p class="intro-subtitle">
+      <em>5 वास्तविक जीवन स्थितियाँ.</em> क्या आप संदिग्ध चीज़ों को पहचान सकते हैं और जिया को स्कैमर्स से बचा सकते हैं?
+    </p>
+
+    <div class="intro-stats">
+      <div class="stat-chip">
+        <span class="num">5</span>
+        <span class="lbl">प्रश्न</span>
+      </div>
+      <div class="stat-chip">
+        <span class="num">3</span>
+        <span class="lbl">अनुमानित मिनट</span>
+      </div>
+      <div class="stat-chip">
+        <span class="num">🏅</span>
+        <span class="lbl">बैज पुरस्कार</span>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="startQuiz()">
+      <span>जिया की सुरक्षा शुरू करें</span>
+      <span>→</span>
+    </button>
+  </div>
+
+  <!-- ═══ QUIZ SCREEN ═══ -->
+  <div class="screen" id="screen-quiz">
+    <div class="progress-head">
+      <span class="q-label" id="qLabel">प्रश्न 1 of 5</span>
+      <span class="score-badge" id="scoreBadge">स्कोर: 0</span>
+    </div>
+    <div class="progress-bar-track">
+      <div class="progress-bar-fill" id="progressFill" style="width:20%"></div>
+    </div>
+
+    <div class="scenario-card" id="scenarioCard">
+      <div class="scenario-header" id="scenarioHeader">
+        <div class="scenario-type-dot"></div>
+        <span id="scenarioTypeLabel">एसएमएस</span>
+      </div>
+      <div class="scenario-body" id="scenarioBody"></div>
+    </div>
+
+    <p class="q-text" id="questionText"></p>
+
+    <div class="options-grid" id="optionsGrid"></div>
+
+    <div class="explanation-box" id="explanationBox"></div>
+
+    <button class="btn-next" id="btnNext" onclick="nextQuestion()">
+      <span id="btnNextLabel">अगला प्रश्न</span>
+      <span>→</span>
+    </button>
+  </div>
+
+  <!-- ═══ FINAL SCREEN ═══ -->
+  <div class="screen" id="screen-final">
+    <div class="final-card">
+      <div class="badge-wrap">
+        <div class="badge-icon" id="badgeIcon"></div>
+        <span class="badge-label" id="badgeLabel"></span>
+        <div class="badge-title" id="badgeTitle"></div>
+      </div>
+
+      <div class="score-display">
+        <div class="score-num" id="finalScore"></div>
+        <div class="score-label">सही उत्तर</div>
+      </div>
+
+      <div class="stars-row" id="starsRow"></div>
+
+      <p class="final-msg" id="finalMsg"></p>
+
+      <button class="btn-primary" onclick="restartQuiz()">फिर से खेलें →</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* ══════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════ */
+const questions = [
+  {
+    id:1,
+    type:'SMS',
+    typeColor:'#4fa3e8',
+    scenarioHTML:`
+      <div class="sms-bubble-wrap">
+        <div class="sms-sender">📱 एसबीआई-अलर्ट · अभी</div>
+        <div class="sms-bubble" id="smsBubble">
+          <span id="smsText"></span>
+        </div>
+        <div class="sms-time">✓✓ 10:42 AM</div>
+      </div>`,
+    smsContent:'आपका बैंक खाता <strong>ब्लॉक</strong> हो जाएगा! तुरंत वेरिफाई करें: <span class="sms-link">http://sbi-secure-verfy.com</span>',
+    question:'👉 इस संदेश में क्या संदिग्ध है?',
+    options:[
+      'संदेश का समय',
+      'वेबसाइट लिंक गलत स्पेलिंग का है (verfy.com)',
+      'यह एसबीआई द्वारा भेजा गया था',
+      '"तुरंत" शब्द का उपयोग किया गया है'
+    ],
+    correct:1,
+    explanation:'🔍 <strong>गलत वर्तनी वाले URL</strong> फ़िशिंग का एक क्लासिक तरीका है। असली एसबीआई लिंक <strong>sbi.co.in</strong> होते हैं — "verfy.com" नहीं। कुछ भी क्लिक करने से पहले हमेशा पूरा URL जांचें!'
+  },
+  {
+    id:2,
+    type:'CALL',
+    typeColor:'#22d37a',
+    scenarioHTML:`
+      <div class="call-screen">
+        <div class="call-avatar">
+          🏦
+          <div class="call-ring"></div>
+          <div class="call-ring2"></div>
+          <div class="call-ring3"></div>
+        </div>
+        <div class="call-name">+91 98XX-XXXXX</div>
+        <div class="call-sub">अज्ञात नंबर · इनकमिंग कॉल</div>
+        <div class="call-status">● इनकमिंग कॉल</div>
+        <div class="call-msg">
+          "मैं आपके बैंक से बोल रहा हूँ! आपका कार्ड कंप्रोमाइज़ हो गया है। ट्रांजैक्शन रद्द करने के लिए <strong>अभी</strong> मुझे अपना ओटीपी बताएं!"
+        </div>
+        <div class="call-actions">
+          <button class="call-btn accept">📞</button>
+          <button class="call-btn decline">📵</button>
+        </div>
+      </div>`,
+    question:'👉 इस कॉल के बारे में क्या संदिग्ध है?',
+    options:[
+      'कॉल करने वाला बैंक से होने का दावा करता है',
+      'कॉल करने वाला ओटीपी (वन टाइम पासवर्ड) माँग रहा है',
+      'कॉल सप्ताह के दिन आई थी',
+      'नंबर मुंबई का है'
+    ],
+    correct:1,
+    explanation:'🚨 <strong>कोई भी बैंक कभी भी आपसे ओटीपी नहीं माँगता।</strong> ओटीपी = वन टाइम पासवर्ड — यह केवल आपके लिए होता है। इसके लिए पूछने वाला कोई भी व्यक्ति धोखेबाज़ होता है, चाहे वे कोई भी होने का दावा करें!'
+  },
+  {
+    id:3,
+    type:'EMAIL',
+    typeColor:'#ffd166',
+    scenarioHTML:`
+      <div class="email-card">
+        <div class="email-from">
+          <div class="email-ico">📧</div>
+          <div class="email-from-meta">
+            <div class="email-sender-name">पेटीएम सपोर्ट टीम</div>
+            <div class="email-sender-addr">support@paytm-secure-help.xyz</div>
+          </div>
+        </div>
+        <div class="email-subject">🎉 बधाई हो! <span class="email-highlight">₹5,000</span> का कैशबैक दावा करें</div>
+        <div class="email-body">
+          प्रिय जिया, आपको एक विशेष कैशबैक पुरस्कार के लिए चुना गया है। ₹5,000 कैशबैक तुरंत दावा करने के लिए नीचे दिए गए लिंक पर क्लिक करें और अपना पेटीएम पिन दर्ज करें!<br/><br/>
+          <span style="color:#ff8c8c;font-size:0.78rem;font-family:'Space Mono',monospace">http://paytm-cashbk-claim.xyz/claim?ref=JY2024</span>
+        </div>
+      </div>`,
+    question:'👉 इस ईमेल में क्या संदिग्ध है?',
+    options:[
+      '₹5,000 की कैशबैक राशि',
+      'विषय पंक्ति में इमोजी है',
+      'ईमेल डोमेन paytm.com नहीं है',
+      'ईमेल जिया को संबोधित है'
+    ],
+    correct:2,
+    explanation:'🔎 पेटीएम का आधिकारिक ईमेल हमेशा <strong>@paytm.com</strong> पर समाप्त होता है। "paytm-secure-help.xyz" एक नकली डोमेन है। कोई भी लिंक क्लिक करने से पहले हमेशा प्रेषक का ईमेल पता ध्यान से जाँचें!'
+  },
+  {
+    id:4,
+    type:'WHATSAPP',
+    typeColor:'#25d366',
+    scenarioHTML:`
+      <div class="wa-wrap">
+        <div class="wa-header">
+          <div class="wa-avatar">🤑</div>
+          <div>
+            <div class="wa-name">लकी ड्रॉ ऑफिशियल</div>
+            <div class="wa-online">ऑनलाइन · +91 7XX-XXX-XXXX</div>
+          </div>
+        </div>
+        <div class="wa-bubble">
+          🎊 <strong>बधाई हो जिया!</strong><br/><br/>
+          आप हमारे नेशनल लॉटरी के <strong>भाग्यशाली विजेता</strong> के रूप में चुने गए हैं!<br/><br/>
+          इनाम: <span class="wa-amount">₹25,000 कैश</span> 💰<br/><br/>
+          समाप्त होने से पहले अपना इनाम दावा करने के लिए <strong>अभी क्लिक करें!</strong><br/><br/>
+          <div class="wa-btn-msg">👉 ₹25,000 अभी दावा करें</div>
+        </div>
+        <div style="font-size:0.65rem;color:var(--faint);margin-top:0.3rem;padding-left:0.5rem">✓✓ 2:15 PM</div>
+      </div>`,
+    question:'👉 इस संदेश के बारे में क्या संदिग्ध है?',
+    options:[
+      'संदेश में कैपिटल अक्षरों का उपयोग किया गया है',
+      'यह व्हाट्सएप पर आया था',
+      'इनाम सच होने के लिए बहुत अच्छा है और इसमें तात्कालिकता का दबाव है',
+      'प्रेषक का नाम लकी ड्रॉ है'
+    ],
+    correct:2,
+    explanation:'⚠️ <strong>"सच होने के लिए बहुत अच्छा"</strong> ऑफर और <strong>तात्कालिकता का दबाव</strong> ("2 घंटे में समाप्त हो रहा है!") स्कैम के मुख्य संकेत हैं। आप उस लॉटरी को नहीं जीत सकते जिसमें आपने कभी प्रवेश नहीं किया। ऐसे लिंक पर कभी क्लिक न करें!'
+  },
+  {
+    id:5,
+    type:'OTP ALERT',
+    typeColor:'#ff5c6a',
+    scenarioHTML:`
+      <div class="otp-wrap">
+        <div class="otp-header">
+          <div class="otp-icon">🔐</div>
+          <div>
+            <div class="otp-title">एचडीएफसी बैंक से ट्रांजैक्शन ओटीपी</div>
+            <div class="otp-from">VM-HDFCBK · 3:40 PM</div>
+          </div>
+        </div>
+        <div class="otp-code-wrap">
+          <div class="otp-label">आपका ओटीपी है</div>
+          <div class="otp-code">8 5 2 1 4 6</div>
+          <div class="otp-msg">10 मिनट के लिए वैध। किसी के साथ साझा न करें।</div>
+        </div>
+        <div class="otp-alert">
+          ⚠️ अभी किसी ने जिया को बैंक से होने का दावा करते हुए फोन किया, कह रहा था: <em>"संदिग्ध ट्रांजैक्शन रद्द करने के लिए कृपया ओटीपी साझा करें।"</em>
+        </div>
+      </div>`,
+    question:'👉 जिया को क्या करना चाहिए?',
+    options:[
+      'ट्रांजैक्शन जल्दी रद्द करने के लिए ओटीपी साझा करें',
+      'ओटीपी केवल तभी साझा करें यदि कॉल करने वाला उसे बैंक शाखा का नाम बताए',
+      'ओटीपी साझा न करें — तुरंत फोन काटें और नंबर ब्लॉक करें',
+      'ओटीपी लिखें और व्हाट्सएप पर साझा करें'
+    ],
+    correct:2,
+    explanation:'✅ <strong>अपना ओटीपी कभी भी किसी के साथ साझा न करें</strong> — चाहे वह बैंक से होने का दावा करने वाला कोई भी क्यों न हो। बैंक कभी भी ओटीपी नहीं माँगते। तुरंत फोन काटें, नंबर ब्लॉक करें, और अपने बैंक के आधिकारिक हेल्पलाइन पर इसकी सूचना दें!'
+  }
+];
+
+/* ══════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════ */
+let currentQ = 0;
+let score = 0;
+let answered = false;
+
+/* ══════════════════════════════════════════════
+   SCREEN MANAGEMENT
+══════════════════════════════════════════════ */
+function showScreen(id) {
+  const overlay = document.getElementById('transition-overlay');
+  overlay.classList.add('show');
+  setTimeout(()=>{
+    document.querySelectorAll('.screen').forEach(s=>{
+      s.classList.remove('active','visible');
+    });
+    const screen = document.getElementById(id);
+    screen.classList.add('active');
+    overlay.classList.remove('show');
+    setTimeout(()=> screen.classList.add('visible'), 30);
+  }, 350);
+}
+
+/* ══════════════════════════════════════════════
+   START
+══════════════════════════════════════════════ */
+function startQuiz() {
+  currentQ = 0;
+  score = 0;
+  answered = false;
+  showScreen('screen-quiz');
+  setTimeout(()=> loadQuestion(0), 400);
+}
+
+/* ══════════════════════════════════════════════
+   LOAD QUESTION
+══════════════════════════════════════════════ */
+function loadQuestion(idx) {
+  const q = questions[idx];
+  answered = false;
+
+  // Progress
+  document.getElementById('qLabel').textContent = `प्रश्न ${idx+1} of ${questions.length}`;
+  document.getElementById('scoreBadge').textContent = `स्कोर: ${score}`;
+  document.getElementById('progressFill').style.width = `${((idx+1)/questions.length)*100}%`;
+
+  // Scenario header
+  document.getElementById('scenarioTypeLabel').textContent = q.type === 'SMS' ? 'एसएमएस' : (q.type === 'CALL' ? 'कॉल' : (q.type === 'EMAIL' ? 'ईमेल' : (q.type === 'WHATSAPP' ? 'व्हाट्सएप' : 'ओटीपी अलर्ट')));
+  const dot = document.querySelector('.scenario-type-dot');
+  dot.style.background = q.typeColor;
+  dot.style.boxShadow = `0 0 8px ${q.typeColor}`;
+
+  // Scenario body
+  document.getElementById('scenarioBody').innerHTML = q.scenarioHTML;
+
+  // SMS typing effect
+  if (q.type === 'SMS') {
+    const bubble = document.getElementById('smsBubble');
+    bubble.classList.add('typing');
+    const textEl = document.getElementById('smsText');
+    textEl.innerHTML = '';
+    setTimeout(()=>{
+      bubble.classList.remove('typing');
+      textEl.innerHTML = q.smsContent;
+    }, 1400);
+  }
+
+  // Question
+  document.getElementById('questionText').innerHTML = q.question;
+
+  // Options
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+  const letters = ['क','ख','ग','घ'];
+  q.options.forEach((opt, i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="opt-letter">${letters[i]}</span><span>${opt}</span>`;
+    btn.onclick = ()=> selectAnswer(i, btn);
+    grid.appendChild(btn);
+  });
+
+  // Hide explanation and next
+  const expBox = document.getElementById('explanationBox');
+  expBox.style.display = 'none';
+  expBox.innerHTML = '';
+  const btnNext = document.getElementById('btnNext');
+  btnNext.classList.remove('show');
+  btnNext.style.display = 'none';
+
+  // Next button label
+  document.getElementById('btnNextLabel').textContent =
+    idx < questions.length - 1 ? 'अगला प्रश्न' : 'परिणाम देखें';
+}
+
+/* ══════════════════════════════════════════════
+   ANSWER SELECTION
+══════════════════════════════════════════════ */
+function selectAnswer(idx, btn) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[currentQ];
+  const isCorrect = idx === q.correct;
+
+  if (isCorrect) {
+    score++;
+    btn.classList.add('correct');
+    launchConfetti();
+    showFeedback(true);
+  } else {
+    btn.classList.add('wrong');
+    // Show correct
+    const btns = document.querySelectorAll('.option-btn');
+    btns[q.correct].classList.add('correct');
+    showFeedback(false);
+  }
+
+  // Disable all
+  document.querySelectorAll('.option-btn').forEach(b=> b.disabled = true);
+
+  // Show explanation
+  setTimeout(()=>{
+    const expBox = document.getElementById('explanationBox');
+    expBox.style.display = 'block';
+    expBox.innerHTML = `
+      <div class="explain-head">💡 स्पष्टीकरण</div>
+      ${q.explanation}
+    `;
+    const btnNext = document.getElementById('btnNext');
+    btnNext.classList.add('show');
+    btnNext.style.display = 'flex';
+    document.getElementById('scoreBadge').textContent = `स्कोर: ${score}`;
+  }, 900);
+}
+
+/* ══════════════════════════════════════════════
+   FEEDBACK POPUP
+══════════════════════════════════════════════ */
+function showFeedback(correct) {
+  const pill = document.getElementById('feedbackPill');
+  const emoji = document.getElementById('fpEmoji');
+  const title = document.getElementById('fpTitle');
+  const sub = document.getElementById('fpSub');
+
+  pill.className = 'feedback-pill ' + (correct ? 'correct' : 'wrong');
+  emoji.textContent = correct ? '🎉' : '😬';
+  title.textContent = correct ? 'बहुत अच्छे! आपने जिया की रक्षा की।' : 'उफ़! यह स्कैम हो सकता था।';
+  sub.textContent = correct ? 'शानदार पकड़! आगे बढ़ते रहें।' : 'अधिक जानने के लिए स्पष्टीकरण पढ़ें।';
+
+  pill.classList.add('show');
+  setTimeout(()=> pill.classList.remove('show'), 2800);
+}
+
+/* ══════════════════════════════════════════════
+   NEXT QUESTION
+══════════════════════════════════════════════ */
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= questions.length) {
+    showResults();
+    return;
+  }
+  const overlay = document.getElementById('transition-overlay');
+  overlay.classList.add('show');
+  setTimeout(()=>{
+    loadQuestion(currentQ);
+    overlay.classList.remove('show');
+  }, 320);
+}
+
+/* ══════════════════════════════════════════════
+   RESULTS
+══════════════════════════════════════════════ */
+function showResults() {
+  showScreen('screen-final');
+  setTimeout(()=>{
+    const pct = score / questions.length;
+    let badge, badgeEmoji, badgeLabel, msg;
+
+    if (pct <= 0.4) {
+      badge = 'शुरुआती'; badgeEmoji = '🌱'; badgeLabel = 'सीखते रहें';
+      msg = 'हर विशेषज्ञ कभी शुरुआती था। <strong>स्पष्टीकरण की समीक्षा करें</strong> और फिर से प्रयास करें — आप बेहतर करेंगे!';
+    } else if (pct <= 0.8) {
+      badge = 'स्मार्ट उपयोगकर्ता'; badgeEmoji = '🧠'; badgeLabel = 'अच्छी जागरूकता';
+      msg = 'आप बहुत अच्छी जागरूकता बना रहे हैं! <strong>आपकी वजह से, जिया आज सुरक्षित रही।</strong>';
+    } else {
+      badge = 'स्कैम रक्षक'; badgeEmoji = '🛡️'; badgeLabel = 'चैंपियन';
+      msg = '<strong>आपकी वजह से, जिया आज सुरक्षित रही।</strong> आप एक सच्चे डिजिटल गार्जियन हैं!';
+      launchConfetti(true);
+    }
+
+    document.getElementById('badgeIcon').textContent = badgeEmoji;
+    document.getElementById('badgeLabel').textContent = badgeLabel;
+    document.getElementById('badgeTitle').textContent = badge;
+    document.getElementById('finalScore').textContent = `${score}/${questions.length}`;
+    document.getElementById('finalMsg').innerHTML = msg;
+
+    // Stars
+    let stars = '';
+    for(let i=0;i<5;i++) {
+      stars += i < score ? '⭐' : '☆';
+    }
+    document.getElementById('starsRow').textContent = stars;
+  }, 450);
+}
+
+/* ══════════════════════════════════════════════
+   RESTART
+══════════════════════════════════════════════ */
+function restartQuiz() {
+  startQuiz();
+}
+
+/* ══════════════════════════════════════════════
+   CONFETTI
+══════════════════════════════════════════════ */
+function launchConfetti(big) {
+  const colors = ['#4fa3e8','#22d37a','#ffd166','#ff6b6b','#7ec8e3','#a78bfa','#f59e0b'];
+  const count = big ? 80 : 24;
+  for(let i=0; i<count; i++) {
+    setTimeout(()=>{
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.left = Math.random()*100 + 'vw';
+      el.style.top = '-10px';
+      el.style.background = colors[Math.floor(Math.random()*colors.length)];
+      el.style.borderRadius = Math.random()>0.5 ? '50%' : '2px';
+      el.style.width = (6+Math.random()*8) + 'px';
+      el.style.height = (6+Math.random()*8) + 'px';
+      const dur = 1.5 + Math.random()*2;
+      el.style.animationDuration = dur + 's';
+      el.style.animationDelay = (Math.random()*0.3) + 's';
+      document.body.appendChild(el);
+      setTimeout(()=> el.remove(), dur*1000+400);
+    }, i*30);
+  }
+}
+
+/* ══════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════ */
+(function init() {
+  const intro = document.getElementById('screen-intro');
+  intro.classList.add('active');
+  setTimeout(()=> intro.classList.add('visible'), 80);
+})();
+/* 🌗 THEME TOGGLE LOGIC */
+
+const toggleBtn = document.getElementById('themeToggle');
+
+// Load saved theme
+if (localStorage.getItem('theme') === 'light') {
+  document.body.classList.add('light-mode');
+  toggleBtn.textContent = '☀️';
+}
+
+// Toggle on click
+toggleBtn.addEventListener('click', () => {
+  document.body.classList.toggle('light-mode');
+
+  if (document.body.classList.contains('light-mode')) {
+    localStorage.setItem('theme', 'light');
+    toggleBtn.textContent = '☀️';
+  } else {
+    localStorage.setItem('theme', 'dark');
+    toggleBtn.textContent = '🌙';
+  }
+});
+</script>
+</body>
+</html>

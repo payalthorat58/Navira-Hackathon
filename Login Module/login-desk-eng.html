@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <title>Digital Saarthi | Smart Form Wizard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* CSS variables for light/dark theme */
+    :root {
+      --bg-page: linear-gradient(145deg, #eef2f7 0%, #d9e2ec 100%);
+      --panel-bg: rgba(255,255,255,0.96);
+      --panel-shadow: 0 25px 45px -12px rgba(0,0,0,0.25);
+      --text-primary: #0a2540;
+      --text-secondary: #2c4c6e;
+      --border-light: #e2e8f0;
+      --accent: #0066cc;
+      --accent-hover: #004c99;
+      --accent-glow: rgba(0,102,204,0.25);
+      --input-bg: #ffffff;
+      --input-border: #cfdfed;
+      --btn-primary: #0066cc;
+      --btn-primary-text: white;
+      --progress-bg: #e2e8f0;
+      --mobile-bezel: #1a1a1a;
+      --mobile-screen: #fefefe;
+      --instruction-bg: rgba(255,255,255,0.85);
+      --radio-label: #1e3a5f;
+      --card-border: rgba(0,102,204,0.15);
+      --toast-bg: #1e293b;
+      --toast-text: #ffffff;
+      --overlay-bg: rgba(0,0,0,0.85);
+      --strength-weak: #e11d48;
+      --strength-medium: #f59e0b;
+      --strength-strong: #10b981;
+      --login-btn-bg: #0066cc;
+      --modal-bg: #ffffff;
+      --modal-text: #0a2540;
+    }
+
+    body.dark {
+      --bg-page: linear-gradient(145deg, #0b1120 0%, #111827 100%);
+      --panel-bg: #1e293b;
+      --text-primary: #f0f4fa;
+      --text-secondary: #b9c7d9;
+      --border-light: #2d3a4e;
+      --accent: #3b82f6;
+      --accent-hover: #60a5fa;
+      --accent-glow: rgba(59,130,246,0.35);
+      --input-bg: #0f172a;
+      --input-border: #334155;
+      --btn-primary: #3b82f6;
+      --btn-primary-text: white;
+      --progress-bg: #2d3a4e;
+      --mobile-bezel: #0f0f12;
+      --mobile-screen: #1e293b;
+      --instruction-bg: #0f172aee;
+      --radio-label: #cbd5e6;
+      --card-border: #3b82f640;
+      --toast-bg: #0f172a;
+      --toast-text: #e2e8f0;
+      --overlay-bg: rgba(0,0,0,0.9);
+      --strength-weak: #f43f5e;
+      --strength-medium: #fbbf24;
+      --strength-strong: #34d399;
+      --login-btn-bg: #3b82f6;
+      --modal-bg: #1e293b;
+      --modal-text: #f0f4fa;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 1.5rem;
+      transition: background 0.3s ease;
+    }
+
+    /* Welcome Overlay */
+    .welcome-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--overlay-bg);
+      backdrop-filter: blur(12px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      transition: opacity 1s ease, visibility 1s ease;
+      opacity: 1;
+      visibility: visible;
+    }
+    .welcome-overlay.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .welcome-content {
+      text-align: center;
+      animation: welcomePulse 1.5s ease-in-out;
+    }
+    .welcome-content h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--accent), #00a1ff, var(--accent));
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 1rem;
+      letter-spacing: 2px;
+    }
+    .welcome-content p {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    @keyframes welcomePulse {
+      0% { transform: scale(0.95); opacity: 0; }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .theme-bar {
+      display: flex;
+      justify-content: flex-end;
+      max-width: 1400px;
+      margin: 0 auto 1.2rem auto;
+      position: relative;
+      z-index: 10;
+    }
+    .theme-btn {
+      background: var(--panel-bg);
+      border: 1px solid var(--border-light);
+      border-radius: 100px;
+      padding: 0.6rem 1.4rem;
+      font-weight: 600;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      color: var(--text-primary);
+      font-size: 0.85rem;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .theme-btn:hover {
+      background: var(--accent);
+      color: white;
+      transform: scale(0.97);
+    }
+
+    .dashboard {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: stretch;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    .dashboard.visible {
+      opacity: 1;
+    }
+
+    /* LEFT PANEL */
+    .instruction-panel {
+      flex: 1.1;
+      min-width: 280px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      box-shadow: var(--panel-shadow);
+      padding: 2rem 1.8rem;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--card-border);
+    }
+
+    .progress-area {
+      margin-bottom: 2rem;
+    }
+    .step-badge {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--accent);
+      background: var(--instruction-bg);
+      display: inline-block;
+      padding: 0.3rem 1rem;
+      border-radius: 40px;
+      border: 0.5px solid var(--border-light);
+    }
+    .progress-bar-bg {
+      background: var(--progress-bg);
+      border-radius: 20px;
+      height: 8px;
+      width: 100%;
+      margin-top: 1rem;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background: var(--accent);
+      width: 0%;
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    .instruction-card {
+      background: var(--instruction-bg);
+      border-radius: 1.5rem;
+      padding: 1.8rem;
+      margin: 1rem 0 2rem 0;
+      border-left: 6px solid var(--accent);
+      animation: fadeSlideUp 0.4s ease;
+    }
+    .instruction-text {
+      font-size: 1.7rem;
+      font-weight: 700;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+    }
+    .password-rules {
+      margin-top: 1.2rem;
+      padding-top: 1rem;
+      border-top: 1px dashed var(--border-light);
+      font-size: 0.85rem;
+    }
+    .password-rules p {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+    }
+    .password-rules ul {
+      padding-left: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .password-rules li {
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.8rem;
+    }
+    .strength-meter {
+      margin-top: 1rem;
+      height: 6px;
+      background: var(--progress-bg);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.2s;
+    }
+    .strength-fill {
+      width: 0%;
+      height: 100%;
+      transition: width 0.25s ease, background 0.2s;
+    }
+    .strength-text {
+      font-size: 0.7rem;
+      margin-top: 0.4rem;
+      font-weight: 600;
+    }
+
+    /* MOBILE REPLICA */
+    .mobile-container {
+      flex: 1;
+      min-width: 340px;
+      display: flex;
+      justify-content: center;
+    }
+    .phone-replica {
+      background: var(--mobile-bezel);
+      border-radius: 3.2rem;
+      padding: 0.9rem;
+      box-shadow: 0 30px 40px -20px rgba(0,0,0,0.5), inset 0 1px 2px rgba(255,255,255,0.1);
+      width: 100%;
+      max-width: 380px;
+      transition: transform 0.2s ease;
+      position: relative;
+    }
+    .phone-screen {
+      background: var(--mobile-screen);
+      border-radius: 2.5rem;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      min-height: 620px;
+    }
+    .dynamic-island {
+      background: #0f0f12;
+      width: 110px;
+      height: 34px;
+      margin: 12px auto 8px auto;
+      border-radius: 28px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
+    }
+    .dynamic-island span {
+      width: 10px;
+      height: 10px;
+      background: #2c2c32;
+      border-radius: 50%;
+    }
+    .phone-header {
+      text-align: center;
+      padding: 0.8rem 0 0.4rem;
+      border-bottom: 1px solid var(--border-light);
+      margin-bottom: 1rem;
+    }
+    .phone-header h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), #00a1ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .form-container {
+      padding: 1.2rem 1.5rem 1rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: relative;
+    }
+    .form-group label {
+      font-weight: 600;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-secondary);
+    }
+    input {
+      background: var(--input-bg);
+      border: 1.5px solid var(--input-border);
+      border-radius: 1.2rem;
+      padding: 0.9rem 1rem;
+      font-size: 0.95rem;
+      outline: none;
+      color: var(--text-primary);
+      transition: all 0.2s;
+    }
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px var(--accent-glow);
+    }
+    .radio-group {
+      display: flex;
+      gap: 1.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+      padding: 0.3rem 0;
+      transition: all 0.2s;
+    }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+      text-transform: none;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+    input[type="radio"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+      margin: 0;
+    }
+    .phone-row {
+      display: flex;
+      gap: 0.7rem;
+      align-items: center;
+    }
+    .phone-row input {
+      flex: 1;
+    }
+    .send-otp-btn {
+      background: var(--accent);
+      border: none;
+      padding: 0.85rem 1rem;
+      border-radius: 1.2rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      white-space: nowrap;
+      font-size: 0.8rem;
+      transition: all 0.2s;
+    }
+    .send-otp-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .send-otp-btn:not(:disabled):hover {
+      background: var(--accent-hover);
+      transform: scale(0.97);
+    }
+
+    /* Login Button */
+    .login-btn-container {
+      padding: 0.5rem 1.5rem 1.8rem 1.5rem;
+      margin-top: 0.5rem;
+    }
+    .login-btn {
+      width: 100%;
+      background: var(--login-btn-bg);
+      border: none;
+      border-radius: 2rem;
+      padding: 1rem;
+      font-size: 1rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .login-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.05);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+    .login-btn:active {
+      transform: translateY(1px);
+    }
+
+    /* OTP NOTIFICATION */
+    .otp-toast {
+      position: absolute;
+      top: 80px;
+      left: 20px;
+      right: 20px;
+      background: var(--toast-bg);
+      color: var(--toast-text);
+      border-radius: 1.2rem;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      border-left: 5px solid var(--accent);
+      z-index: 200;
+      animation: slideDownFade 0.3s ease;
+      backdrop-filter: blur(8px);
+      font-weight: 500;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+    .otp-toast span {
+      font-family: monospace;
+      font-size: 1.2rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      background: var(--accent-glow);
+      padding: 0.2rem 0.6rem;
+      border-radius: 0.8rem;
+    }
+    
+    /* CENTERED MODAL POPUP ON PHONE */
+    .phone-modal-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(6px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      border-radius: 2.5rem;
+      animation: fadeInModal 0.25s ease;
+    }
+    .phone-modal-card {
+      background: var(--modal-bg);
+      color: var(--modal-text);
+      border-radius: 2rem;
+      width: 85%;
+      max-width: 280px;
+      padding: 1.8rem 1.5rem;
+      text-align: center;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.4);
+      border: 1px solid var(--accent);
+      animation: modalPop 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+    .phone-modal-card h3 {
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, var(--accent), #00a1ff);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .phone-modal-card p {
+      font-size: 0.95rem;
+      margin: 0.8rem 0;
+      line-height: 1.4;
+    }
+    .phone-modal-card .success-icon {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+    .phone-modal-close {
+      background: var(--accent);
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 3rem;
+      color: white;
+      font-weight: 600;
+      margin-top: 1.2rem;
+      cursor: pointer;
+      width: 100%;
+      transition: 0.2s;
+    }
+    .phone-modal-close:hover {
+      background: var(--accent-hover);
+      transform: scale(0.96);
+    }
+    @keyframes fadeInModal {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes modalPop {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    @keyframes slideDownFade {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(16px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    @media (max-width: 780px) {
+      body { padding: 1rem; }
+      .dashboard { flex-direction: column; }
+      .instruction-panel { order: 2; }
+      .mobile-container { order: 1; }
+      .welcome-content h1 { font-size: 2rem; }
+      .welcome-content p { font-size: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+<div id="welcomeOverlay" class="welcome-overlay">
+  <div class="welcome-content">
+    <h1>Learn How to Login</h1>
+    <p>Follow the guided instructions to complete your signup</p>
+  </div>
+</div>
+
+<div class="theme-bar">
+  <button class="theme-btn" id="themeToggleBtn">🌓 Light / Dark Mode</button>
+</div>
+<div class="dashboard" id="dashboard">
+  <div class="instruction-panel">
+    <div class="progress-area">
+      <div class="step-badge" id="stepCounter">STEP 1 / 5</div>
+      <div class="progress-bar-bg">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+    <div class="instruction-card" id="instructionCard">
+      <div class="instruction-text" id="instructionMessage">Enter your Name</div>
+      <div id="passwordGuidanceArea" class="password-rules" style="display: none;"></div>
+    </div>
+  </div>
+
+  <div class="mobile-container">
+    <div class="phone-replica">
+      <div class="phone-screen" id="phoneScreen">
+        <div class="dynamic-island"><span></span><span></span><span></span></div>
+        <div class="phone-header"><h2>Digital Saarthi</h2></div>
+        <div class="form-container">
+          <div class="form-group" id="nameGroup"><label>Full Name</label><input type="text" id="nameInput" placeholder="Aditi Bhatia" autocomplete="off"></div>
+          <div class="form-group" id="genderGroup"><label>Gender</label><div class="radio-group" id="genderRadioGroup"><label><input type="radio" name="gender" value="Male"> Male</label><label><input type="radio" name="gender" value="Female"> Female</label><label><input type="radio" name="gender" value="Other"> Other</label></div></div>
+          <div class="form-group" id="phoneGroup"><label>Phone Number</label><div class="phone-row"><input type="tel" id="phoneInput" placeholder="10-digit mobile" maxlength="10" inputmode="numeric"><button class="send-otp-btn" id="sendOtpBtn">Send OTP</button></div></div>
+          <div class="form-group" id="otpGroup"><label>OTP</label><input type="text" id="otpInput" placeholder="4-6 digit code" maxlength="6" inputmode="numeric"></div>
+          <div class="form-group" id="passwordGroup"><label>Password</label><input type="password" id="passwordInput" placeholder="Create strong password"></div>
+        </div>
+        <div class="login-btn-container">
+          <button class="login-btn" id="loginBtn">Create Account</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Welcome overlay fade out
+  const welcomeOverlay = document.getElementById('welcomeOverlay');
+  const dashboardDiv = document.getElementById('dashboard');
+  setTimeout(() => {
+    welcomeOverlay.classList.add('fade-out');
+    dashboardDiv.classList.add('visible');
+    setTimeout(() => welcomeOverlay.style.display = 'none', 1000);
+  }, 2500);
+
+  let currentStep = 1;
+  let otpSent = false;
+  let generatedOtp = "";
+  let otpToastElement = null;
+
+  const nameInput = document.getElementById('nameInput');
+  const genderRadios = document.querySelectorAll('input[name="gender"]');
+  const phoneInput = document.getElementById('phoneInput');
+  const otpInput = document.getElementById('otpInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const sendOtpBtn = document.getElementById('sendOtpBtn');
+  const loginBtn = document.getElementById('loginBtn');
+  const instructionMsg = document.getElementById('instructionMessage');
+  const stepCounter = document.getElementById('stepCounter');
+  const progressFill = document.getElementById('progressFill');
+  const passwordGuidanceArea = document.getElementById('passwordGuidanceArea');
+  const phoneScreenDiv = document.getElementById('phoneScreen');
+
+  // Function to show centered modal popup on phone screen
+  function showPhoneCenteredModal(title, message, isSuccess = true) {
+    const existingModal = document.querySelector('.phone-modal-overlay');
+    if(existingModal) existingModal.remove();
+    
+    const modalOverlay = document.createElement('div');
+    modalOverlay.className = 'phone-modal-overlay';
+    const successIcon = isSuccess ? '🎉' : '⚠️';
+    modalOverlay.innerHTML = `
+      <div class="phone-modal-card">
+        <div class="success-icon">${successIcon}</div>
+        <h3>${title}</h3>
+        <p>${message}</p>
+        <button class="phone-modal-close">OK</button>
+      </div>
+    `;
+    phoneScreenDiv.appendChild(modalOverlay);
+    const closeBtn = modalOverlay.querySelector('.phone-modal-close');
+    closeBtn.addEventListener('click', () => {
+      modalOverlay.remove();
+    });
+  }
+
+  // Password strength validation
+  function checkPasswordStrength(pwd) {
+    const rules = {
+      length: pwd.length >= 8,
+      upperLower: /[a-z]/.test(pwd) && /[A-Z]/.test(pwd),
+      number: /[0-9]/.test(pwd),
+      special: /[!@#$%^&*(),.?":{}|<>]/.test(pwd),
+      noPersonal: true
+    };
+    const nameValue = nameInput.value.trim().toLowerCase();
+    if (nameValue && pwd.toLowerCase().includes(nameValue)) rules.noPersonal = false;
+    const yearPattern = /\b(19[0-9]{2}|20[0-2][0-9]|2025)\b/;
+    if (yearPattern.test(pwd)) rules.noPersonal = false;
+    
+    const score = Object.values(rules).filter(v => v === true).length;
+    const isStrong = score >= 5;
+    return { rules, score, isStrong };
+  }
+
+  function updatePasswordUI() {
+    const pwd = passwordInput.value;
+    const { rules, score } = checkPasswordStrength(pwd);
+    const ruleItems = [
+      { key: 'length', text: 'At least 8 characters' },
+      { key: 'upperLower', text: 'Uppercase & lowercase letters' },
+      { key: 'number', text: 'Contains numbers (1,2,3...)' },
+      { key: 'special', text: 'Special symbols (@, #, $, etc.)' },
+      { key: 'noPersonal', text: 'No name or date of birth' }
+    ];
+    let rulesHtml = `<p>🔐 How to create a secure password:</p><ul>`;
+    ruleItems.forEach(item => {
+      const passed = rules[item.key];
+      const icon = passed ? '✅' : '❌';
+      rulesHtml += `<li><span style="min-width:24px;">${icon}</span> ${item.text}</li>`;
+    });
+    let strengthColor = '#e11d48';
+    let strengthMsg = '❌ Weak - improve your password';
+    if (score >= 5) { strengthColor = '#10b981'; strengthMsg = '💪 Strong password! ✓'; }
+    else if (score >= 3) { strengthColor = '#f59e0b'; strengthMsg = '⚠️ Medium - follow all rules for strong password'; }
+    rulesHtml += `</ul><div class="strength-meter"><div class="strength-fill" style="width: ${(score/5)*100}%; background: ${strengthColor};"></div></div><div class="strength-text">${strengthMsg}</div>`;
+    passwordGuidanceArea.innerHTML = rulesHtml;
+    passwordGuidanceArea.style.display = 'block';
+  }
+
+  function validateName() { return nameInput.value.trim().length >= 10; }
+  function validateGender() { return [...genderRadios].some(r=>r.checked); }
+  function validatePhone() { return phoneInput.value.replace(/\D/g, '').length === 10; }
+  function validateOTP() {
+    const entered = otpInput.value.replace(/\D/g, '');
+    if(!otpSent) return false;
+    return entered.length >=4 && entered.length <=6 && entered === generatedOtp;
+  }
+  function validatePasswordStrong() { 
+    const pwd = passwordInput.value;
+    if(pwd.length === 0) return false;
+    return checkPasswordStrength(pwd).isStrong; 
+  }
+
+  function showPersistentOtpToast(otpCode) {
+    if(otpToastElement) otpToastElement.remove();
+    const toast = document.createElement('div');
+    toast.className = 'otp-toast';
+    toast.innerHTML = `<strong>🔐 OTP received</strong> <span>${otpCode}</span> <small>Enter this code to verify</small>`;
+    phoneScreenDiv.appendChild(toast);
+    otpToastElement = toast;
+  }
+  function removeOtpToast() { if(otpToastElement) { otpToastElement.remove(); otpToastElement = null; } }
+
+  function sendOtpLogic() {
+    if(!validatePhone()) return false;
+    generatedOtp = Math.floor(100000 + Math.random() * 900000).toString().slice(0,6);
+    otpSent = true;
+    showPersistentOtpToast(generatedOtp);
+    return true;
+  }
+
+  sendOtpBtn.addEventListener('click', () => {
+    if(validatePhone()) {
+      sendOtpLogic();
+      if(currentStep === 3 && validatePhone()) {
+        currentStep = 4;
+        updateProgressUI();
+      }
+    } else {
+      if(phoneInput.value.replace(/\D/g, '').length !== 10) 
+        showPhoneCenteredModal('Attention', 'Please enter a valid 10-digit mobile number', false);
+    }
+  });
+
+  function updateProgressUI() {
+    stepCounter.innerText = `STEP ${currentStep} / 5`;
+    progressFill.style.width = `${((currentStep-1)/5)*100}%`;
+    const texts = {1:"Enter your Name",2:"Select your Gender",3:"Enter your Phone Number (10 digits)",4:"Enter OTP (4–6 digits)",5:"Create a Strong Password"};
+    instructionMsg.innerText = texts[currentStep];
+    if(currentStep === 5) {
+      passwordGuidanceArea.style.display = 'block';
+      updatePasswordUI();
+    } else {
+      passwordGuidanceArea.style.display = 'none';
+    }
+  }
+
+  function advanceStepIfValid() {
+    if(currentStep === 1 && validateName()) { currentStep = 2; updateProgressUI(); }
+    else if(currentStep === 2 && validateGender()) { currentStep = 3; updateProgressUI(); }
+    else if(currentStep === 4 && validateOTP()) { 
+      removeOtpToast(); 
+      currentStep = 5; 
+      updateProgressUI(); 
+      updatePasswordUI(); 
+    }
+  }
+
+  nameInput.addEventListener('input', () => { if(currentStep===1 && validateName()) advanceStepIfValid(); });
+  genderRadios.forEach(r => r.addEventListener('change', () => { if(currentStep===2 && validateGender()) advanceStepIfValid(); }));
+  phoneInput.addEventListener('input', (e) => { 
+    let val = phoneInput.value.replace(/\D/g, '').slice(0,10); 
+    phoneInput.value = val; 
+  });
+  
+  otpInput.addEventListener('input', (e) => { 
+    let val = otpInput.value.replace(/\D/g, '').slice(0,6); 
+    otpInput.value = val; 
+    if(currentStep===4 && validateOTP()) { 
+      removeOtpToast(); 
+      currentStep = 5; 
+      updateProgressUI(); 
+      updatePasswordUI(); 
+    } 
+  });
+  
+  passwordInput.addEventListener('input', () => { 
+    if(currentStep === 5) updatePasswordUI();
+  });
+
+  // LOGIN BUTTON: final account creation with centered phone popup
+  loginBtn.addEventListener('click', () => {
+    const nameOk = validateName();
+    const genderOk = validateGender();
+    const phoneOk = validatePhone();
+    const otpOk = validateOTP();
+    const pwdOk = validatePasswordStrong();
+    
+    if(!nameOk) { showPhoneCenteredModal('Incomplete Details', '❌ Please enter your full name (at least 2 characters)', false); return; }
+    if(!genderOk) { showPhoneCenteredModal('Incomplete Details', '❌ Please select your gender', false); return; }
+    if(!phoneOk) { showPhoneCenteredModal('Invalid Number', '❌ Please enter a valid 10-digit mobile number', false); return; }
+    if(!otpSent) { showPhoneCenteredModal('OTP Required', '❌ Please request OTP and verify your phone number', false); return; }
+    if(!otpOk) { showPhoneCenteredModal('Wrong OTP', '❌ Please enter the correct OTP sent to your phone', false); return; }
+    if(!pwdOk) { 
+      const pwd = passwordInput.value;
+      if(pwd.length === 0) showPhoneCenteredModal('Password Required', '❌ Please create a password', false);
+      else showPhoneCenteredModal('Weak Password', '❌ Password is not strong enough. Please follow the rules: 8+ chars, uppercase, lowercase, numbers, special symbols, no name/DOB', false);
+      return;
+    }
+    
+    const userName = nameInput.value.trim().split(' ')[0];
+    showPhoneCenteredModal('Account Created!', ` Welcome ${userName || 'User'}! Your account has been successfully created. You can now login to Digital Saarthi.`, true);
+  });
+
+  // Theme toggle
+  const themeBtn = document.getElementById('themeToggleBtn');
+  if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+  themeBtn.addEventListener('click', () => {
+    document.body.classList.toggle('dark');
+    localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    if(currentStep===5) updatePasswordUI();
+  });
+
+  // Initialize state
+  function init() {
+    currentStep = 1;
+    nameInput.value = ''; phoneInput.value = ''; otpInput.value = ''; passwordInput.value = '';
+    genderRadios.forEach(r=>r.checked=false);
+    otpSent = false; generatedOtp = "";
+    if(otpToastElement) otpToastElement.remove();
+    otpToastElement = null;
+    updateProgressUI();
+  }
+  init();
+</script>
+</body>
+</html>
