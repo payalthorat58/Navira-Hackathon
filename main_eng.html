@@ -39,7 +39,7 @@
       font-family:'Inter',sans-serif;
       background:radial-gradient(circle at 20% 30%, var(--bg-start), var(--bg-end));
       min-height:100vh; overflow:hidden; position:fixed;
-      width:100%; height:100vh; font-size:18px;
+      width:100%; height:100vh; font-size:20px;
     }
     .blob {
       position:fixed; width:55vw; height:55vw;
@@ -65,15 +65,15 @@
       display:flex; justify-content:space-between; align-items:center;
       flex-wrap:wrap; position:sticky; top:0; z-index:100;
     }
-    .logo { font-weight:800; font-size:1.8rem; background:linear-gradient(135deg,var(--accent),var(--accent-light)); background-clip:text; -webkit-background-clip:text; color:transparent; }
+    .logo { font-weight:800; font-size:2.4rem; background:linear-gradient(135deg,var(--accent),var(--accent-light)); background-clip:text; -webkit-background-clip:text; color:transparent; }
     .level-progress {
       background:var(--module-bg); border-radius:60px; padding:0.6rem 1.2rem;
       display:flex; align-items:center; gap:1.2rem; border:2px solid var(--accent);
     }
-    .progress-label { font-size:1rem; font-weight:600; color:var(--text-secondary); }
+    .progress-label { font-size:1.4rem; font-weight:600; color:var(--text-secondary); }
     .progress-bar-container { width:200px; height:12px; background:var(--progress-bg); border-radius:20px; overflow:hidden; }
     .progress-fill { width:0%; height:100%; background:linear-gradient(90deg,var(--accent),var(--accent-light)); transition:width 0.5s ease; }
-    .points-badge { background:var(--accent-soft); padding:0.4rem 1rem; border-radius:40px; font-size:1rem; font-weight:700; color:var(--text-primary); }
+    .points-badge { background:var(--accent-soft); padding:0.6rem 1.4rem; border-radius:40px; font-size:1.2rem; font-weight:700; color:var(--text-primary); }
     .user-profile {
       display:flex; align-items:center; gap:12px;
       background:var(--module-bg); padding:0.5rem 1.2rem;
@@ -99,15 +99,46 @@
       box-shadow:var(--shadow);
     }
     .section-title {
-      font-weight:800; font-size:1.4rem; margin-bottom:1rem;
+      font-weight:800; font-size:2rem; margin-bottom:1rem;
       border-left:6px solid var(--accent); padding-left:14px;
       color:var(--text-primary);
     }
     .module-card {
-      background:var(--module-bg); border-radius:1.5rem; margin-bottom:0.8rem;
-      padding:1rem; cursor:pointer; border:2px solid var(--card-border);
-      transition:all 0.2s; display:flex; flex-direction:column; gap:0.5rem;
+      background:var(--module-bg); border-radius:1.5rem; margin-bottom:1rem;
+      padding:1.4rem; cursor:pointer; border:3px solid var(--card-border);
+      transition:all 0.2s; display:flex; flex-direction:column; gap:0.8rem;
     }
+    .module-intro-screen {
+      background:var(--card-bg); border-radius:2rem; padding:2rem;
+      text-align:center; display:flex; flex-direction:column; gap:1.5rem;
+      justify-content:center; min-height:300px;
+    }
+    .module-intro-title { font-size:2.6rem; font-weight:800; color:var(--accent); margin-bottom:1rem; }
+    .module-intro-description { font-size:1.6rem; line-height:1.8; color:var(--text-secondary); margin-bottom:1rem; }
+    .module-intro-icon { font-size:4rem; margin-bottom:1rem; }
+    .guideline-card {
+      background:white; border-radius:1.8rem; padding:2rem; margin:0.8rem;
+      min-width:300px; flex-shrink:0; box-shadow:0 8px 16px rgba(0,0,0,0.1);
+      display:flex; flex-direction:column; gap:1.2rem; border-left:8px solid var(--accent);
+    }
+    .guideline-card.warning { border-left-color:#f59e0b; }
+    .guideline-card.success { border-left-color:#22c55e; }
+    .guideline-type { font-size:1.2rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+    .guideline-type.do { color:#22c55e; }
+    .guideline-type.dont { color:#ef4444; }
+    .guideline-text { font-size:1.5rem; font-weight:600; line-height:1.6; color:#1e293b; }
+    .guidelines-container {
+      display:flex; overflow-x:auto; gap:1rem; padding:1.5rem 0;
+    }
+    .guidelines-nav {
+      display:flex; gap:1rem; justify-content:center; margin-top:1.5rem;
+    }
+    .guidelines-nav button {
+      background:var(--accent); color:white; border:none; border-radius:50px;
+      padding:1rem 2rem; font-size:1.3rem; font-weight:700; cursor:pointer;
+      transition:all 0.3s;
+    }
+    .guidelines-nav button:hover { transform:scale(1.05); }
     .module-card.active { border:3px solid var(--accent); background:var(--module-hover); }
     .module-card-header { display:flex; align-items:center; gap:1rem; }
     .module-icon {
@@ -115,8 +146,8 @@
       border-radius:1rem; display:flex; align-items:center; justify-content:center;
     }
     .module-info { flex:1; }
-    .module-title { font-weight:800; font-size:1.2rem; color:var(--text-primary); }
-    .module-desc { font-size:0.85rem; color:var(--text-muted); }
+    .module-title { font-weight:800; font-size:1.6rem; color:var(--text-primary); }
+    .module-desc { font-size:1.1rem; color:var(--text-muted); }
     .module-status-badge {
       background:var(--accent-soft); padding:0.2rem 0.8rem;
       border-radius:30px; font-size:0.75rem; color:var(--accent); font-weight:700;
@@ -144,6 +175,13 @@
     .step-label.done { color:#22c55e; }
     .step-label.current { color:var(--accent); }
 
+    .guide-btn:hover { 
+      background:linear-gradient(135deg, rgba(59,130,246,0.22), rgba(96,165,250,0.22))!important;
+      border-color:rgba(59,130,246,0.4)!important;
+      transform:translateY(-1px);
+      box-shadow:0 4px 12px rgba(59,130,246,0.2);
+    }
+
     /* Middle panel */
     .instruction-panel {
       flex:1.2; background:var(--card-bg); backdrop-filter:blur(14px);
@@ -154,8 +192,8 @@
       background:var(--accent-soft); border-radius:1.5rem;
       padding:1.5rem; text-align:center;
     }
-    .welcome-box h2 { font-size:1.8rem; margin-bottom:1rem; color:var(--accent); }
-    .welcome-box p { font-size:1.1rem; line-height:1.5; color:var(--text-secondary); }
+    .welcome-box h2 { font-size:2.4rem; margin-bottom:1rem; color:var(--accent); }
+    .welcome-box p { font-size:1.4rem; line-height:1.7; color:var(--text-secondary); }
 
     /* Right panel */
     .mobile-sim-panel {
@@ -182,9 +220,9 @@
 
     /* Shepherd */
     .shepherd-element { background:var(--card-bg)!important; backdrop-filter:blur(16px); border:3px solid var(--accent)!important; border-radius:2rem!important; font-family:'Inter',sans-serif!important; box-shadow:0 20px 35px rgba(0,0,0,0.3)!important; }
-    .shepherd-title { font-size:1.5rem!important; font-weight:800!important; color:var(--accent)!important; }
-    .shepherd-text { font-size:1.2rem!important; line-height:1.5!important; padding:1rem 1.5rem!important; color:var(--text-secondary)!important; }
-    .shepherd-button { background:var(--accent)!important; border-radius:50px!important; font-size:1rem!important; font-weight:700!important; padding:0.6rem 1.2rem!important; }
+    .shepherd-title { font-size:1.8rem!important; font-weight:800!important; color:var(--accent)!important; }
+    .shepherd-text { font-size:1.4rem!important; line-height:1.7!important; padding:1.2rem 1.8rem!important; color:var(--text-secondary)!important; }
+    .shepherd-button { background:var(--accent)!important; border-radius:50px!important; font-size:1.2rem!important; font-weight:700!important; padding:0.8rem 1.6rem!important; }
     .shepherd-footer { padding:0.8rem 1.5rem 1.5rem!important; }
 
     /* Temp highlight ring on phone simulator */
@@ -220,28 +258,28 @@
     .instr-card p { font-size:1.05rem; line-height:1.6; color:var(--text-secondary); }
     .instr-nav-btn {
       background:var(--accent); color:white; border:none;
-      padding:12px 28px; border-radius:50px; font-size:1rem;
-      font-weight:700; cursor:pointer; margin-top:0.5rem;
+      padding:1rem 2.4rem; border-radius:50px; font-size:1.3rem; min-height:60px;
+      font-weight:700; cursor:pointer; margin-top:1rem;
       transition:transform 0.2s, background 0.2s;
     }
-    .instr-nav-btn:hover { transform:scale(1.04); background:var(--accent-light); }
+    .instr-nav-btn:hover { transform:scale(1.05); background:var(--accent-light); }
 
     /* GPay screens */
     .gpay-screen { width:100%; height:100%; display:flex; flex-direction:column; background:#f1f5fb; }
-    .gpay-header { background:#4285F4; color:white; padding:14px 16px; font-size:1rem; font-weight:700; display:flex; align-items:center; gap:8px; }
-    .gpay-body { flex:1; overflow-y:auto; padding:12px; }
-    .gpay-field { background:white; border-radius:10px; padding:10px 14px; margin-bottom:10px; border:2px solid #e2e8f0; font-size:0.9rem; color:#334155; }
-    .gpay-field label { font-size:0.75rem; color:#94a3b8; display:block; margin-bottom:2px; }
-    .gpay-field input, .gpay-field select { width:100%; border:none; outline:none; font-size:0.95rem; color:#0f172a; background:transparent; }
-    .gpay-btn { background:#4285F4; color:white; border:none; width:100%; padding:12px; border-radius:10px; font-size:1rem; font-weight:700; cursor:pointer; margin-top:4px; }
-    .gpay-upi-row { display:flex; gap:8px; margin-bottom:8px; }
-    .gpay-upi-app { flex:1; background:white; border-radius:10px; padding:10px 8px; text-align:center; font-size:0.75rem; color:#334155; border:2px solid #e2e8f0; cursor:pointer; }
-    .gpay-upi-app img { width:36px; height:36px; margin-bottom:4px; }
-    .gpay-pin-circle { width:14px; height:14px; border-radius:50%; background:#e2e8f0; display:inline-block; margin:0 4px; }
+    .gpay-header { background:#4285F4; color:white; padding:18px 16px; font-size:1.3rem; font-weight:700; display:flex; align-items:center; gap:12px; }
+    .gpay-body { flex:1; overflow-y:auto; padding:16px; }
+    .gpay-field { background:white; border-radius:14px; padding:14px 18px; margin-bottom:14px; border:3px solid #e2e8f0; font-size:1.1rem; color:#334155; }
+    .gpay-field label { font-size:1rem; font-weight:700; color:#64748b; display:block; margin-bottom:6px; }
+    .gpay-field input, .gpay-field select { width:100%; border:none; outline:none; font-size:1.2rem; color:#0f172a; background:transparent; min-height:44px; }
+    .gpay-btn { background:#4285F4; color:white; border:none; width:100%; padding:16px; border-radius:12px; font-size:1.3rem; font-weight:700; cursor:pointer; margin-top:8px; min-height:60px; }
+    .gpay-upi-row { display:flex; gap:12px; margin-bottom:12px; }
+    .gpay-upi-app { flex:1; background:white; border-radius:14px; padding:14px 10px; text-align:center; font-size:0.95rem; font-weight:600; color:#334155; border:3px solid #e2e8f0; cursor:pointer; min-height:90px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .gpay-upi-app img { width:44px; height:44px; margin-bottom:6px; }
+    .gpay-pin-circle { width:18px; height:18px; border-radius:50%; background:#e2e8f0; display:inline-block; margin:0 6px; }
     .gpay-pin-circle.filled { background:#4285F4; }
-    .gpay-numpad { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:10px; }
-    .gpay-num-btn { background:white; border:2px solid #e2e8f0; border-radius:10px; padding:12px; font-size:1.1rem; font-weight:700; cursor:pointer; color:#0f172a; text-align:center; }
-    .gpay-num-btn:active { background:#e2e8f0; }
+    .gpay-numpad { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:14px; }
+    .gpay-num-btn { background:white; border:3px solid #e2e8f0; border-radius:12px; padding:16px; font-size:1.8rem; font-weight:700; cursor:pointer; color:#0f172a; text-align:center; min-height:70px; }
+    .gpay-num-btn:active { background:#dbeafe; border-color:#4285F4; }
 
     /* Jiya animation / scam call */
     .jiya-intro { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; padding:20px; background:#f1f5fb; }
@@ -266,11 +304,39 @@
     .call-btn.nothing { background:#1e293b; color:#94a3b8; border:2px solid #334155; }
 
     /* Active call screen */
-    .active-call { display:flex; flex-direction:column; align-items:center; justify-content:space-between; height:100%; background:linear-gradient(180deg,#1e3a5f,#0f172a); padding:28px 20px 28px; color:white; }
-    .active-call-opts { display:flex; flex-direction:column; gap:10px; width:100%; }
-    .active-call-opt-btn { padding:12px; border-radius:14px; font-size:0.88rem; font-weight:700; border:2px solid transparent; cursor:pointer; text-align:left; }
-    .active-call-opt-btn.safe { background:#064e3b; color:#34d399; border-color:#34d399; }
-    .active-call-opt-btn.danger { background:#7f1d1d; color:#fca5a5; border-color:#ef4444; }
+    .active-call { display:flex; flex-direction:column; align-items:center; justify-content:space-between; height:100%; background:linear-gradient(180deg,#f8fafc,#f1f5fb); padding:28px 20px 28px; color:#0f172a; }
+    .active-call-opts { display:flex; flex-direction:column; gap:12px; width:100%; }
+    .active-call-opt-btn { padding:14px 16px; border-radius:14px; font-size:1rem; font-weight:700; border:3px solid #e2e8f0; cursor:pointer; text-align:left; background:white; color:#1e293b; transition:all 0.3s; min-height:54px; display:flex; align-items:center; }
+    .active-call-opt-btn:hover { border-color:#3b82f6; background:#dbeafe; transform:translateX(4px); }
+    .active-call-opt-btn.safe { background:#dcfce7; color:#15803d; border-color:#22c55e; }
+    .active-call-opt-btn.danger { background:#fee2e2; color:#991b1b; border-color:#ef4444; }
+    .quiz-option-btn {
+      padding: 14px 16px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      border: 3px solid #e2e8f0;
+      cursor: pointer;
+      text-align: left;
+      background: white;
+      color: #1e293b;
+      transition: all 0.3s;
+      min-height: 58px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .quiz-option-btn:hover {
+      background: #dbeafe;
+      border-color: #3b82f6;
+      transform: translateX(4px);
+    }
+    
+    .neutral-btn {
+      background: white !important;
+      border-color: #e2e8f0 !important;
+      color: #1e293b !important;
+    }
 
     /* Result screens */
     .result-screen { display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%; padding:20px; text-align:center; }
@@ -664,10 +730,126 @@ const gpayState = {
   payAmount:'',
   payNote:'',
   searchText:'',
-  actionCompleted:false
+  actionCompleted:false,
+  showingModuleIntro:false,
+  showingGuidelineCards:false,
+  currentGuidelineCardIndex:0
 };
 
 // ===================== UI UPDATE =====================
+
+// Module introductions
+const moduleIntros = {
+  download: {
+    title: "📱 Download Google Pay",
+    description: "Google Pay is a secure way to send money online to family and friends, or pay bills without visiting a bank.",
+    icon: "📱"
+  },
+  create_account: {
+    title: "👤 Create Your Google Pay Account",
+    description: "Set up your account safely with your mobile number and a secure One-Time Password (OTP).",
+    icon: "👤"
+  },
+  link_bank: {
+    title: "🏦 Link Your Bank Account",
+    description: "Connect your bank account to Google Pay so you can send and receive money securely.",
+    icon: "🏦"
+  },
+  upi_pin: {
+    title: "🔐 Set Your Security PIN",
+    description: "Create a personal security code that only you know. This PIN protects all your transactions.",
+    icon: "🔐"
+  }
+};
+
+function showModuleIntro(stepIndex) {
+  const step = gpaySteps[stepIndex];
+  const intro = moduleIntros[step.id] || { title: step.title, description: "Let's learn this module!", icon: "📍" };
+  
+  document.getElementById('welcomeBox').style.display = 'none';
+  const di = document.getElementById('dynamicInstruction');
+  di.style.display = 'block';
+  
+  di.innerHTML = `
+    <div class="module-intro-screen">
+      <div class="module-intro-icon">${intro.icon}</div>
+      <div class="module-intro-title">${intro.title}</div>
+      <div class="module-intro-description">${intro.description}</div>
+      <button class="instr-nav-btn" onclick="skipModuleIntro(${stepIndex})" style="margin-top:1.5rem;min-height:60px;font-size:1.3rem;">
+        Let's Begin →
+      </button>
+    </div>
+  `;
+
+  document.getElementById('phoneScreen').innerHTML = `
+    <div class="gpay-screen" style="display:flex;align-items:center;justify-content:center;font-size:2rem;color:#cbd5e1;">
+      <div style="text-align:center;">
+        <div style="font-size:4rem;margin-bottom:1rem;">${intro.icon}</div>
+        <div style="font-weight:700;color:#64748b;">Get ready to learn</div>
+      </div>
+    </div>
+  `;
+}
+
+function skipModuleIntro(stepIndex) {
+  gpayState.showingModuleIntro = false;
+  const mod = modules[0];
+  mod.currentStep = stepIndex;
+  mod.currentInstr = 0;
+  showGpayStep(stepIndex, 0);
+}
+
+function showGuidelineFlashcards(guidelines, stepIndex, instrIndex) {
+  gpayState.showingGuidelineCards = true;
+  gpayState.currentGuidelineCardIndex = 0;
+  
+  const guidelineCards = guidelines.map(g => {
+    const isWarning = g.startsWith('🚫') || g.startsWith('⚠️') || g.startsWith('🔐') || g.startsWith('🚫');
+    return {
+      text: g,
+      type: isWarning ? 'dont' : 'do'
+    };
+  });
+
+  function renderGuidelineCard(index) {
+    if (index >= guidelineCards.length) {
+      gpayState.showingGuidelineCards = false;
+      return;
+    }
+
+    const card = guidelineCards[index];
+    const nextBtn = index < guidelineCards.length - 1 
+      ? `<button class="instr-nav-btn" onclick="nextGuidelineCard(${stepIndex}, ${instrIndex})" style="margin-top:1rem;">Next Card →</button>`
+      : `<button class="instr-nav-btn" onclick="continueFromGuidelines(${stepIndex}, ${instrIndex})" style="margin-top:1rem;background:#22c55e;">Got It! Let's Continue →</button>`;
+
+    const di = document.getElementById('dynamicInstruction');
+    di.innerHTML = `
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:300px;text-align:center;">
+        <div style="font-size:3rem;margin-bottom:1rem;">${card.text.split(' ')[0]}</div>
+        <div class="guideline-type ${card.type}" style="margin-bottom:1rem;">${card.type === 'do' ? '✓ DO THIS' : '✗ DON\'T DO THIS'}</div>
+        <div class="guideline-text" style="margin-bottom:2rem;font-size:1.4rem;">${card.text}</div>
+        <div style="font-size:0.95rem;color:#94a3b8;margin-bottom:1.5rem;">Card ${index+1} of ${guidelineCards.length}</div>
+        ${nextBtn}
+      </div>
+    `;
+  }
+
+  renderGuidelineCard(0);
+}
+
+function nextGuidelineCard(stepIndex, instrIndex) {
+  gpayState.currentGuidelineCardIndex++;
+  const step = gpaySteps[stepIndex];
+  const instr = step.instructions[instrIndex];
+  showGuidelineFlashcards(instr.guidelines, stepIndex, instrIndex);
+}
+
+function continueFromGuidelines(stepIndex, instrIndex) {
+  gpayState.showingGuidelineCards = false;
+  gpayState.currentGuidelineCardIndex = 0;
+  showGpayStep(stepIndex, instrIndex);
+}
+
 function updateGlobalUI() {
   document.getElementById('totalPoints').innerText = totalPoints;
   document.getElementById('globalProgressFill').style.width = (totalPoints) + "%";
@@ -707,6 +889,16 @@ function renderModules() {
             <span class="step-label ${labelClass}">${step.title}</span>
           </div>`;
       });
+      stepsHtml += `
+        <div style="margin-top:14px;padding-top:14px;border-top:1px solid rgba(59,130,246,0.15);display:flex;flex-direction:column;gap:8px;">
+          <button class="guide-btn" onclick="event.stopPropagation(); showBankingGuidelines()" style="background:linear-gradient(135deg, rgba(147,197,253,0.12), rgba(191,219,254,0.12));border:1px solid rgba(59,130,246,0.25);color:#0c4a6e;padding:8px 12px;font-size:0.9rem;margin:0;border-radius:10px;font-weight:600;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(10px);">
+            <i class="fas fa-book" style="margin-right:6px;"></i>Banking Guideline
+          </button>
+          <button class="guide-btn" onclick="event.stopPropagation(); startJiyaSequence()" style="background:linear-gradient(135deg, rgba(96,165,250,0.15), rgba(147,197,253,0.15));border:1px solid rgba(59,130,246,0.3);color:#0c4a6e;padding:8px 12px;font-size:0.9rem;margin:0;border-radius:10px;font-weight:600;cursor:pointer;transition:all 0.3s;backdrop-filter:blur(10px);">
+            <i class="fas fa-user-circle" style="margin-right:6px;"></i>Help Jiya
+          </button>
+        </div>
+      `;
       stepsHtml += `</div>`;
     }
 
@@ -733,7 +925,12 @@ function openModule(modId) {
   renderModules();
   const mod = modules[modId];
   if (modId === 0) {
-    showGpayStep(mod.currentStep, mod.currentInstr);
+    // Show module intro if starting a new step
+    if (mod.currentInstr === 0) {
+      showModuleIntro(mod.currentStep);
+    } else {
+      showGpayStep(mod.currentStep, mod.currentInstr);
+    }
   } else {
     showComingSoon(mod);
   }
@@ -762,6 +959,13 @@ function showGpayStep(stepIndex, instrIndex) {
 
   const step = gpaySteps[stepIndex];
   const instr = step.instructions[instrIndex];
+  
+  // If this has important guidelines and we haven't shown them yet, show flashcards first
+  if (instr.important && instr.guidelines && instr.guidelines.length > 0 && !gpayState.showingGuidelineCards) {
+    showGuidelineFlashcards(instr.guidelines, stepIndex, instrIndex);
+    return;
+  }
+
   const isLastInstr = instrIndex === step.instructions.length - 1;
   const isLastStep = stepIndex === gpaySteps.length - 1;
 
@@ -779,16 +983,16 @@ function showGpayStep(stepIndex, instrIndex) {
 
   di.innerHTML = `
     <div class="instr-card">
-      <h3>📍 Step ${stepIndex+1} of ${gpaySteps.length}: ${step.title}</h3>
-      <p>"${instr.text}"</p>
-      ${instr.important ? `<div style="background:#fef3c7;border-left:4px solid #f59e0b;padding:12px;border-radius:6px;margin-top:10px;margin-bottom:10px;">
-        <div style="font-weight:700;color:#92400e;margin-bottom:8px;">⚠️ Important Guidelines:</div>
-        ${instr.guidelines ? instr.guidelines.map(g => `<div style="color:#92400e;font-size:0.9rem;margin-bottom:4px;">${g}</div>`).join('') : ''}
+      <h3 style="font-size:1.6rem;">📍 Step ${stepIndex+1} of ${gpaySteps.length}: ${step.title}</h3>
+      <p style="font-size:1.3rem;line-height:1.7;">"${instr.text}"</p>
+      ${instr.important ? `<div style="background:#fef3c7;border-left:6px solid #f59e0b;padding:14px;border-radius:8px;margin-top:12px;margin-bottom:12px;">
+        <div style="font-weight:700;color:#92400e;margin-bottom:8px;font-size:1.1rem;">⚠️ Important Guidelines:</div>
+        ${instr.guidelines ? instr.guidelines.map(g => `<div style="color:#92400e;font-size:1rem;margin-bottom:6px;line-height:1.5;font-weight:500;">${g}</div>`).join('') : ''}
       </div>` : ''}
-      <p style="color:#ef4444;margin-top:8px;font-weight:600;"><i class="fas fa-hand-pointer"></i> Perform action on your phone →</p>
-      <div style="margin-top:0.6rem;">${progressDots}</div>
+      <p style="color:#ef4444;margin-top:10px;font-weight:700;font-size:1.1rem;"><i class="fas fa-hand-pointer"></i> Perform action on your phone →</p>
+      <div style="margin-top:0.8rem;">${progressDots}</div>
     </div>
-    <div style="display:flex;gap:0.8rem;flex-wrap:wrap;">
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;">
       ${instrIndex > 0 || stepIndex > 0 ? `<button class="instr-nav-btn" style="background:#64748b;" onclick="gpayPrev()">← Back</button>` : ''}
       <button id="nextBtn" class="instr-nav-btn" style="opacity:0.5;cursor:not-allowed;background:#cbd5e1;" disabled onclick="gpayNext()">⏳ Waiting for action...</button>
     </div>
@@ -1720,11 +1924,41 @@ if (expiryInput && instrIndex === 2) {
       if (toggleEyeIcon) {
         toggleEyeIcon.addEventListener('click', () => {
           isPinVisible = !isPinVisible;
+          const pinContainer = document.getElementById('pin-container');
+          const pinCircles = document.getElementById('pin-circles');
           const hiddenInput = document.getElementById('hidden-pin-input');
+          
           if (hiddenInput) {
-            hiddenInput.type = isPinVisible ? 'text' : 'password';
+            if (isPinVisible) {
+              // Show PIN as text - replace circles with actual numbers
+              hiddenInput.type = 'text';
+              pinCircles.style.display = 'none';
+              hiddenInput.style.opacity = '1';
+              hiddenInput.style.position = 'relative';
+              hiddenInput.style.background = '#f0f4f8';
+              hiddenInput.style.border = '1px solid #cbd5e1';
+              hiddenInput.style.borderRadius = '8px';
+              hiddenInput.style.padding = '12px';
+              hiddenInput.style.fontSize = '1.2rem';
+              hiddenInput.style.letterSpacing = '4px';
+              hiddenInput.style.textAlign = 'center';
+              hiddenInput.style.fontWeight = '600';
+              hiddenInput.style.marginBottom = '8px';
+            } else {
+              // Hide PIN - show circles again
+              hiddenInput.type = 'password';
+              pinCircles.style.display = 'block';
+              hiddenInput.style.opacity = '0';
+              hiddenInput.style.position = 'absolute';
+              hiddenInput.style.top = '0';
+              hiddenInput.style.left = '0';
+              hiddenInput.style.width = '100%';
+              hiddenInput.style.height = '100%';
+              hiddenInput.style.cursor = 'pointer';
+            }
           }
           toggleEyeIcon.className = isPinVisible ? 'fas fa-eye' : 'fas fa-eye-slash';
+          toggleEyeIcon.style.color = isPinVisible ? '#2563eb' : '#94a3b8';
         });
       }
       
@@ -2048,155 +2282,453 @@ function addSimHighlight(elId, arrowDir) {
 }
 
 // ===================== JIYA SCAM SEQUENCE =====================
+// ===================== JIYA SCAM SEQUENCE =====================
+
+// ===================== JIYA SCAM SEQUENCE =====================
+
+const callScenarios = [
+  {
+    scenario: "Bank verification call",
+    message: 'Caller: "Hello, I am calling from SBI Bank. We have detected suspicious activity on your account. To verify your identity, please tell me your 6-digit UPI PIN right now."',
+    options: [
+      { text: "Tell them your UPI PIN immediately", safe: false, feedback: "Banks never ask for UPI PIN over a call. This is a scam!" },
+      { text: "Say 'I will never share my PIN' and hang up", safe: true, feedback: "Correct! Real bank employees never ask for your PIN." },
+      { text: "Ask them to hold while you find your PIN", safe: false, feedback: "Don't look for your PIN. This is a scam call." },
+      { text: "Ask for their employee ID, then hang up and call bank directly", safe: true, feedback: "Smart! Always verify by calling the official bank number." }
+    ]
+  },
+  {
+    scenario: "OTP sharing request",
+    message: 'Caller: "Sir/Madam, you just received an OTP on your phone. Please read that OTP to me so I can complete your account verification process."',
+    options: [
+      { text: "Read out the OTP to them", safe: false, feedback: "Never share OTP. It gives full access to your account!" },
+      { text: "Hang up without saying anything", safe: true, feedback: "Correct! No one should ever ask you for your OTP." },
+      { text: "Tell them you did not receive any OTP", safe: false, feedback: "Better to just hang up — engaging gives them more chances to trick you." },
+      { text: "Say 'OTP is confidential' and disconnect", safe: true, feedback: "Exactly right! OTP is private and for your eyes only." }
+    ]
+  },
+  {
+    scenario: "Prize money announcement",
+    message: 'Caller: "Congratulations! Your number has won a prize of Rs. 50,000 in our lucky draw. To transfer the prize money, I need your bank account number and debit card details."',
+    options: [
+      { text: "Give your account number and card details", safe: false, feedback: "Never! This is a classic prize scam to steal your money." },
+      { text: "Ask them to send the prize to your address instead", safe: false, feedback: "This still engages the scammer. Just hang up." },
+      { text: "Say 'Legitimate prizes don't need bank details' and hang up", safe: true, feedback: "Correct! Real prizes are never conditional on sharing sensitive info." },
+      { text: "Hang up immediately", safe: true, feedback: "Right move! Unexpected prize calls are almost always scams." }
+    ]
+  },
+  {
+    scenario: "Debit card verification",
+    message: 'Caller: "We are upgrading your debit card. To activate the new card, please provide your 16-digit card number and the 3-digit CVV on the back of your card."',
+    options: [
+      { text: "Read out your card number and CVV", safe: false, feedback: "CVV and card number together allow anyone to make online purchases!" },
+      { text: "Hang up and call your bank's official helpline", safe: true, feedback: "Perfect! Card upgrades are done at branches, not over random calls." },
+      { text: "Give only the card number, not the CVV", safe: false, feedback: "Still unsafe — never share card details over an incoming call." },
+      { text: "Tell them you will visit the bank branch yourself", safe: true, feedback: "Smart response! Official matters should be handled at the bank." }
+    ]
+  },
+  {
+    scenario: "Remote access request",
+    message: 'Caller: "I am a technical support officer. Your Google Pay account has a virus. Please download the AnyDesk app right now and share the 9-digit code so I can fix it remotely."',
+    options: [
+      { text: "Download AnyDesk and share the code", safe: false, feedback: "This gives the scammer complete control of your phone and accounts!" },
+      { text: "Hang up and report the number as spam", safe: true, feedback: "Exactly right! Never install apps or share screen access on someone's request." },
+      { text: "Download the app but do not share the code", safe: false, feedback: "Even downloading is risky. Scammers may guide you to expose info." },
+      { text: "Ask them to come in person to fix the issue", safe: true, feedback: "Good thinking — though best to just hang up entirely." }
+    ]
+  },
+  {
+    scenario: "Account closure threat",
+    message: 'Caller: "Your bank account will be permanently blocked in 30 minutes due to incomplete KYC! To prevent this, tell me your Aadhaar number, PAN card number and date of birth right now."',
+    options: [
+      { text: "Quickly give Aadhaar, PAN and date of birth", safe: false, feedback: "This is a scare tactic! Scammers use urgency to trick you into sharing identity docs." },
+      { text: "Hang up and visit your bank branch to check KYC status", safe: true, feedback: "Correct! KYC updates are always done in person at a bank branch." },
+      { text: "Ask them for more time and then decide", safe: false, feedback: "Scammers use time pressure to confuse you. Just hang up." },
+      { text: "Tell them you know this is a scam and hang up", safe: true, feedback: "Bold and correct! Real banks never threaten account closure over a call." }
+    ]
+  },
+  {
+    scenario: "Insurance agent call",
+    message: 'Caller: "I am from LIC. You are eligible for a special life insurance policy. To process your application instantly, please share your bank account number and net banking password."',
+    options: [
+      { text: "Share account number and net banking password", safe: false, feedback: "Net banking password gives full access to all your money — never share it!" },
+      { text: "Ask to meet the agent at your home", safe: false, feedback: "Avoid engaging. Real insurance applications do not need your password." },
+      { text: "Hang up and contact LIC directly through their official website", safe: true, feedback: "Right! Always verify through official channels, not through incoming calls." },
+      { text: "Share only the account number, not the password", safe: false, feedback: "Even sharing your account number with strangers can be risky." }
+    ]
+  },
+  {
+    scenario: "Google account alert",
+    message: 'Caller: "This is a security alert from Google. Someone is trying to hack your Gmail account. Please tell me your Gmail password immediately so we can secure it."',
+    options: [
+      { text: "Tell them your Gmail password", safe: false, feedback: "Google never calls users and will NEVER ask for your password!" },
+      { text: "Say 'Google never calls users' and hang up", safe: true, feedback: "Spot on! This is a well-known impersonation scam." },
+      { text: "Change your password and then tell them", safe: false, feedback: "Do not share any password, old or new, with this caller." },
+      { text: "Hang up and check your Google account yourself", safe: true, feedback: "Correct! Go directly to myaccount.google.com to check security." }
+    ]
+  },
+  {
+    scenario: "Investment scheme offer",
+    message: 'Caller: "Sir, I have a guaranteed investment plan. Invest just Rs. 5,000 today and get Rs. 50,000 back in one month. But you must transfer the money right now to this UPI ID."',
+    options: [
+      { text: "Transfer Rs. 5,000 immediately via UPI", safe: false, feedback: "No legitimate investment guarantees 10x returns in one month. This is fraud." },
+      { text: "Ask for a brochure first", safe: false, feedback: "Scammers can send fake brochures too. The urgency is the red flag." },
+      { text: "Hang up — guaranteed high returns are always a scam", safe: true, feedback: "Correct! 'Guaranteed returns' is the number one sign of a financial scam." },
+      { text: "Say you will think and call back on their number", safe: false, feedback: "Do not call back unknown numbers. Just hang up and block." }
+    ]
+  },
+  {
+    scenario: "Refund processing call",
+    message: 'Caller: "I am calling from Amazon. You are eligible for a refund of Rs. 3,500. To process the refund, please scan this QR code I will send you and enter your UPI PIN."',
+    options: [
+      { text: "Scan the QR code and enter your UPI PIN", safe: false, feedback: "Scanning a QR code and entering PIN sends money OUT — not in! This is a common fraud." },
+      { text: "Ask them to directly credit to your bank account", safe: false, feedback: "Engaging gives scammers a chance to manipulate you further." },
+      { text: "Hang up — receiving money never needs your PIN", safe: true, feedback: "Absolutely correct! You never need a PIN to receive money. Only to send it." },
+      { text: "Say 'Refunds don't need UPI PIN' and disconnect", safe: true, feedback: "100% right! A PIN request during a 'refund' is always a fraud attempt." }
+    ]
+  }
+];
+
+const smsScenarios = [
+  {
+    scenario: "Suspicious bank SMS",
+    message: 'SMS from +91-99XXXXX: "URGENT: Your SBI account is suspended. Click here to reactivate: http://sbi-secure-login.xyz and enter your details within 2 hours."',
+    options: [
+      { text: "Click the link and enter your details", safe: false, feedback: "Fake website! The real SBI site is onlinesbi.sbi — never click links in SMS." },
+      { text: "Forward the SMS to your family to check", safe: false, feedback: "Sharing the link spreads risk. Just delete and report." },
+      { text: "Delete the SMS and call SBI helpline (1800 1234) directly", safe: true, feedback: "Correct! Always use the official helpline, never links from SMS." },
+      { text: "Reply asking for more details", safe: false, feedback: "Replying confirms your number is active — scammers will call you back." }
+    ]
+  },
+  {
+    scenario: "KYC update SMS",
+    message: 'SMS: "Dear customer, your KYC is incomplete. Your account will be closed in 24 hours. Update KYC now: bit.ly/kyc-update-bank. Enter Aadhaar and PAN to continue."',
+    options: [
+      { text: "Click the link and enter Aadhaar and PAN", safe: false, feedback: "This is a phishing link to steal your identity. Never click!" },
+      { text: "Visit your bank branch in person for KYC", safe: true, feedback: "Perfect! KYC is always done at the branch, not through SMS links." },
+      { text: "Take a screenshot and share in a WhatsApp group", safe: false, feedback: "Sharing may cause others to click the dangerous link." },
+      { text: "Ignore and delete the SMS", safe: true, feedback: "Correct! Unsolicited KYC SMS with links are always fraudulent." }
+    ]
+  },
+  {
+    scenario: "UPI payment request SMS",
+    message: 'SMS: "Hi, I am transferring money to you. Please accept this Rs. 10,000 payment request on Google Pay. Tap approve and enter your PIN to receive the money."',
+    options: [
+      { text: "Approve the request and enter your PIN", safe: false, feedback: "You SEND money when you enter PIN on a payment request — not receive it!" },
+      { text: "Check your Google Pay app notifications carefully", safe: true, feedback: "Correct! Payment requests shown in the app send money OUT. Never approve from strangers." },
+      { text: "Enter PIN quickly before the offer expires", safe: false, feedback: "There is no time limit. This urgency is a manipulation tactic." },
+      { text: "Decline the request immediately in the app", safe: true, feedback: "Right! Decline any UPI collect requests from unknown people." }
+    ]
+  },
+  {
+    scenario: "Lottery winning SMS",
+    message: 'SMS: "Congratulations! Your mobile number won Rs. 1,00,000 in the National Lottery. To claim, send your name, bank account, and IFSC code to lottery.india@gmail.com"',
+    options: [
+      { text: "Email your bank details as instructed", safe: false, feedback: "There is no national lottery that announces winners by SMS. Classic scam!" },
+      { text: "Reply to the SMS to verify first", safe: false, feedback: "Never reply — it confirms your number is active and they will target you more." },
+      { text: "Delete the SMS — unexpected lottery SMS are always scams", safe: true, feedback: "Exactly! If you never entered a lottery, you cannot have won one." },
+      { text: "Share only your name, not bank details", safe: false, feedback: "Any engagement with scammers gives them a foothold to keep manipulating you." }
+    ]
+  },
+  {
+    scenario: "Job offer SMS",
+    message: 'SMS: "Work from home job offer: Earn Rs. 15,000 daily by liking YouTube videos. Register now by paying a Rs. 500 registration fee to UPI: jobs.easy@paytm"',
+    options: [
+      { text: "Pay the registration fee to get started", safe: false, feedback: "Legitimate jobs never require a registration fee. This is advance-fee fraud." },
+      { text: "Ask friends if they have heard of this job", safe: false, feedback: "This wastes time — the scam is clear from the fee requirement." },
+      { text: "Ignore and delete — real jobs never charge fees to apply", safe: true, feedback: "Correct! Any job asking you to pay first is always a fraud." },
+      { text: "Send a smaller amount to test if it is real", safe: false, feedback: "Once you send any amount, they will keep asking for more and then disappear." }
+    ]
+  },
+  {
+    scenario: "OTP received SMS",
+    message: 'SMS from unknown number: "I accidentally sent an OTP to your number. My money is stuck. Please share that OTP with me on this number so I can recover my funds."',
+    options: [
+      { text: "Share the OTP out of helpfulness", safe: false, feedback: "This OTP was triggered by the scammer using YOUR number on a site — sharing it gives them access!" },
+      { text: "Delete the OTP message and ignore the request", safe: true, feedback: "Perfect! OTPs arrive because someone used your number — sharing it is dangerous." },
+      { text: "Call them back to understand the situation", safe: false, feedback: "Calling back gives scammers your attention and more chances to manipulate." },
+      { text: "Block the number immediately", safe: true, feedback: "Correct! Block and ignore — there is no innocent reason for this request." }
+    ]
+  },
+  {
+    scenario: "Electricity bill threat SMS",
+    message: 'SMS: "NOTICE: Your electricity connection will be cut tonight at 9 PM due to unpaid dues. To avoid disconnection call this number immediately: 9876543XXX"',
+    options: [
+      { text: "Call the number immediately in panic", safe: false, feedback: "Calling puts you in contact with scammers who will ask for payment via UPI." },
+      { text: "Check your official electricity bill app or website", safe: true, feedback: "Right! Your real electricity provider communicates through official channels." },
+      { text: "Ask a family member to call the number", safe: false, feedback: "Do not send anyone to call that number. It is fraudulent." },
+      { text: "Ignore it — you know your bills are paid", safe: true, feedback: "Correct if your bills are current. Always verify through official channels." }
+    ]
+  },
+  {
+    scenario: "Fake customer care SMS",
+    message: 'SMS: "Your Google Pay transaction of Rs. 4,500 has FAILED. Your money is deducted. To get refund instantly, contact Google Pay customer care: 9876543XXX"',
+    options: [
+      { text: "Call the number to get your refund", safe: false, feedback: "This is a fake helpline — they will ask for OTP or PIN to 'process the refund'." },
+      { text: "Check your actual Google Pay transaction history first", safe: true, feedback: "Correct! Always verify in the app before acting on any SMS claim." },
+      { text: "Screenshot and share on social media to warn others", safe: false, feedback: "Harmless but also unhelpful — just report the number to the app." },
+      { text: "Contact Google Pay through the official app Help section", safe: true, feedback: "Perfect! Only use in-app support or the official website for transaction issues." }
+    ]
+  },
+  {
+    scenario: "Fake delivery SMS",
+    message: 'SMS: "Your package could not be delivered. To reschedule, confirm your address and pay Rs. 25 delivery charge here: delivery-reship.in/confirm"',
+    options: [
+      { text: "Click the link and pay Rs. 25", safe: false, feedback: "The Rs. 25 is bait — the fake site steals your card details when you pay." },
+      { text: "Track your package on the official courier app or website", safe: true, feedback: "Smart! Always check package status only through the official courier's app or site." },
+      { text: "Reply to the SMS with your address", safe: false, feedback: "Your address is personal information — do not share it with unknown numbers." },
+      { text: "Ignore the SMS if you are not expecting a delivery", safe: true, feedback: "Correct! If you have no pending orders, such SMS are always fraud attempts." }
+    ]
+  },
+  {
+    scenario: "Government scheme SMS",
+    message: 'SMS: "PM Free Smartphone Yojana: You are selected to receive a free smartphone. Fill this form and pay Rs. 200 courier charge: pmsmartphone.co.in/apply"',
+    options: [
+      { text: "Fill the form and pay the courier charge", safe: false, feedback: "Government schemes are announced officially, not via random SMS, and never charge fees." },
+      { text: "Search for the scheme name on the official government website", safe: true, feedback: "Correct! Always verify government schemes at india.gov.in or official state portals." },
+      { text: "Share with family to help them also benefit", safe: false, feedback: "Sharing spreads the scam to more people. Verify first." },
+      { text: "Delete the SMS — government freebies via SMS with fees are always fake", safe: true, feedback: "Exactly right! Real government schemes never ask for payment to receive benefits." }
+    ]
+  }
+];
+
+let currentQuizIndex = 0;
+let quizScore = 0;
+let jiyaAnsweredCall = false;
+let jiyaSequenceStarted = false;
+
 function startJiyaSequence() {
+  if (jiyaSequenceStarted) return;
+  jiyaSequenceStarted = true;
+  currentQuizIndex = 0;
+  quizScore = 0;
+
   document.getElementById('welcomeBox').style.display = 'none';
   const di = document.getElementById('dynamicInstruction');
   di.style.display = 'block';
   di.innerHTML = `
     <div class="instr-card" style="background:linear-gradient(135deg,#fff7ed,#ffedd5);border-left-color:#f97316;">
-      <h3 style="color:#ea580c;">👋 Meet Jiya!</h3>
-      <p>You've learned all about Google Pay. Now let's see if you can help <strong>Jiya</strong> stay safe from fraud!</p>
-      <p style="margin-top:0.5rem;">Jiya is a regular user just like you. She will receive a call from an unknown number. Help her make the right choice!</p>
+      <h3 style="color:#ea580c;font-size:1.4rem;">👋 Meet Jiya — Scam Safety Quiz!</h3>
+      <p style="color:#1e293b;font-size:1.1rem;line-height:1.6;">You've learned all about Google Pay. Now test your knowledge with <strong>10 real-world scam scenarios</strong>!</p>
+      <p style="margin-top:1rem;color:#1e293b;font-size:1.1rem;line-height:1.6;">Jiya's phone is about to ring from an unknown number. What she does next changes the type of questions you'll face!</p>
+      <ul style="margin-top:1rem;padding-left:1.2rem;color:#1e293b;font-size:1rem;line-height:2;">
+        <li>If she <strong>answers</strong> → 10 call-based scenarios</li>
+        <li>If she <strong>declines</strong> → the scammer texts her instead, and you get 1 call + 9 SMS scenarios</li>
+      </ul>
     </div>
-    <button class="instr-nav-btn" onclick="showJiyaOnPhone()">Meet Jiya on her phone →</button>
+    <button class="instr-nav-btn" onclick="showJiyaIncomingCall()" style="margin-top:1.5rem;min-height:60px;font-size:1.3rem;">Jiya's Phone is Ringing! →</button>
   `;
 
   document.getElementById('phoneScreen').innerHTML = `
     <div class="jiya-intro">
       <div class="jiya-avatar">👩</div>
-      <div class="jiya-name">Meet Jiya</div>
-      <div class="jiya-desc">She just set up her Google Pay and is excited to use it!</div>
-    </div>`;
+      <div class="jiya-name">Jiya's Safety Quiz</div>
+      <div class="jiya-desc">Help her stay safe from scammers!</div>
+    </div>
+  `;
 }
 
-function showJiyaOnPhone() {
-  const di = document.getElementById('dynamicInstruction');
-  di.innerHTML = `
+function showJiyaIncomingCall() {
+  document.getElementById('dynamicInstruction').innerHTML = `
     <div class="instr-card" style="background:linear-gradient(135deg,#fff1f2,#ffe4e6);border-left-color:#ef4444;">
-      <h3 style="color:#dc2626;">📱 Jiya's Phone is Ringing!</h3>
-      <p>An unknown number is calling Jiya. What should she do?</p>
-      <p style="margin-top:0.5rem;">Look at Jiya's phone and choose wisely!</p>
+      <h3 style="color:#dc2626;font-size:1.4rem;">📳 Jiya is receiving a call from an unknown number!</h3>
+      <p style="color:#1e293b;font-size:1.1rem;line-height:1.6;">She has no idea who it is. What should she do?</p>
+      <p style="margin-top:1rem;color:#64748b;font-size:0.95rem;">Tap an option on Jiya's phone to decide.</p>
     </div>
   `;
 
   document.getElementById('phoneScreen').innerHTML = `
     <div class="call-screen">
       <div class="call-contact">
-        <div style="font-size:0.8rem;color:#94a3b8;margin-bottom:16px;">📳 Incoming Call</div>
-        <div class="call-avatar">🔔</div>
-        <div class="call-label">Unknown Number</div>
-        <div class="call-name">+91 XXXXX XXXXX</div>
-        <div style="margin-top:6px;background:#1e3a5f;border-radius:20px;padding:4px 12px;font-size:0.78rem;color:#94a3b8;">⚠️ Not in contacts</div>
+        <div style="font-size:0.85rem;color:#94a3b8;margin-bottom:1.5rem;font-weight:600;letter-spacing:0.5px;">INCOMING CALL</div>
+        <div class="call-avatar">📵</div>
+        <div class="call-label">Unknown number</div>
+        <div class="call-name">+91 98XXX XXXXX</div>
+        <div style="margin-top:1rem;background:rgba(239,68,68,0.15);border-radius:20px;padding:6px 16px;font-size:0.8rem;color:#fca5a5;">⚠ Not saved in contacts</div>
       </div>
       <div class="call-actions">
-        <button class="call-btn pickup" onclick="handleCallAction('pickup')"><i class="fas fa-phone"></i>Pick up</button>
-        <button class="call-btn decline" onclick="handleCallAction('decline')"><i class="fas fa-phone-slash"></i>Decline</button>
-        <button class="call-btn ignore" onclick="handleCallAction('ignore')"><i class="fas fa-bell-slash"></i>Ignore</button>
-        <button class="call-btn nothing" onclick="handleCallAction('nothing')"><i class="fas fa-ellipsis-h"></i>Do Nothing</button>
+        <button class="call-btn pickup" onclick="jiyaAnswersCall()"><i class="fas fa-phone"></i>Answer</button>
+        <button class="call-btn decline" onclick="jiyaDeclinesCall()"><i class="fas fa-phone-slash"></i>Decline</button>
       </div>
-    </div>`;
+    </div>
+  `;
 }
 
-function handleCallAction(action) {
-  if (action === 'pickup') {
-    showActiveCallScreen();
-  } else {
-    showSafeResult();
-  }
-}
+function jiyaAnswersCall() {
+  jiyaAnsweredCall = true;
+  currentQuizIndex = 0;
 
-function showActiveCallScreen() {
-  const di = document.getElementById('dynamicInstruction');
-  di.innerHTML = `
+  document.getElementById('dynamicInstruction').innerHTML = `
     <div class="instr-card" style="background:linear-gradient(135deg,#fff7ed,#ffedd5);border-left-color:#f97316;">
-      <h3 style="color:#ea580c;">📞 Jiya Picked Up</h3>
-      <p>The caller claims to be from her bank. He says there's a problem with her account and asks for her UPI PIN to "fix" it. What should Jiya say?</p>
+      <h3 style="color:#ea580c;font-size:1.4rem;">📞 Jiya answered the call!</h3>
+      <p style="color:#1e293b;font-size:1.1rem;line-height:1.6;">The caller starts with suspicious questions. Help Jiya respond to all <strong>10 call scenarios</strong>!</p>
     </div>
   `;
 
   document.getElementById('phoneScreen').innerHTML = `
-    <div class="active-call">
-      <div style="text-align:center;">
-        <div class="call-avatar" style="width:60px;height:60px;background:#ef4444;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 8px;">🔴</div>
-        <div style="font-size:0.85rem;color:#94a3b8;">On Call · 0:22</div>
-        <div style="font-size:1rem;font-weight:700;margin:8px 0;color:white;">Unknown: +91 XXXXX XXXXX</div>
-        <div style="background:#1e3a5f;border-radius:12px;padding:10px;font-size:0.82rem;color:#cbd5e1;line-height:1.5;text-align:left;margin:10px 0;">
-          🗣️ <em>"Hello, I'm calling from your bank. We have detected suspicious activity on your Google Pay account. Please share your 6-digit UPI PIN to verify your identity."</em>
-        </div>
-      </div>
-      <div class="active-call-opts">
-        <button class="active-call-opt-btn danger" onclick="handleCallResponse('share')">🔓 "Sure, my PIN is 4 2 1 8 3 7"</button>
-        <button class="active-call-opt-btn safe" onclick="handleCallResponse('refuse')">🚫 "I will never share my PIN"</button>
-        <button class="active-call-opt-btn safe" onclick="handleCallResponse('hangup')">📵 Hang up immediately</button>
-        <button class="active-call-opt-btn danger" onclick="handleCallResponse('share2')">"Let me check my phone and tell you"</button>
-      </div>
-    </div>`;
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;background:linear-gradient(180deg,#1e3a5f,#0f172a);color:white;padding:20px;text-align:center;">
+      <div style="font-size:3rem;margin-bottom:12px;animation:jiyaPop 0.4s ease;">📞</div>
+      <div style="font-size:1rem;font-weight:700;margin-bottom:6px;">Call Connected</div>
+      <div style="font-size:0.85rem;color:#94a3b8;">The caller starts speaking...</div>
+    </div>
+  `;
+
+  setTimeout(() => showQuizQuestion(), 1500);
 }
 
-function handleCallResponse(choice) {
-  if (choice === 'share' || choice === 'share2') {
-    showWarningResult();
+function jiyaDeclinesCall() {
+  jiyaAnsweredCall = false;
+  currentQuizIndex = 0;
+
+  document.getElementById('dynamicInstruction').innerHTML = `
+    <div class="instr-card" style="background:linear-gradient(135deg,#f0f9ff,#e0f2fe);border-left-color:#0284c7;">
+      <h3 style="color:#0369a1;font-size:1.4rem;">✋ Jiya declined the call — smart move!</h3>
+      <p style="color:#1e293b;font-size:1.1rem;line-height:1.6;">But the scammer didn't give up. They sent her a <strong>text message</strong> instead!</p>
+      <p style="margin-top:0.8rem;color:#1e293b;font-size:1rem;line-height:1.6;">First question will be about this text. Then 9 more SMS-based scenarios follow.</p>
+    </div>
+  `;
+
+  document.getElementById('phoneScreen').innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:20px;background:#f1f5fb;">
+      <div style="font-size:2.5rem;margin-bottom:12px;">📱</div>
+      <div style="font-size:1rem;font-weight:700;color:#0369a1;margin-bottom:12px;">New SMS Received</div>
+      <div style="background:white;border-radius:12px;padding:14px;font-size:0.9rem;color:#1e293b;line-height:1.6;border-left:5px solid #0284c7;width:100%;">
+        ${smsScenarios[0].message}
+      </div>
+      <div style="margin-top:10px;font-size:0.8rem;color:#64748b;">From: +91 98XXX XXXXX (Unknown)</div>
+    </div>
+  `;
+
+  setTimeout(() => showQuizQuestion(), 2000);
+}
+
+function showQuizQuestion() {
+  if (currentQuizIndex >= 10) {
+    showQuizResults();
+    return;
+  }
+
+  const isCall = jiyaAnsweredCall;
+  const scenario = isCall ? callScenarios[currentQuizIndex] : smsScenarios[currentQuizIndex];
+  const label = isCall ? '📞 Caller says:' : '📱 Text message received:';
+  const icon = isCall ? '📞' : '📱';
+
+  document.getElementById('dynamicInstruction').innerHTML = `
+    <div class="instr-card" style="background:linear-gradient(135deg,#fff7ed,#ffedd5);border-left-color:#f97316;">
+      <h3 style="color:#ea580c;font-size:1.3rem;">${icon} Question ${currentQuizIndex + 1}/10: ${scenario.scenario}</h3>
+      <div style="background:white;padding:1rem;border-radius:10px;border-left:5px solid #f97316;margin:1rem 0;">
+        <div style="font-size:0.9rem;color:#64748b;font-weight:700;margin-bottom:6px;">${label}</div>
+        <div style="color:#1e293b;font-size:1rem;line-height:1.6;">${scenario.message}</div>
+      </div>
+      <p style="color:#1e293b;font-weight:700;font-size:1rem;margin-top:0.5rem;">What should Jiya do?</p>
+      <p style="font-size:0.9rem;color:#64748b;">Score: ${quizScore}/${currentQuizIndex}</p>
+    </div>
+  `;
+
+  document.getElementById('phoneScreen').innerHTML = `
+    <div class="${isCall ? 'active-call' : ''}" style="display:flex;flex-direction:column;padding:16px;height:100%;background:${isCall ? 'linear-gradient(180deg,#f8fafc,#f1f5fb)' : '#f1f5fb'};gap:10px;overflow-y:auto;">
+      <div style="background:white;border-radius:12px;padding:12px;border-left:5px solid ${isCall ? '#f97316' : '#0284c7'};margin-bottom:4px;font-size:0.9rem;color:#1e293b;line-height:1.5;">
+        ${isCall ? '<div style="font-size:0.75rem;font-weight:700;color:#64748b;margin-bottom:6px;">CALLER SAYS:</div>' : '<div style="font-size:0.75rem;font-weight:700;color:#64748b;margin-bottom:6px;">SMS RECEIVED:</div>'}
+        ${scenario.message}
+      </div>
+      <div style="font-size:0.85rem;font-weight:700;color:#1e293b;padding:0 2px;">What should Jiya do?</div>
+      ${scenario.options.map((opt, idx) => `
+        <button onclick="handleAnswer(${idx})" style="background:white;border:2px solid #e2e8f0;border-radius:12px;padding:12px;font-size:0.9rem;font-weight:600;color:#1e293b;text-align:left;cursor:pointer;transition:all 0.2s;min-height:52px;line-height:1.4;">
+          ${opt.text}
+        </button>
+      `).join('')}
+    </div>
+  `;
+}
+
+function handleAnswer(optIdx) {
+  const isCall = jiyaAnsweredCall;
+  const scenario = isCall ? callScenarios[currentQuizIndex] : smsScenarios[currentQuizIndex];
+  const selected = scenario.options[optIdx];
+  const correct = selected.safe;
+
+  if (correct) quizScore++;
+
+  const icon = correct ? '✅' : '❌';
+  const color = correct ? '#16a34a' : '#dc2626';
+  const bg = correct ? 'linear-gradient(135deg,#f0fdf4,#dcfce7)' : 'linear-gradient(135deg,#fef2f2,#fee2e2)';
+  const border = correct ? '#22c55e' : '#ef4444';
+
+  document.getElementById('dynamicInstruction').innerHTML = `
+    <div class="instr-card" style="background:${bg};border-left-color:${border};">
+      <h3 style="color:${color};font-size:1.3rem;">${icon} ${correct ? 'Correct!' : 'Incorrect!'}</h3>
+      <p style="color:#1e293b;font-size:1rem;margin-top:0.8rem;"><strong>You chose:</strong> "${selected.text}"</p>
+      <div style="background:white;border-radius:10px;padding:12px;margin-top:1rem;border-left:4px solid ${border};">
+        <p style="color:#1e293b;font-size:1rem;line-height:1.6;">${selected.feedback}</p>
+      </div>
+      <p style="margin-top:1rem;font-size:0.9rem;color:#64748b;">Score so far: ${quizScore}/${currentQuizIndex + 1}</p>
+    </div>
+    <button class="instr-nav-btn" onclick="nextQuestion()" style="margin-top:1.5rem;min-height:60px;font-size:1.3rem;">
+      ${currentQuizIndex + 1 < 10 ? 'Next Question →' : 'See Results →'}
+    </button>
+  `;
+
+  document.getElementById('phoneScreen').innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:20px;text-align:center;">
+      <div style="font-size:4rem;margin-bottom:12px;animation:jiyaPop 0.5s cubic-bezier(0.2,1.4,0.4,1);">${icon}</div>
+      <div style="font-size:1.3rem;font-weight:800;color:${color};">${correct ? 'Good call!' : 'Watch out!'}</div>
+      <div style="font-size:0.95rem;color:#475569;margin-top:10px;line-height:1.5;background:white;border-radius:12px;padding:12px;border:2px solid ${border};">
+        ${selected.feedback}
+      </div>
+    </div>
+  `;
+}
+
+function nextQuestion() {
+  currentQuizIndex++;
+  if (currentQuizIndex >= 10) {
+    showQuizResults();
   } else {
-    showSafeResult();
+    showQuizQuestion();
   }
 }
 
-function showWarningResult() {
-  spawnConfetti(false);
-  document.getElementById('dynamicInstruction').innerHTML = `
-    <div class="instr-card" style="background:linear-gradient(135deg,#fef2f2,#fee2e2);border-left-color:#ef4444;">
-      <h3 style="color:#dc2626;">⚠️ This Was a Scam Attempt!</h3>
-      <p>Jiya shared her UPI PIN with a stranger. <strong>Real banks NEVER ask for your UPI PIN, OTP, or password over the phone.</strong></p>
-      <p style="margin-top:0.5rem;">Remember: If someone calls asking for your PIN or OTP — it's always a scam. Hang up immediately!</p>
-    </div>
-    <button class="instr-nav-btn" style="background:#ef4444;" onclick="completeGpayModule(false)">Try Again Next Time →</button>
-  `;
-  document.getElementById('phoneScreen').innerHTML = `
-    <div class="result-screen warning">
-      <div class="result-icon">⚠️</div>
-      <div class="result-title">Scam Alert!</div>
-      <div class="result-desc">Never share your UPI PIN or OTP with anyone — not even someone claiming to be from your bank.</div>
-      <button class="result-continue-btn" onclick="completeGpayModule(false)">I Understand</button>
-    </div>`;
-}
+function showQuizResults() {
+  const percentage = Math.round((quizScore / 10) * 100);
+  const passed = percentage >= 70;
 
-function showSafeResult() {
-  spawnConfetti(true);
+  spawnConfetti(passed);
+
   document.getElementById('dynamicInstruction').innerHTML = `
-    <div class="instr-card" style="background:linear-gradient(135deg,#f0fdf4,#dcfce7);border-left-color:#22c55e;">
-      <h3 style="color:#16a34a;">🎉 Great Job! Jiya is Safe!</h3>
-      <p>You made the right choice! Real banks and Google Pay will <strong>never</strong> call you asking for your UPI PIN or OTP.</p>
-      <p style="margin-top:0.5rem;">If you receive such calls, always decline or hang up immediately. You've earned your Google Pay points!</p>
+    <div class="instr-card" style="background:linear-gradient(135deg,${passed ? '#f0fdf4,#dcfce7' : '#fef2f2,#fee2e2'});border-left-color:${passed ? '#22c55e' : '#ef4444'};">
+      <h3 style="color:${passed ? '#16a34a' : '#dc2626'};font-size:1.5rem;">${passed ? '🎉 Well done!' : '📚 Keep practising!'}</h3>
+      <p style="color:#1e293b;font-weight:700;font-size:1.3rem;margin:1rem 0;"><strong>Score: ${quizScore}/10 (${percentage}%)</strong></p>
+      <p style="color:#1e293b;font-size:1rem;line-height:1.8;">${passed ? 'You have strong scam awareness! You correctly handled most situations Jiya faced.' : 'You got some questions wrong. Review the key rule: never share PIN, OTP, passwords, or card details with anyone who contacts you first.'}</p>
+      <div style="background:white;border-radius:10px;padding:12px;margin-top:1rem;border-left:4px solid #f59e0b;">
+        <p style="color:#92400e;font-size:0.95rem;font-weight:700;">Golden Rule: If someone contacts YOU asking for sensitive information — hang up or delete the message. Real banks never ask for PIN, OTP, or passwords this way.</p>
+      </div>
     </div>
-    <button class="instr-nav-btn" onclick="completeGpayModule(true)">Claim Your Points 🏆</button>
+    <button class="instr-nav-btn" onclick="completeGpayModule(${passed})" style="margin-top:1.5rem;min-height:60px;font-size:1.3rem;background:${passed ? '#22c55e' : '#f97316'};">${passed ? 'Claim Your Points 🏆' : 'Complete Module →'}</button>
   `;
+
   document.getElementById('phoneScreen').innerHTML = `
-    <div class="result-screen success">
-      <div class="result-icon">🎉</div>
-      <div class="result-title">Excellent!</div>
-      <div class="result-desc">Jiya stayed safe because of you. You know how to spot a scam call!</div>
-      <button class="result-continue-btn" onclick="completeGpayModule(true)">Claim Points!</button>
-    </div>`;
+    <div class="result-screen ${passed ? 'success' : 'warning'}">
+      <div class="result-icon">${passed ? '🏆' : '📖'}</div>
+      <div class="result-title">${percentage}%</div>
+      <div class="result-desc">${quizScore} out of 10 correct</div>
+      <button class="result-continue-btn" onclick="completeGpayModule(${passed})">${passed ? 'Complete!' : 'Finish'}</button>
+    </div>
+  `;
 }
 
 function completeGpayModule(passed) {
   const mod = modules[0];
   if (!mod.completed) {
     mod.completed = true;
-    if (passed) {
-      totalPoints += mod.points;
-    } else {
-      totalPoints += Math.floor(mod.points * 0.5);
-    }
+    totalPoints += passed ? mod.points : Math.floor(mod.points * 0.5);
     updateGlobalUI();
     renderModules();
   }
 
-  const di = document.getElementById('dynamicInstruction');
-  di.innerHTML = `
+  document.getElementById('dynamicInstruction').innerHTML = `
     <div class="instr-card" style="background:var(--accent-soft);">
       <h3>✅ Google Pay Module Complete!</h3>
-      <p>You've finished the Google Pay learning module. You earned <strong>${passed ? modules[0].points : Math.floor(modules[0].points*0.5)} points</strong>!</p>
+      <p>You've finished the Google Pay learning module. You earned <strong>${passed ? modules[0].points : Math.floor(modules[0].points * 0.5)} points</strong>!</p>
       <p style="margin-top:0.5rem;">Explore other modules in the left panel to earn all 100 points and reach Gold status!</p>
     </div>
   `;
@@ -2204,8 +2736,9 @@ function completeGpayModule(passed) {
     <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:20px;text-align:center;">
       <div style="font-size:4rem;margin-bottom:12px;">🏆</div>
       <div style="font-size:1.3rem;font-weight:800;color:var(--accent);">Module Complete!</div>
-      <div style="font-size:0.9rem;color:var(--text-muted);margin-top:8px;">Google Pay — ${passed ? modules[0].points : Math.floor(modules[0].points*0.5)} pts earned</div>
-    </div>`;
+      <div style="font-size:0.9rem;color:var(--text-muted);margin-top:8px;">Google Pay — ${passed ? modules[0].points : Math.floor(modules[0].points * 0.5)} pts earned</div>
+    </div>
+  `;
 }
 
 function spawnConfetti(success) {
@@ -2213,217 +2746,12 @@ function spawnConfetti(success) {
   const colors = success
     ? ['#22c55e','#4ade80','#86efac','#facc15','#fbbf24']
     : ['#ef4444','#f97316','#fca5a5','#fed7aa'];
-  for (let i=0; i<24; i++) {
+  for (let i = 0; i < 24; i++) {
     const p = document.createElement('div');
     p.className = 'confetti-particle';
-    p.style.cssText = `
-      left:${Math.random()*100}%;
-      top:${Math.random()*30}%;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      animation-delay:${Math.random()*0.5}s;
-      transform:rotate(${Math.random()*360}deg);
-    `;
+    p.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*30}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-delay:${Math.random()*0.5}s;transform:rotate(${Math.random()*360}deg);`;
     ps.appendChild(p);
-    setTimeout(()=>p.remove(), 2000);
-  }
-}
-
-function enableNextButton() {
-  const btn = document.getElementById('nextBtn');
-  if (btn) {
-    btn.disabled = false;
-    btn.style.opacity = '1';
-    btn.style.cursor = 'pointer';
-    btn.style.background = 'var(--accent)';
-    btn.textContent = 'Got it →';
-    gpayState.actionCompleted = true;
-  }
-}
-
-function showActionHighlight(stepIndex, instrIndex, instr) {
-  if (typeof Shepherd === 'undefined') return;
-  
-  // Clear any existing tutorials
-  if (window.tempTour) {
-    window.tempTour.complete();
-    window.tempTour = null;
-  }
-  
-  // Map instruction to element that needs to be highlighted (within phone screen)
-  let highlightSelector = '';
-  let targetElement = null;
-  
-  // Get the phone screen element
-  const phoneScreen = document.getElementById('phoneScreen');
-  if (!phoneScreen) return;
-  
-  if (stepIndex === 0) { // Download
-    if (instrIndex === 0) highlightSelector = '#home-playstore';
-    else if (instrIndex === 1) highlightSelector = '#search-bar';
-    else if (instrIndex === 2) highlightSelector = '#search-input-field';
-    else if (instrIndex === 3) highlightSelector = '#install-btn';
-  } else if (stepIndex === 1) { // Create Account
-    if (instrIndex === 0) highlightSelector = '#home-gpay';
-    else if (instrIndex === 1) highlightSelector = '#phone-input-field';
-    else if (instrIndex === 2) highlightSelector = '#otp-input-field';
-    else if (instrIndex === 3) highlightSelector = '#continue-btn';
-  } else if (stepIndex === 2) { // Link Bank
-    if (instrIndex === 0) highlightSelector = '#profile-icon';
-    else if (instrIndex === 1) highlightSelector = '#bank-menu';
-    else if (instrIndex === 2) highlightSelector = '.bank-item';
-    else if (instrIndex === 3 || instrIndex === 4) highlightSelector = '#verify-btn';
-  } else if (stepIndex === 3) { // UPI PIN
-    if (instrIndex === 0) highlightSelector = '#set-pin-btn';
-    else if (instrIndex === 1) highlightSelector = '#card-input-field';
-    else if (instrIndex === 2) highlightSelector = '#expiry-input-field';
-    else if (instrIndex === 3) highlightSelector = '.gpay-numpad';
-    else if (instrIndex === 4) highlightSelector = '.gpay-numpad';
-  }
-  
-  if (!highlightSelector) return;
-  
-  // Special handling for bank items - highlight first bank item
-  if (highlightSelector === '.bank-item') {
-    targetElement = phoneScreen.querySelector('.bank-item');
-    if (!targetElement) return;
-  } else {
-    targetElement = phoneScreen.querySelector(highlightSelector);
-    if (!targetElement) return;
-  }
-  
-  // Remove previous highlight class
-  document.querySelectorAll('.shepherd-highlight-element').forEach(el => {
-    el.classList.remove('shepherd-highlight-element');
-  });
-  
-  // Add highlight class to target element
-  targetElement.classList.add('shepherd-highlight-element');
-  
-  // Ensure the phone screen container has proper positioning
-  phoneScreen.style.position = 'relative';
-  phoneScreen.style.overflow = 'visible';
-  
-  // Get action instruction with emoji
-  let actionHint = '';
-  let actionEmoji = '';
-  if (instr.action === 'click') {
-    actionEmoji = '🔘';
-    actionHint = 'Click here';
-  } else if (instr.action === 'type') {
-    actionEmoji = '⌨️';
-    actionHint = 'Type here';
-  } else if (instr.action === 'numpad') {
-    actionEmoji = '🔢';
-    actionHint = 'Tap numbers on keypad';
-  } else {
-    actionEmoji = '👆';
-    actionHint = 'Tap here';
-  }
-  
-  // Clean and shorten instruction text if needed
-  let shortText = instr.text;
-  if (shortText.length > 80) {
-    shortText = shortText.substring(0, 77) + '...';
-  }
-  
-  // Create small transparent Shepherd tour attached to the phone screen element
-  const tour = new Shepherd.Tour({
-    useModalOverlay: false, // Disable modal overlay to keep within phone
-    defaultStepOptions: {
-      classes: 'custom-shepherd mobile-shepherd-step',
-      scrollTo: false,
-      popperOptions: {
-        placement: instr.arrowDir === 'down' ? 'bottom' : (instr.arrowDir === 'right' ? 'right' : 'left'),
-        modifiers: [
-          {
-            name: 'offset',
-            options: {
-              offset: [0, 10]
-            }
-          },
-          {
-            name: 'preventOverflow',
-            options: {
-              boundary: phoneScreen,
-              padding: 8,
-              altAxis: true
-            }
-          },
-          {
-            name: 'flip',
-            options: {
-              fallbackPlacements: ['top', 'bottom', 'left', 'right'],
-              boundary: phoneScreen,
-              padding: 8
-            }
-          }
-        ]
-      }
-    }
-  });
-  
-  tour.addStep({
-    id: 'mobile-highlight-step',
-    title: `Instruction`,
-    text: `${shortText}\n\n${actionHint}`,
-    attachTo: {
-      element: targetElement,
-      on: instr.arrowDir === 'down' ? 'bottom' : (instr.arrowDir === 'right' ? 'right' : 'left')
-    },
-    buttons: [
-      {
-        text: '✓ Got it',
-        action: () => {
-          targetElement.classList.remove('shepherd-highlight-element');
-          tour.complete();
-          window.tempTour = null;
-        }
-      }
-    ],
-    cancelIcon: {
-      enabled: true
-    }
-  });
-  
-  window.tempTour = tour;
-  
-  // Small delay to ensure DOM is ready
-  setTimeout(() => {
-    if (tour && targetElement) {
-      tour.start();
-    }
-  }, 100);
-  
-  // Auto-remove highlight after 8 seconds if user doesn't interact
-  setTimeout(() => {
-    if (window.tempTour === tour) {
-      targetElement.classList.remove('shepherd-highlight-element');
-      if (tour && tour.isActive()) {
-        tour.complete();
-      }
-      window.tempTour = null;
-    }
-  }, 8000);
-}
-function gpayNext() {
-  const mod = modules[0];
-  const step = gpaySteps[mod.currentStep];
-  if (mod.currentInstr < step.instructions.length - 1) {
-    showGpayStep(mod.currentStep, mod.currentInstr + 1);
-  } else if (mod.currentStep < gpaySteps.length - 1) {
-    showGpayStep(mod.currentStep + 1, 0);
-  } else {
-    startJiyaSequence();
-  }
-}
-
-function gpayPrev() {
-  const mod = modules[0];
-  if (mod.currentInstr > 0) {
-    showGpayStep(mod.currentStep, mod.currentInstr - 1);
-  } else if (mod.currentStep > 0) {
-    const prevStep = gpaySteps[mod.currentStep - 1];
-    showGpayStep(mod.currentStep - 1, prevStep.instructions.length - 1);
+    setTimeout(() => p.remove(), 2000);
   }
 }
 
